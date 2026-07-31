@@ -28,8 +28,9 @@ MAX_CONFIG_FILE = 20 * 1024 * 1024
 MAX_CONFIG_TOTAL = 250 * 1024 * 1024
 MAX_MACRO_FILE = 2 * 1024 * 1024
 DEFAULT_SUBNET = "10.42.42.0/24"
-INCLUDE_LINE = "[include macro_z_tilt_via_knob.cfg]"
-MACRO_FILENAME = "macro_z_tilt_via_knob.cfg"
+GERGO_MACRO_FILENAME = "macro_z_tilt_via_knob.cfg"
+OPEN_MACRO_FILENAME = "t300_gantry_level.cfg"
+OPEN_MACRO_PATH = Path(__file__).resolve().parents[1] / "macros" / OPEN_MACRO_FILENAME
 
 
 class T300Error(RuntimeError):
@@ -243,9 +244,12 @@ def make_backup(client: Moonraker, output: Path | None = None) -> Path:
     return target
 
 
-def patch_printer_cfg(text: str) -> tuple[str, bool]:
+def patch_printer_cfg(
+    text: str, include_filename: str = GERGO_MACRO_FILENAME
+) -> tuple[str, bool]:
+    include_line = f"[include {include_filename}]"
     include_pattern = re.compile(
-        r"^\s*\[include\s+macro_z_tilt_via_knob\.cfg\]\s*(?:#.*)?$", re.IGNORECASE
+        rf"^\s*\[include\s+{re.escape(include_filename)}\]\s*(?:#.*)?$", re.IGNORECASE
     )
     macro_pattern = re.compile(r"^\s*\[include\s+Macro\.cfg\]\s*(?:#.*)?$", re.IGNORECASE)
     lines = text.splitlines(keepends=True)
@@ -255,7 +259,7 @@ def patch_printer_cfg(text: str) -> tuple[str, bool]:
     for index, line in enumerate(lines):
         if macro_pattern.match(line.rstrip("\r\n")):
             newline = "\r\n" if line.endswith("\r\n") else "\n"
-            lines.insert(index + 1, INCLUDE_LINE + newline)
+            lines.insert(index + 1, include_line + newline)
             return "".join(lines), True
     raise T300Error("printer.cfg does not contain the expected [include Macro.cfg] line")
 
@@ -271,11 +275,12 @@ def read_macro(source: Path) -> bytes:
             matches = [
                 info
                 for info in archive.infolist()
-                if not info.is_dir() and PurePosixPath(info.filename).name == MACRO_FILENAME
+                if not info.is_dir()
+                and PurePosixPath(info.filename).name == GERGO_MACRO_FILENAME
             ]
             if len(matches) != 1:
                 raise T300Error(
-                    f"Expected exactly one {MACRO_FILENAME} in the ZIP; found {len(matches)}"
+                    f"Expected exactly one {GERGO_MACRO_FILENAME} in the ZIP; found {len(matches)}"
                 )
             info = matches[0]
             if info.file_size > MAX_MACRO_FILE:
@@ -298,6 +303,85 @@ def read_macro(source: Path) -> bytes:
 def macro_names(content: bytes) -> list[str]:
     text = content.decode("utf-8")
     return re.findall(r"^\s*\[gcode_macro\s+([^]]+)\]", text, re.MULTILINE | re.IGNORECASE)
+
+
+def read_open_macro() -> bytes:
+    if not OPEN_MACRO_PATH.is_file():
+        raise T300Error(f"Bundled open macro is missing: {OPEN_MACRO_PATH}")
+    content = OPEN_MACRO_PATH.read_bytes()
+    if len(content) > MAX_MACRO_FILE or b"\x00" in content:
+        raise T300Error("Bundled open macro failed its size/text safety check")
+    content.decode("utf-8")
+    return content
+
+
+def numeric_pair(value: Any, name: str) -> tuple[float, float]:
+    if isinstance(value, str):
+        parts: Any = [part.strip() for part in value.split(",")]
+    else:
+        parts = value
+    if not isinstance(parts, (list, tuple)) or len(parts) != 2:
+        raise T300Error(f"Klipper setting {name} is not an XY pair")
+    try:
+        return float(parts[0]), float(parts[1])
+    except (TypeError, ValueError) as exc:
+        raise T300Error(f"Klipper setting {name} contains non-numeric values") from exc
+
+
+def open_level_geometry(client: Moonraker) -> dict[str, float]:
+    response = client.post_json(
+        "/printer/objects/query", {"objects": {"configfile": ["settings"]}}
+    )
+    try:
+        settings = response["status"]["configfile"]["settings"]
+    except (KeyError, TypeError) as exc:
+        raise T300Error("Klipper did not return parsed configfile settings") from exc
+    if not isinstance(settings, dict):
+        raise T300Error("Klipper returned malformed configfile settings")
+    required = {"bed_mesh", "probe", "stepper_x", "stepper_y", "stepper_z"}
+    missing = sorted(required.difference(settings))
+    if missing:
+        raise T300Error(f"Open leveling macro requires config sections: {', '.join(missing)}")
+
+    mesh_min = numeric_pair(settings["bed_mesh"].get("mesh_min"), "bed_mesh.mesh_min")
+    mesh_max = numeric_pair(settings["bed_mesh"].get("mesh_max"), "bed_mesh.mesh_max")
+    span_x = mesh_max[0] - mesh_min[0]
+    span_y = mesh_max[1] - mesh_min[1]
+    if span_x <= 40 or span_y <= 40:
+        raise T300Error("Configured bed_mesh area is too small or invalid")
+    edge_margin = max(5.0, span_x * 0.05)
+    probe_left = mesh_min[0] + edge_margin
+    probe_right = mesh_max[0] - edge_margin
+    probe_y = (mesh_min[1] + mesh_max[1]) / 2.0
+
+    probe = settings["probe"]
+    x_offset = float(probe.get("x_offset", 0.0))
+    y_offset = float(probe.get("y_offset", 0.0))
+    nozzle_left = probe_left - x_offset
+    nozzle_right = probe_right - x_offset
+    nozzle_y = probe_y - y_offset
+
+    stepper_x = settings["stepper_x"]
+    stepper_y = settings["stepper_y"]
+    x_min = float(stepper_x.get("position_min", 0.0))
+    x_max = float(stepper_x["position_max"])
+    y_min = float(stepper_y.get("position_min", 0.0))
+    y_max = float(stepper_y["position_max"])
+    rotation_distance = float(settings["stepper_z"]["rotation_distance"])
+    if rotation_distance <= 0:
+        raise T300Error("stepper_z.rotation_distance must be positive")
+    if not (x_min <= nozzle_left < nozzle_right <= x_max and y_min <= nozzle_y <= y_max):
+        raise T300Error("Calculated nozzle probe positions exceed the configured axis limits")
+
+    return {
+        "probe_left": probe_left,
+        "probe_right": probe_right,
+        "probe_y": probe_y,
+        "nozzle_left": nozzle_left,
+        "nozzle_right": nozzle_right,
+        "nozzle_y": nozzle_y,
+        "rotation_distance": rotation_distance,
+    }
 
 
 def config_permissions(client: Moonraker) -> str:
@@ -372,31 +456,35 @@ def print_preflight(client: Moonraker) -> None:
         print(f"  {name}")
 
 
-def install_macro(client: Moonraker, source: Path, apply: bool, output: Path | None) -> None:
+def install_config_macro(
+    client: Moonraker,
+    macro: bytes,
+    remote_filename: str,
+    apply: bool,
+    output: Path | None,
+) -> None:
     ensure_idle_ready(client)
     if "w" not in config_permissions(client):
         raise T300Error("Moonraker's config root is read-only")
 
-    macro = read_macro(source)
     names = macro_names(macro)
     original = client.download_bytes("config", "printer.cfg", MAX_CONFIG_FILE)
     try:
         original_text = original.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise T300Error("Remote printer.cfg is not valid UTF-8") from exc
-    proposed_text, changed = patch_printer_cfg(original_text)
+    proposed_text, changed = patch_printer_cfg(original_text, remote_filename)
     proposed = proposed_text.encode("utf-8")
 
     files = client.get_json("/server/files/list?root=config")
     remote_macro = next(
-        (item for item in files if isinstance(item, dict) and item.get("path") == MACRO_FILENAME), None
+        (item for item in files if isinstance(item, dict) and item.get("path") == remote_filename),
+        None,
     )
     if remote_macro is not None:
-        existing = client.download_bytes("config", MACRO_FILENAME, MAX_MACRO_FILE)
+        existing = client.download_bytes("config", remote_filename, MAX_MACRO_FILE)
         if existing != macro:
-            raise T300Error(
-                f"A different {MACRO_FILENAME} already exists; refusing to overwrite it"
-            )
+            raise T300Error(f"A different {remote_filename} already exists; refusing to overwrite it")
 
     print("Macro sections:")
     for name in names:
@@ -411,7 +499,7 @@ def install_macro(client: Moonraker, source: Path, apply: bool, output: Path | N
         )
         print("\n" + "\n".join(diff))
     else:
-        print(f"\n{INCLUDE_LINE} is already present in printer.cfg")
+        print(f"\n[include {remote_filename}] is already present in printer.cfg")
 
     if not apply:
         print("\nDry run only. Re-run with --apply after reviewing the output.")
@@ -421,10 +509,10 @@ def install_macro(client: Moonraker, source: Path, apply: bool, output: Path | N
     print(f"\nConfiguration backup: {backup}")
     (backup / "proposed-printer.cfg").write_bytes(proposed)
     (backup / "supplied-macro.sha256").write_text(
-        hashlib.sha256(macro).hexdigest() + f"  {MACRO_FILENAME}\n", encoding="utf-8"
+        hashlib.sha256(macro).hexdigest() + f"  {remote_filename}\n", encoding="utf-8"
     )
 
-    client.upload_config(MACRO_FILENAME, macro)
+    client.upload_config(remote_filename, macro)
     if changed:
         client.upload_config("printer.cfg", proposed)
     client.post_json("/printer/firmware_restart")
@@ -452,6 +540,31 @@ def install_macro(client: Moonraker, source: Path, apply: bool, output: Path | N
         f"Open Mainsail and restore {backup / 'config-root' / 'printer.cfg'}. "
         f"Last response: {restore_message}"
     )
+
+
+def install_gergo_macro(
+    client: Moonraker, source: Path, apply: bool, output: Path | None
+) -> None:
+    macro = read_macro(source)
+    install_config_macro(client, macro, GERGO_MACRO_FILENAME, apply, output)
+
+
+def install_open_level_macro(client: Moonraker, apply: bool, output: Path | None) -> None:
+    ensure_idle_ready(client)
+    geometry = open_level_geometry(client)
+    print("Live T300 geometry check:")
+    print(
+        "  Probe points: "
+        f"({geometry['probe_right']:.2f}, {geometry['probe_y']:.2f}) right, "
+        f"({geometry['probe_left']:.2f}, {geometry['probe_y']:.2f}) left"
+    )
+    print(
+        "  Nozzle moves: "
+        f"({geometry['nozzle_right']:.2f}, {geometry['nozzle_y']:.2f}) right, "
+        f"({geometry['nozzle_left']:.2f}, {geometry['nozzle_y']:.2f}) left"
+    )
+    print(f"  Z screw rotation distance: {geometry['rotation_distance']:.3f} mm/revolution\n")
+    install_config_macro(client, read_open_macro(), OPEN_MACRO_FILENAME, apply, output)
 
 
 def discover_one(address: str, timeout: float) -> tuple[str, dict[str, Any]] | None:
@@ -513,8 +626,18 @@ def build_parser() -> argparse.ArgumentParser:
     add_host_args(backup_parser)
     backup_parser.add_argument("--output", type=Path)
 
+    open_level_parser = subparsers.add_parser(
+        "install-open-level",
+        help="safely stage or install the bundled open-source T300 leveling macro",
+    )
+    add_host_args(open_level_parser)
+    open_level_parser.add_argument("--output", type=Path, help="backup destination used with --apply")
+    open_level_parser.add_argument(
+        "--apply", action="store_true", help="perform uploads and restart after backing up"
+    )
+
     install_parser = subparsers.add_parser(
-        "install-gergo", help="safely stage or install a user-supplied GerGo v3 macro"
+        "install-gergo", help="optionally install a user-supplied GerGo v3 macro"
     )
     add_host_args(install_parser)
     install_parser.add_argument("--source", type=Path, required=True, help="purchased ZIP or CFG")
@@ -544,8 +667,10 @@ def main(argv: Iterable[str] | None = None) -> int:
         elif args.command == "backup":
             destination = make_backup(client, args.output)
             print(f"Configuration backup written to {destination}")
+        elif args.command == "install-open-level":
+            install_open_level_macro(client, args.apply, args.output)
         elif args.command == "install-gergo":
-            install_macro(client, args.source, args.apply, args.output)
+            install_gergo_macro(client, args.source, args.apply, args.output)
         return 0
     except (T300Error, zipfile.BadZipFile) as exc:
         print(f"Error: {exc}", file=sys.stderr)

@@ -4,9 +4,10 @@ Connect an Arch Linux laptop directly to a Sovol/Comgrow T300 over Ethernet
 while the laptop keeps its normal Internet connection over Wi-Fi. No router and
 no Internet connection on the printer are required.
 
-The kit also provides bounded, read-only configuration backups and a
-conservative installer for a **user-supplied** GerGo T300 Z-tilt-via-knob v3
-macro.
+The kit also provides bounded, read-only configuration backups and includes an
+original, MIT-licensed `GANTRY_LEVEL_T300` macro. The macro measures the gantry
+with the inductive probe and reports how far to turn the stock right Z knob. It
+does not use the T300's inaccurate top-ramming routine.
 
 ## What you need
 
@@ -14,11 +15,6 @@ macro.
 - One ordinary Ethernet cable. A crossover cable is not required.
 - Python 3 and `nmcli` (provided by the `networkmanager` package).
 - A powered-on T300 that is idle and running its normal Klipper firmware.
-- For the GerGo workflow: the ZIP purchased from the creator's
-  [Cults page](https://cults3d.com/en/3d-model/tool/z-tilt-via-knob-macro-models-on-comgrow-t300).
-
-This repository intentionally does not redistribute GerGo's paid macro or STL
-files.
 
 ## Direct connection: quick path
 
@@ -73,10 +69,81 @@ will abort rather than ingest unexpectedly large data.
 
 Do not use Mainsail's update manager to update the vendor Klipper installation.
 The T300 screen and factory macros depend on Sovol/Comgrow's customized image.
+Sovol firmware **1.5.2** is the complete vendor release; it contains Klipper
+**0.12.0** as one component. Those two version numbers are not alternatives.
 
-## GerGo macro: dry run, then installation
+## Install the included open leveling macro
 
-Download the purchased archive to the laptop. First perform a dry run:
+The installer reads the T300's live `bed_mesh`, probe offsets, axis limits, and
+Z `rotation_distance`. It calculates and displays safe probe/nozzle positions
+before offering to upload anything. No other owner's hard-coded coordinates are
+used.
+
+First perform a dry run:
+
+```bash
+python3 ./bin/t300ctl.py install-open-level --host 10.42.42.x
+```
+
+Review the calculated geometry and proposed one-line `printer.cfg` change. Then
+apply it:
+
+```bash
+python3 ./bin/t300ctl.py install-open-level --host 10.42.42.x --apply
+```
+
+The apply operation:
+
+1. Verifies that Klipper is ready and not printing or paused.
+2. Validates the live mesh, probe, axis, and Z-screw configuration.
+3. Refuses to overwrite a different existing macro file.
+4. Downloads a complete configuration backup.
+5. Uploads `t300_gantry_level.cfg`.
+6. Adds `[include t300_gantry_level.cfg]` immediately after the existing
+   `[include Macro.cfg]` line.
+7. Restarts Klipper and waits for it to report ready.
+8. Automatically restores the original `printer.cfg` if the new configuration
+   fails to load.
+
+### First leveling run
+
+Keep the bed clear and remain beside the printer. In Mainsail's console, first
+check that the probe is repeatable:
+
+```text
+PROBE_ACCURACY SAMPLES=10
+```
+
+Do not trust tilt measurements if the reported probe range is above 0.025 mm.
+If repeatability is acceptable, run:
+
+```text
+GANTRY_LEVEL_T300 BED_TEMP=60 TOLERANCE=0.02
+```
+
+The macro heats the bed, homes, probes right and then left three times each, and
+reports one of these outcomes:
+
+- **PASS:** the difference is within 0.02 mm. It re-homes and keeps the motors
+  enabled so a bed mesh can follow.
+- **RIGHT SIDE IS LOW/HIGH:** it raises the head, disables the Z driver, and
+  reports the required movement in millimetres, degrees, and clock-minutes.
+  Turn the stock right knob in the direction that raises or lowers that side,
+  then run the macro again. Every new run re-homes first.
+
+Once it passes, run the printer's normal bed-mesh calibration and inspect the
+mesh before printing. The open macro intentionally does not replace a factory
+touchscreen button; run it from Mainsail until the behavior has been validated.
+
+## Optional GerGo v3 installer
+
+The original GerGo v3 knob, dial, and macro package is a separate optional
+alternative. This repository does not redistribute those third-party files. If
+you acquire the archive from the creator's
+[Cults page](https://cults3d.com/en/3d-model/tool/z-tilt-via-knob-macro-models-on-comgrow-t300),
+the kit can install it with the same backup and rollback protections.
+
+Dry run:
 
 ```bash
 python3 ./bin/t300ctl.py install-gergo \
@@ -98,22 +165,10 @@ python3 ./bin/t300ctl.py install-gergo \
   --apply
 ```
 
-The apply operation:
-
-1. Verifies that Klipper is ready and not printing or paused.
-2. Refuses to overwrite a different existing macro file.
-3. Downloads a complete configuration backup.
-4. Uploads the macro.
-5. Adds `[include macro_z_tilt_via_knob.cfg]` immediately after the existing
-   `[include Macro.cfg]` line.
-6. Restarts Klipper and waits for it to report ready.
-7. Automatically restores the original `printer.cfg` if the new configuration
-   fails to load.
-
 The separate macro file may remain uploaded after an automatic rollback, but it
 is inert because the restored `printer.cfg` does not include it.
 
-## First macro test
+### GerGo touchscreen test
 
 Do not assume the touchscreen shortcut has been replaced successfully. Firmware
 1.5.2 owners have reported differences in factory macro naming and include
@@ -165,6 +220,6 @@ Add `--api-key-env T300_KEY` to the backup or install command as well.
 
 ## License
 
-The scripts and original documentation in this repository use the MIT License.
-Third-party macro and model files retain their respective authors' licenses and
-are not included.
+The scripts, `GANTRY_LEVEL_T300` macro, and original documentation in this
+repository use the MIT License. Third-party macro and model files retain their
+respective authors' licenses and are not included.

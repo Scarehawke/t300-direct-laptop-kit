@@ -80,13 +80,19 @@ class ConfigPatchTests(unittest.TestCase):
         with self.assertRaises(t300ctl.T300Error):
             t300ctl.patch_printer_cfg("[mcu]\n")
 
+    def test_inserts_open_macro_include(self):
+        original = "[include Macro.cfg]\n[mcu]\n"
+        actual, changed = t300ctl.patch_printer_cfg(original, t300ctl.OPEN_MACRO_FILENAME)
+        self.assertTrue(changed)
+        self.assertIn("[include t300_gantry_level.cfg]\n", actual)
+
 
 class MacroReadTests(unittest.TestCase):
     CONTENT = b"[gcode_macro T300_TEST]\ngcode:\n  RESPOND MSG=ok\n"
 
     def test_reads_cfg(self):
         with tempfile.TemporaryDirectory() as directory:
-            source = Path(directory) / t300ctl.MACRO_FILENAME
+            source = Path(directory) / t300ctl.GERGO_MACRO_FILENAME
             source.write_bytes(self.CONTENT)
             self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
 
@@ -94,20 +100,27 @@ class MacroReadTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "macro_v3.zip"
             with zipfile.ZipFile(source, "w") as archive:
-                archive.writestr("nested/" + t300ctl.MACRO_FILENAME, self.CONTENT)
+                archive.writestr("nested/" + t300ctl.GERGO_MACRO_FILENAME, self.CONTENT)
             self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
 
     def test_rejects_ambiguous_zip(self):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "macro_v3.zip"
             with zipfile.ZipFile(source, "w") as archive:
-                archive.writestr("a/" + t300ctl.MACRO_FILENAME, self.CONTENT)
-                archive.writestr("b/" + t300ctl.MACRO_FILENAME, self.CONTENT)
+                archive.writestr("a/" + t300ctl.GERGO_MACRO_FILENAME, self.CONTENT)
+                archive.writestr("b/" + t300ctl.GERGO_MACRO_FILENAME, self.CONTENT)
             with self.assertRaises(t300ctl.T300Error):
                 t300ctl.read_macro(source)
 
     def test_extracts_macro_names(self):
         self.assertEqual(t300ctl.macro_names(self.CONTENT), ["T300_TEST"])
+
+    def test_bundled_open_macro_has_expected_sections(self):
+        content = t300ctl.read_open_macro()
+        self.assertEqual(
+            t300ctl.macro_names(content),
+            ["GANTRY_LEVEL_T300", "_TGL_CAPTURE_RIGHT", "_TGL_REPORT"],
+        )
 
 
 class BackupTests(unittest.TestCase):
@@ -172,15 +185,44 @@ class UploadTests(unittest.TestCase):
         opener = self.Opener()
         client.opener = opener
         content = b"[gcode_macro TEST]\n"
-        result = client.upload_config(t300ctl.MACRO_FILENAME, content)
+        result = client.upload_config(t300ctl.GERGO_MACRO_FILENAME, content)
 
         self.assertEqual(result["action"], "create_file")
         self.assertIsNotNone(opener.request)
         request_body = opener.request.data
         self.assertIn(b'name="root"\r\n\r\nconfig\r\n', request_body)
-        self.assertIn(t300ctl.MACRO_FILENAME.encode(), request_body)
+        self.assertIn(t300ctl.GERGO_MACRO_FILENAME.encode(), request_body)
         self.assertIn(hashlib.sha256(content).hexdigest().encode(), request_body)
         self.assertIn(content, request_body)
+
+
+class OpenGeometryTests(unittest.TestCase):
+    class FakeClient:
+        def post_json(self, path, payload):
+            if path != "/printer/objects/query":
+                raise AssertionError(path)
+            return {
+                "status": {
+                    "configfile": {
+                        "settings": {
+                            "bed_mesh": {"mesh_min": [20.0, 25.0], "mesh_max": [280.0, 275.0]},
+                            "probe": {"x_offset": -25.0, "y_offset": 10.0},
+                            "stepper_x": {"position_min": 0.0, "position_max": 310.0},
+                            "stepper_y": {"position_min": 0.0, "position_max": 300.0},
+                            "stepper_z": {"rotation_distance": 8.0},
+                        }
+                    }
+                }
+            }
+
+    def test_derives_safe_nozzle_points(self):
+        geometry = t300ctl.open_level_geometry(self.FakeClient())
+        self.assertAlmostEqual(geometry["probe_left"], 33.0)
+        self.assertAlmostEqual(geometry["probe_right"], 267.0)
+        self.assertAlmostEqual(geometry["nozzle_left"], 58.0)
+        self.assertAlmostEqual(geometry["nozzle_right"], 292.0)
+        self.assertAlmostEqual(geometry["nozzle_y"], 140.0)
+        self.assertAlmostEqual(geometry["rotation_distance"], 8.0)
 
 
 if __name__ == "__main__":
