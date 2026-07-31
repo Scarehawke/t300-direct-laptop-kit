@@ -103,6 +103,18 @@ class MacroReadTests(unittest.TestCase):
                 archive.writestr("nested/" + t300ctl.GERGO_MACRO_FILENAME, self.CONTENT)
             self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
 
+    def test_reads_macro_from_official_nested_package(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "official-download.zip"
+            inner_data = io.BytesIO()
+            with zipfile.ZipFile(inner_data, "w") as inner:
+                inner.writestr(t300ctl.GERGO_MACRO_FILENAME, self.CONTENT)
+            with zipfile.ZipFile(source, "w") as outer:
+                outer.writestr(
+                    "gerGoPrint3D/t300/macro_v3(extract!).zip", inner_data.getvalue()
+                )
+            self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
+
     def test_rejects_ambiguous_zip(self):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "macro_v3.zip"

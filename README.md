@@ -148,20 +148,21 @@ Dry run:
 ```bash
 python3 ./bin/t300ctl.py install-gergo \
   --host 10.42.42.x \
-  --source "$HOME/Downloads/macro_v3(extract!).zip"
+  --source "$HOME/Downloads/YOUR-CULTS-DOWNLOAD.zip"
 ```
 
-The exact archive name may differ. The helper searches the archive for
-`macro_z_tilt_via_knob.cfg`, validates it as a small UTF-8 Klipper
-configuration, and shows the proposed `printer.cfg` diff. It makes no changes
-without `--apply`.
+The exact archive name may differ. You can supply the complete ZIP downloaded
+from Cults, the nested `macro_v3(extract!).zip`, or the extracted CFG. The helper
+finds `macro_z_tilt_via_knob.cfg`, validates both archive layers and the macro as
+a small UTF-8 Klipper configuration, and shows the proposed `printer.cfg` diff.
+It makes no changes without `--apply`.
 
 After reviewing the output, install it:
 
 ```bash
 python3 ./bin/t300ctl.py install-gergo \
   --host 10.42.42.x \
-  --source "$HOME/Downloads/macro_v3(extract!).zip" \
+  --source "$HOME/Downloads/YOUR-CULTS-DOWNLOAD.zip" \
   --apply
 ```
 

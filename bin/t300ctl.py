@@ -8,6 +8,7 @@ import concurrent.futures
 import datetime as dt
 import difflib
 import hashlib
+import io
 import ipaddress
 import json
 import os
@@ -272,20 +273,55 @@ def read_macro(source: Path) -> bytes:
         content = source.read_bytes()
     elif source.suffix.lower() == ".zip":
         with zipfile.ZipFile(source) as archive:
-            matches = [
+            direct_matches = [
                 info
                 for info in archive.infolist()
                 if not info.is_dir()
                 and PurePosixPath(info.filename).name == GERGO_MACRO_FILENAME
             ]
-            if len(matches) != 1:
+            if len(direct_matches) == 1:
+                info = direct_matches[0]
+                if info.file_size > MAX_MACRO_FILE:
+                    raise T300Error("Macro in ZIP exceeds the 2 MiB safety limit")
+                content = archive.read(info)
+            elif len(direct_matches) > 1:
                 raise T300Error(
-                    f"Expected exactly one {GERGO_MACRO_FILENAME} in the ZIP; found {len(matches)}"
+                    f"Expected exactly one {GERGO_MACRO_FILENAME} in the ZIP; "
+                    f"found {len(direct_matches)}"
                 )
-            info = matches[0]
-            if info.file_size > MAX_MACRO_FILE:
-                raise T300Error("Macro in ZIP exceeds the 2 MiB safety limit")
-            content = archive.read(info)
+            else:
+                nested_matches = [
+                    info
+                    for info in archive.infolist()
+                    if not info.is_dir()
+                    and PurePosixPath(info.filename).name.lower()
+                    == "macro_v3(extract!).zip"
+                ]
+                if len(nested_matches) != 1:
+                    raise T300Error(
+                        f"Expected {GERGO_MACRO_FILENAME} or one official "
+                        "macro_v3(extract!).zip in the supplied archive"
+                    )
+                nested_info = nested_matches[0]
+                if nested_info.file_size > MAX_MACRO_FILE:
+                    raise T300Error("Nested macro ZIP exceeds the 2 MiB safety limit")
+                nested_bytes = archive.read(nested_info)
+                with zipfile.ZipFile(io.BytesIO(nested_bytes)) as nested_archive:
+                    inner_matches = [
+                        info
+                        for info in nested_archive.infolist()
+                        if not info.is_dir()
+                        and PurePosixPath(info.filename).name == GERGO_MACRO_FILENAME
+                    ]
+                    if len(inner_matches) != 1:
+                        raise T300Error(
+                            f"Expected exactly one {GERGO_MACRO_FILENAME} in the "
+                            f"nested ZIP; found {len(inner_matches)}"
+                        )
+                    inner_info = inner_matches[0]
+                    if inner_info.file_size > MAX_MACRO_FILE:
+                        raise T300Error("Macro in nested ZIP exceeds the 2 MiB safety limit")
+                    content = nested_archive.read(inner_info)
     else:
         raise T300Error("Macro source must be GerGo's ZIP or macro_z_tilt_via_knob.cfg")
 
@@ -640,7 +676,9 @@ def build_parser() -> argparse.ArgumentParser:
         "install-gergo", help="optionally install a user-supplied GerGo v3 macro"
     )
     add_host_args(install_parser)
-    install_parser.add_argument("--source", type=Path, required=True, help="purchased ZIP or CFG")
+    install_parser.add_argument(
+        "--source", type=Path, required=True, help="downloaded Cults ZIP, inner ZIP, or CFG"
+    )
     install_parser.add_argument("--output", type=Path, help="backup destination used with --apply")
     install_parser.add_argument(
         "--apply", action="store_true", help="perform uploads and restart after backing up"
