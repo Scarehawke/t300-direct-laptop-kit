@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly PROFILE_NAME="T300-Direct"
+readonly LINK_ADDRESS="10.42.42.1/24"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  t300-link up [--interface DEVICE]
+  t300-link status [--interface DEVICE]
+  t300-link down
+  t300-link interfaces
+
+Creates a private Ethernet link for a Comgrow/Sovol T300. NetworkManager runs
+DHCP on the laptop-side interface, while Wi-Fi remains the laptop's default
+Internet connection.
+
+The script refuses to take over an Ethernet interface that is already active.
+EOF
+}
+
+die() {
+  printf 'Error: %s\n' "$*" >&2
+  exit 1
+}
+
+need_command() {
+  command -v "$1" >/dev/null 2>&1 || die "Required command not found: $1"
+}
+
+list_interfaces() {
+  local device type state
+  while IFS=: read -r device type state; do
+    [[ "$type" == "ethernet" ]] || continue
+    [[ -e "/sys/class/net/$device/device" ]] || continue
+    printf '%-18s %s\n' "$device" "$state"
+  done < <(nmcli -t -f DEVICE,TYPE,STATE device status)
+}
+
+device_type() {
+  nmcli -g GENERAL.TYPE device show "$1" 2>/dev/null || true
+}
+
+device_state() {
+  nmcli -g GENERAL.STATE device show "$1" 2>/dev/null |
+    sed -E 's/^[0-9]+ \(([^)]+)\)$/\1/' || true
+}
+
+choose_interface() {
+  local requested="${1:-}"
+  local state=""
+  local -a candidates=()
+
+  if [[ -n "$requested" ]]; then
+    [[ "$(device_type "$requested")" == "ethernet" ]] ||
+      die "$requested is not an Ethernet interface"
+    [[ -e "/sys/class/net/$requested/device" ]] ||
+      die "$requested is not a physical Ethernet interface"
+    state="$(device_state "$requested")"
+    [[ "$state" != "connected" ]] ||
+      die "$requested is already connected; refusing to disrupt it"
+    printf '%s\n' "$requested"
+    return
+  fi
+
+  while IFS=: read -r device type state; do
+    [[ "$type" == "ethernet" ]] || continue
+    [[ -e "/sys/class/net/$device/device" ]] || continue
+    [[ "$state" != "connected" ]] || continue
+    candidates+=("$device")
+  done < <(nmcli -t -f DEVICE,TYPE,STATE device status)
+
+  case "${#candidates[@]}" in
+    0) die "No unused Ethernet interface found. Connect the cable, or pass --interface DEVICE." ;;
+    1) printf '%s\n' "${candidates[0]}" ;;
+    *)
+      list_interfaces >&2
+      die "More than one unused Ethernet interface found; pass --interface DEVICE"
+      ;;
+  esac
+}
+
+profile_exists() {
+  nmcli -t -f NAME connection show | grep -Fxq "$PROFILE_NAME"
+}
+
+link_up() {
+  local interface="$1"
+
+  if profile_exists; then
+    nmcli connection modify "$PROFILE_NAME" \
+      connection.interface-name "$interface" \
+      connection.autoconnect no \
+      ipv4.method shared \
+      ipv4.addresses "$LINK_ADDRESS" \
+      ipv4.never-default yes \
+      ipv6.method disabled
+  else
+    nmcli connection add \
+      type ethernet \
+      ifname "$interface" \
+      con-name "$PROFILE_NAME" \
+      connection.autoconnect no \
+      ipv4.method shared \
+      ipv4.addresses "$LINK_ADDRESS" \
+      ipv4.never-default yes \
+      ipv6.method disabled
+  fi
+
+  nmcli connection up "$PROFILE_NAME" ifname "$interface"
+  printf '\nPrivate T300 link is active on %s.\n' "$interface"
+  printf 'Laptop address: 10.42.42.1\n'
+  printf 'On the T300, open Advanced -> Show IP after the Ethernet cable is connected.\n'
+}
+
+link_status() {
+  local interface="${1:-}"
+  printf 'Profile:\n'
+  nmcli -f NAME,UUID,TYPE,DEVICE connection show "$PROFILE_NAME" 2>/dev/null ||
+    printf '  %s has not been created yet.\n' "$PROFILE_NAME"
+  printf '\nEthernet interfaces:\n'
+  list_interfaces
+  if [[ -n "$interface" ]]; then
+    printf '\nAddresses on %s:\n' "$interface"
+    nmcli -g IP4.ADDRESS device show "$interface" 2>/dev/null || true
+  fi
+}
+
+main() {
+  need_command nmcli
+  local command="${1:-}"
+  shift || true
+
+  local interface=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --interface)
+        [[ $# -ge 2 ]] || die "--interface requires a device name"
+        interface="$2"
+        shift 2
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      *) die "Unknown argument: $1" ;;
+    esac
+  done
+
+  case "$command" in
+    up)
+      interface="$(choose_interface "$interface")"
+      link_up "$interface"
+      ;;
+    status) link_status "$interface" ;;
+    down)
+      if profile_exists; then
+        nmcli connection down "$PROFILE_NAME" || true
+      else
+        printf '%s does not exist.\n' "$PROFILE_NAME"
+      fi
+      ;;
+    interfaces) list_interfaces ;;
+    -h|--help|"") usage ;;
+    *) die "Unknown command: $command" ;;
+  esac
+}
+
+main "$@"

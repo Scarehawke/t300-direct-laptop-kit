@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+t300-backups/
+*.zip
+macro_z_tilt_via_knob.cfg

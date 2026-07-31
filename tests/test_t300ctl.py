@@ -1,0 +1,187 @@
+from __future__ import annotations
+
+import hashlib
+import importlib.util
+import io
+from pathlib import Path
+import tempfile
+import unittest
+import zipfile
+
+
+MODULE_PATH = Path(__file__).resolve().parents[1] / "bin" / "t300ctl.py"
+SPEC = importlib.util.spec_from_file_location("t300ctl", MODULE_PATH)
+assert SPEC and SPEC.loader
+t300ctl = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(t300ctl)
+
+
+class NormalizeHostTests(unittest.TestCase):
+    def test_plain_ipv4(self):
+        self.assertEqual(t300ctl.normalize_base_url("10.42.42.2"), "http://10.42.42.2")
+
+    def test_host_and_port(self):
+        self.assertEqual(
+            t300ctl.normalize_base_url("http://printer.local:7125/"),
+            "http://printer.local:7125",
+        )
+
+    def test_rejects_path(self):
+        with self.assertRaises(t300ctl.T300Error):
+            t300ctl.normalize_base_url("http://printer.local/server/info")
+
+    def test_rejects_credentials(self):
+        with self.assertRaises(t300ctl.T300Error):
+            t300ctl.normalize_base_url("http://user:secret@printer.local")
+
+
+class RemotePathTests(unittest.TestCase):
+    def test_nested_path(self):
+        self.assertEqual(
+            str(t300ctl.validate_remote_path("printer_additions/module.cfg")),
+            "printer_additions/module.cfg",
+        )
+
+    def test_rejects_parent_escape(self):
+        with self.assertRaises(t300ctl.T300Error):
+            t300ctl.validate_remote_path("../printer.cfg")
+
+    def test_rejects_absolute_path(self):
+        with self.assertRaises(t300ctl.T300Error):
+            t300ctl.validate_remote_path("/etc/passwd")
+
+
+class ConfigPatchTests(unittest.TestCase):
+    def test_inserts_after_factory_macro_include(self):
+        original = "[include mainsail.cfg]\n[include Macro.cfg]\n[mcu]\n"
+        expected = (
+            "[include mainsail.cfg]\n"
+            "[include Macro.cfg]\n"
+            "[include macro_z_tilt_via_knob.cfg]\n"
+            "[mcu]\n"
+        )
+        actual, changed = t300ctl.patch_printer_cfg(original)
+        self.assertTrue(changed)
+        self.assertEqual(actual, expected)
+
+    def test_preserves_crlf(self):
+        original = "[include Macro.cfg]\r\n[mcu]\r\n"
+        actual, changed = t300ctl.patch_printer_cfg(original)
+        self.assertTrue(changed)
+        self.assertIn("[include macro_z_tilt_via_knob.cfg]\r\n", actual)
+
+    def test_is_idempotent(self):
+        original = "[include Macro.cfg]\n[include macro_z_tilt_via_knob.cfg]\n"
+        actual, changed = t300ctl.patch_printer_cfg(original)
+        self.assertFalse(changed)
+        self.assertEqual(actual, original)
+
+    def test_refuses_unknown_layout(self):
+        with self.assertRaises(t300ctl.T300Error):
+            t300ctl.patch_printer_cfg("[mcu]\n")
+
+
+class MacroReadTests(unittest.TestCase):
+    CONTENT = b"[gcode_macro T300_TEST]\ngcode:\n  RESPOND MSG=ok\n"
+
+    def test_reads_cfg(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / t300ctl.MACRO_FILENAME
+            source.write_bytes(self.CONTENT)
+            self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
+
+    def test_reads_one_macro_from_zip(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "macro_v3.zip"
+            with zipfile.ZipFile(source, "w") as archive:
+                archive.writestr("nested/" + t300ctl.MACRO_FILENAME, self.CONTENT)
+            self.assertEqual(t300ctl.read_macro(source), self.CONTENT)
+
+    def test_rejects_ambiguous_zip(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "macro_v3.zip"
+            with zipfile.ZipFile(source, "w") as archive:
+                archive.writestr("a/" + t300ctl.MACRO_FILENAME, self.CONTENT)
+                archive.writestr("b/" + t300ctl.MACRO_FILENAME, self.CONTENT)
+            with self.assertRaises(t300ctl.T300Error):
+                t300ctl.read_macro(source)
+
+    def test_extracts_macro_names(self):
+        self.assertEqual(t300ctl.macro_names(self.CONTENT), ["T300_TEST"])
+
+
+class BackupTests(unittest.TestCase):
+    class FakeClient:
+        base_url = "http://10.42.42.2"
+        files = {
+            "printer.cfg": b"[include Macro.cfg]\n",
+            "nested/Macro.cfg": b"[gcode_macro TEST]\ngcode:\n  M117 test\n",
+        }
+
+        def get_json(self, path):
+            if path != "/server/files/list?root=config":
+                raise AssertionError(path)
+            return [
+                {"path": name, "size": len(content), "permissions": "rw"}
+                for name, content in self.files.items()
+            ]
+
+        def download_bytes(self, root, filename, limit):
+            if root != "config" or len(self.files[filename]) > limit:
+                raise AssertionError((root, filename, limit))
+            return self.files[filename]
+
+    def test_backup_separates_remote_files_from_metadata(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "backup"
+            result = t300ctl.make_backup(self.FakeClient(), target)
+            self.assertEqual(result, target.resolve())
+            self.assertEqual(
+                (target / "config-root" / "printer.cfg").read_bytes(),
+                self.FakeClient.files["printer.cfg"],
+            )
+            self.assertTrue((target / "manifest.json").is_file())
+            self.assertTrue((target / "SHA256SUMS").is_file())
+
+    def test_backup_refuses_non_directory_destination(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "backup"
+            target.write_text("occupied", encoding="utf-8")
+            with self.assertRaises(t300ctl.T300Error):
+                t300ctl.make_backup(self.FakeClient(), target)
+
+
+class UploadTests(unittest.TestCase):
+    class Response(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self.close()
+
+    class Opener:
+        def __init__(self):
+            self.request = None
+
+        def open(self, request, timeout):
+            self.request = request
+            return UploadTests.Response(b'{"result":{"action":"create_file"}}')
+
+    def test_upload_uses_config_root_and_checksum(self):
+        client = t300ctl.Moonraker("10.42.42.2")
+        opener = self.Opener()
+        client.opener = opener
+        content = b"[gcode_macro TEST]\n"
+        result = client.upload_config(t300ctl.MACRO_FILENAME, content)
+
+        self.assertEqual(result["action"], "create_file")
+        self.assertIsNotNone(opener.request)
+        request_body = opener.request.data
+        self.assertIn(b'name="root"\r\n\r\nconfig\r\n', request_body)
+        self.assertIn(t300ctl.MACRO_FILENAME.encode(), request_body)
+        self.assertIn(hashlib.sha256(content).hexdigest().encode(), request_body)
+        self.assertIn(content, request_body)
+
+
+if __name__ == "__main__":
+    unittest.main()
