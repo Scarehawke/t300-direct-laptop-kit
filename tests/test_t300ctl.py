@@ -176,6 +176,37 @@ class BackupTests(unittest.TestCase):
                 t300ctl.make_backup(self.FakeClient(), target)
 
 
+class ConfigPermissionsTests(unittest.TestCase):
+    class ModernClient:
+        def get_json(self, path):
+            if path != "/server/files/roots":
+                raise AssertionError(path)
+            return [{"name": "config", "permissions": "rw"}]
+
+    class FactoryClient:
+        def get_json(self, path):
+            if path == "/server/files/roots":
+                raise t300ctl.T300Error("Moonraker returned HTTP 404: Not Found")
+            if path == "/server/files/list?root=config":
+                return [
+                    {"path": "Macro.cfg", "permissions": "rw"},
+                    {"path": "printer.cfg", "permissions": "rw"},
+                ]
+            raise AssertionError(path)
+
+    def test_reads_modern_root_permissions(self):
+        self.assertEqual(
+            t300ctl.config_permissions(self.ModernClient()),
+            "rw",
+        )
+
+    def test_falls_back_to_factory_file_permissions(self):
+        self.assertEqual(
+            t300ctl.config_permissions(self.FactoryClient()),
+            "rw",
+        )
+
+
 class UploadTests(unittest.TestCase):
     class Response(io.BytesIO):
         def __enter__(self):

@@ -421,7 +421,21 @@ def open_level_geometry(client: Moonraker) -> dict[str, float]:
 
 
 def config_permissions(client: Moonraker) -> str:
-    roots = client.get_json("/server/files/roots")
+    try:
+        roots = client.get_json("/server/files/roots")
+    except T300Error as exc:
+        if "HTTP 404" not in str(exc):
+            raise
+        files = client.get_json("/server/files/list?root=config")
+        if not isinstance(files, list):
+            raise T300Error("Moonraker returned an unexpected config file list") from exc
+        for item in files:
+            if isinstance(item, dict) and item.get("path") == "printer.cfg":
+                return str(item.get("permissions", ""))
+        raise T300Error(
+            "Moonraker does not report permissions for printer.cfg"
+        ) from exc
+
     if not isinstance(roots, list):
         raise T300Error("Moonraker returned an unexpected roots response")
     for root in roots:
