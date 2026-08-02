@@ -13,8 +13,9 @@ Usage:
   t300-link interfaces
 
 Creates a private Ethernet link for a Comgrow/Sovol T300. NetworkManager runs
-DHCP on the laptop-side interface, while Wi-Fi remains the laptop's default
-Internet connection.
+DHCP on the laptop-side interface. Internet access and Wi-Fi are not required.
+If the laptop has another network connection, this profile leaves its default
+route unchanged.
 
 The script refuses to take over an Ethernet interface that is already active.
 EOF
