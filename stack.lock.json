@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "profile": "stable",
+  "target": {
+    "board": "MKS-Klipad50",
+    "architecture": "aarch64",
+    "distribution": "Debian 13 Trixie",
+    "kernel": "6.18.33",
+    "printer": "Comgrow/Sovol T300",
+    "vendor_baseline": "1.5.2"
+  },
+  "base_image": {
+    "name": "Armbian_26.5.1_Mksklipad50_trixie_current_6.18.33_minimal.img.xz",
+    "version": "26.5.1",
+    "url": "https://dl.armbian.com/mksklipad50/archive/Armbian_26.5.1_Mksklipad50_trixie_current_6.18.33_minimal.img.xz",
+    "sha256": "fdbbb1fe15d85aa6fc82c609f26e70acefcb6b2392c29d02fa79942751eb37ac",
+    "signature_url": "https://dl.armbian.com/mksklipad50/archive/Armbian_26.5.1_Mksklipad50_trixie_current_6.18.33_minimal.img.xz.asc",
+    "signature_sha256": "7769aaae377a0e78488f30e01e75132dd9599282adc5bdf1f46bc264f98b53b5",
+    "checksum_url": "https://dl.armbian.com/mksklipad50/archive/Armbian_26.5.1_Mksklipad50_trixie_current_6.18.33_minimal.img.xz.sha",
+    "checksum_sha256": "9cc4214b44d15a4bed09bf6b57f12cab9d650691bce8ddca47762b5088bc9b58",
+    "signing_key": {
+      "name": "armbian-image-signing.key",
+      "url": "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xDF00FAF1C577104B50BF1D0093D6889F9F0E78D5",
+      "sha256": "f4a2a8cde035572584e5f7457519e9a5cd042c9f8e5ed39d68b1da61591732a1",
+      "fingerprint": "DF00FAF1C577104B50BF1D0093D6889F9F0E78D5",
+      "verification_guide": "https://docs.armbian.com/User-Guide_Getting-Started/"
+    },
+    "license": "Armbian-distribution"
+  },
+  "components": [
+    {
+      "name": "klipper",
+      "version": "v0.13.0",
+      "repository": "https://github.com/Klipper3d/klipper.git",
+      "commit": "61c0c8d2ef40340781835dd53fb04cc7a454e37a",
+      "archive_url": "https://codeload.github.com/Klipper3d/klipper/tar.gz/61c0c8d2ef40340781835dd53fb04cc7a454e37a",
+      "archive_sha256": "eebce17e3045e5b8e200dbbfd9e2338022ff87b430c2d1379faa2e72a21ec7fe",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "moonraker",
+      "version": "v0.10.0",
+      "repository": "https://github.com/Arksine/moonraker.git",
+      "commit": "16e530eb663218faa6ccd97ffb0583f1880e2983",
+      "archive_url": "https://codeload.github.com/Arksine/moonraker/tar.gz/16e530eb663218faa6ccd97ffb0583f1880e2983",
+      "archive_sha256": "f223f0ccd26d6a69616bc33e95df1ee4c9dfa4fd66fbbf8d3230359bffa865a9",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "mainsail",
+      "version": "v2.18.2",
+      "repository": "https://github.com/mainsail-crew/mainsail.git",
+      "commit": "009ae11fc0676a6f3b0d4697f5d28aa345c697ff",
+      "archive_url": "https://codeload.github.com/mainsail-crew/mainsail/tar.gz/009ae11fc0676a6f3b0d4697f5d28aa345c697ff",
+      "archive_sha256": "980b14d869a076ee980885b3ce9c24bd92a2778398ae6c2a2eae08a7a374d7f2",
+      "release_asset": {
+        "name": "mainsail-v2.18.2.zip",
+        "url": "https://github.com/mainsail-crew/mainsail/releases/download/v2.18.2/mainsail.zip",
+        "sha256": "df2ba7c301f7bfc8ac9f122741a6ba08356d679ecfa1f62f898d0337802d5de5",
+        "size": 3133520,
+        "format": "zip",
+        "version": "v2.18.2"
+      },
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "klipperscreen",
+      "version": "v0.4.7",
+      "repository": "https://github.com/KlipperScreen/KlipperScreen.git",
+      "commit": "c5fcc279518e78af90071ee2bf46bf36c007fc16",
+      "archive_url": "https://codeload.github.com/KlipperScreen/KlipperScreen/tar.gz/c5fcc279518e78af90071ee2bf46bf36c007fc16",
+      "archive_sha256": "02cc4fd1f6ce8432193d861e0a1cf8daa8be4e252ce499b92addf434e6e8a9fa",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "crowsnest",
+      "version": "v5.0.0",
+      "repository": "https://github.com/mainsail-crew/crowsnest.git",
+      "commit": "3e82384cacc09451d25f0214ebcee20c89b73704",
+      "archive_url": "https://codeload.github.com/mainsail-crew/crowsnest/tar.gz/3e82384cacc09451d25f0214ebcee20c89b73704",
+      "archive_sha256": "4d5db5f7834d0f7051d1c3f56eaa0f8772198676e585c7c429d838208afedb4e",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "ustreamer",
+      "version": "v6.60",
+      "repository": "https://github.com/pikvm/ustreamer.git",
+      "commit": "ef4a4cb8ad5bb0087c1a8a6daa24dcd698a27d38",
+      "archive_url": "https://codeload.github.com/pikvm/ustreamer/tar.gz/ef4a4cb8ad5bb0087c1a8a6daa24dcd698a27d38",
+      "archive_sha256": "d94eaa984906435f25c9f63327d32e5c296ea5d6375f226a533aab1fa9a7f084",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "name": "mainsail-config",
+      "version": "ff3869a6",
+      "repository": "https://github.com/mainsail-crew/mainsail-config.git",
+      "commit": "ff3869a621db17ce3ef660adbbd3fa321995ac42",
+      "archive_url": "https://codeload.github.com/mainsail-crew/mainsail-config/tar.gz/ff3869a621db17ce3ef660adbbd3fa321995ac42",
+      "archive_sha256": "600a8568a18e88cdef0f193c794aae5e04e044413ac6752a42472afe46469cdf",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "kamp",
+      "version": "b0dad8ec",
+      "repository": "https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging.git",
+      "commit": "b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0",
+      "archive_url": "https://codeload.github.com/kyleisah/Klipper-Adaptive-Meshing-Purging/tar.gz/b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0",
+      "archive_sha256": "fb6e03cb603993ddbedf8c22bf6a6faa7a0551f8ddc2c8be82fee8be90672042",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "moonraker-timelapse",
+      "version": "c7fff11e",
+      "repository": "https://github.com/mainsail-crew/moonraker-timelapse.git",
+      "commit": "c7fff11e542b95e0e15b8bb1443cea8159ac0274",
+      "archive_url": "https://codeload.github.com/mainsail-crew/moonraker-timelapse/tar.gz/c7fff11e542b95e0e15b8bb1443cea8159ac0274",
+      "archive_sha256": "efbf24ac24309440761425c9e873772882727e5f7513c6a3fc6d04601d02ea76",
+      "license": "GPL-3.0-only"
+    }
+  ],
+  "compatibility_patches": [
+    {
+      "name": "klipper-python313-requirements",
+      "component": "klipper",
+      "base_commit": "61c0c8d2ef40340781835dd53fb04cc7a454e37a",
+      "condition": "python_version >= 3.12",
+      "upstream_commit": "1af219fad6c2abda1eadbd4c48ad541110100f4c",
+      "upstream_url": "https://github.com/Klipper3d/klipper/commit/1af219fad6c2abda1eadbd4c48ad541110100f4c",
+      "path": "mainline/patches/klipper-python313-requirements.patch",
+      "sha256": "52e4ea90b039c29e99adee176f609271229a23684caf9ec8375df2aba2c26cd0",
+      "input_path": "scripts/klippy-requirements.txt",
+      "input_sha256": "9156745687308219560b157885c3da7b664f155cb53b73b3c853196bfbf79281",
+      "output_sha256": "7ae12be1d929dec9b609a745f9c46fdfa31f8ec608d2aedc4f977aa18dd626de",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "klipper-source-archive-version",
+      "component": "klipper",
+      "base_commit": "61c0c8d2ef40340781835dd53fb04cc7a454e37a",
+      "origin": "local",
+      "condition": "source archive has no .git metadata",
+      "design_reference_url": "https://github.com/Klipper3d/klipper/blob/61c0c8d2ef40340781835dd53fb04cc7a454e37a/klippy/util.py#L128-L135",
+      "path": "mainline/patches/klipper-source-archive-version.patch",
+      "sha256": "a9b5d69671bdc875a954a99919a59cb8b2451d294585c40ee380056769139e71",
+      "input_path": "scripts/buildcommands.py",
+      "input_sha256": "474c315d39f208aac54deb2a4e9098aeb391de89fedc44cdbc8ba94d8a1946d5",
+      "output_sha256": "e04364bc7f356fccb0975792d694b8fe2777b4e97e36cde693281ae42e4d024d",
+      "license": "GPL-3.0-only"
+    },
+    {
+      "name": "kamp-line-purge-bounds",
+      "component": "kamp",
+      "base_commit": "b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0",
+      "origin": "local",
+      "condition": "production KAMP purge must remain within configured axes and require a safe object margin",
+      "design_reference_url": "https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging/blob/b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0/Configuration/Line_Purge.cfg",
+      "path": "mainline/patches/kamp-line-purge-bounds.patch",
+      "sha256": "3556c821a0ea75f807e5c10d521cec045ec874b0a2776f56ab16174f7da108f7",
+      "input_path": "Configuration/Line_Purge.cfg",
+      "input_sha256": "7fa5b694710fbe5288be06503e44a827d62474d79b284726eb41f659c99d66ec",
+      "output_sha256": "7ddd2c5c0f938bac9401607612685fd4e98bcbce1f496ab6740a62b109e86e77",
+      "license": "GPL-3.0-only"
+    }
+  ],
+  "firmware": {
+    "provenance_path": "mainline/firmware/provenance.json",
+    "provenance_sha256": "82b0b95d31f3c6bf5bdeffa604d4dffae45f6996af23d1277d3f97395dd51ef2",
+    "build_count": 2,
+    "flash_capability": false
+  },
+  "python_artifacts": {
+    "path": "mainline/build/python-artifacts.lock.json",
+    "sha256": "f1b5991b54366dfd4bac5cd711fa84836033b3f5b5a0ef5c45e057c97ce5d3f2",
+    "target": {
+      "python": "3.13.5",
+      "abi": "cp313",
+      "architecture": "aarch64"
+    }
+  },
+  "debian_artifacts": {
+    "path": "mainline/build/debian-artifacts.lock.json",
+    "sha256": "fdcd235dd631c3763c5bea11e99a4c190c44f8a3a1de4be0026c2814ef64c674",
+    "root_policy_path": "mainline/build/debian-root-packages.json",
+    "root_policy_sha256": "d617a154689318b29128e0369400e2743feeb55f959c693e1443216ff4368082",
+    "artifact_count": 353,
+    "target": {
+      "distribution": "Debian 13 Trixie",
+      "architecture": "arm64"
+    }
+  },
+  "next": {
+    "klipper_ref": "master",
+    "last_resolved_commit": "9c1ae230eaebd5ec4df76d5a87537e2f35defab0",
+    "resolved_on": "2026-08-04",
+    "deployable": false
+  }
+}

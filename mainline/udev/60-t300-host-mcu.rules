@@ -1,0 +1,2 @@
+# The host MCU receives access only to the stock SPI accelerometer device.
+KERNEL=="spidev0.0", GROUP="t300-host-mcu", MODE="0660"

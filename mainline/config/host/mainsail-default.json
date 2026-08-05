@@ -1,0 +1,151 @@
+{
+  "general": {
+    "printername": "T300"
+  },
+  "navigation": {
+    "entries": [
+      {"type": "route", "title": "Dashboard", "visible": true, "position": 10},
+      {"type": "route", "title": "Webcam", "visible": true, "position": 20},
+      {"type": "route", "title": "Console", "visible": false, "position": 30},
+      {"type": "route", "title": "Heightmap", "visible": false, "position": 40},
+      {"type": "route", "title": "G-Code Files", "visible": true, "position": 50},
+      {"type": "route", "title": "G-Code Viewer", "visible": false, "position": 60},
+      {"type": "route", "title": "History", "visible": true, "position": 70},
+      {"type": "route", "title": "Timelapse", "visible": true, "position": 80},
+      {"type": "route", "title": "Machine", "visible": false, "position": 90}
+    ]
+  },
+  "uiSettings": {
+    "confirmOnEmergencyStop": false,
+    "confirmOnCancelJob": true,
+    "boolHideUploadAndPrintButton": true,
+    "lockSlidersOnTouchDevices": true,
+    "hideSaveConfigForBedMash": true,
+    "navigationStyle": "iconsAndText",
+    "defaultNavigationStateSetting": "alwaysOpen"
+  },
+  "macros": {
+    "mode": "expert",
+    "hiddenMacros": [],
+    "macrogroups": {
+      "t300-owner-actions": {
+        "id": "t300-owner-actions",
+        "name": "Owner Actions",
+        "color": "primary",
+        "showInStandby": true,
+        "showInPrinting": false,
+        "showInPause": true,
+        "macros": [
+          {
+            "pos": 1,
+            "name": "BUILD_PLATE_READY",
+            "color": "success",
+            "showInStandby": true,
+            "showInPrinting": false,
+            "showInPause": false
+          },
+          {
+            "pos": 2,
+            "name": "HOME_PRINTER",
+            "color": "warning",
+            "showInStandby": true,
+            "showInPrinting": false,
+            "showInPause": false
+          },
+          {
+            "pos": 3,
+            "name": "LOAD_FILAMENT",
+            "color": "group",
+            "showInStandby": false,
+            "showInPrinting": false,
+            "showInPause": true
+          },
+          {
+            "pos": 4,
+            "name": "UNLOAD_FILAMENT",
+            "color": "group",
+            "showInStandby": false,
+            "showInPrinting": false,
+            "showInPause": true
+          }
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "nonExpandPanels": {
+      "mobile": [],
+      "tablet": [],
+      "desktop": [],
+      "widescreen": []
+    },
+    "mobileLayout": [
+      {"name": "webcam", "visible": true},
+      {"name": "macrogroup_t300-owner-actions", "visible": true},
+      {"name": "afc", "visible": false},
+      {"name": "toolhead-control", "visible": false},
+      {"name": "extruder-control", "visible": false},
+      {"name": "macros", "visible": false},
+      {"name": "led-effects", "visible": false},
+      {"name": "machine-settings", "visible": false},
+      {"name": "miniconsole", "visible": false},
+      {"name": "miscellaneous", "visible": false},
+      {"name": "spoolman", "visible": false},
+      {"name": "mmu", "visible": false},
+      {"name": "temperature", "visible": false}
+    ],
+    "tabletLayout1": [
+      {"name": "webcam", "visible": true},
+      {"name": "afc", "visible": false},
+      {"name": "toolhead-control", "visible": false},
+      {"name": "extruder-control", "visible": false},
+      {"name": "macros", "visible": false},
+      {"name": "led-effects", "visible": false},
+      {"name": "machine-settings", "visible": false}
+    ],
+    "tabletLayout2": [
+      {"name": "macrogroup_t300-owner-actions", "visible": true},
+      {"name": "miniconsole", "visible": false},
+      {"name": "miscellaneous", "visible": false},
+      {"name": "spoolman", "visible": false},
+      {"name": "mmu", "visible": false},
+      {"name": "temperature", "visible": false}
+    ],
+    "desktopLayout1": [
+      {"name": "webcam", "visible": true},
+      {"name": "afc", "visible": false},
+      {"name": "toolhead-control", "visible": false},
+      {"name": "extruder-control", "visible": false},
+      {"name": "macros", "visible": false},
+      {"name": "led-effects", "visible": false},
+      {"name": "machine-settings", "visible": false}
+    ],
+    "desktopLayout2": [
+      {"name": "macrogroup_t300-owner-actions", "visible": true},
+      {"name": "miniconsole", "visible": false},
+      {"name": "miscellaneous", "visible": false},
+      {"name": "spoolman", "visible": false},
+      {"name": "mmu", "visible": false},
+      {"name": "temperature", "visible": false}
+    ],
+    "widescreenLayout1": [
+      {"name": "webcam", "visible": true},
+      {"name": "afc", "visible": false},
+      {"name": "toolhead-control", "visible": false},
+      {"name": "extruder-control", "visible": false},
+      {"name": "macros", "visible": false}
+    ],
+    "widescreenLayout2": [
+      {"name": "macrogroup_t300-owner-actions", "visible": true},
+      {"name": "led-effects", "visible": false},
+      {"name": "machine-settings", "visible": false},
+      {"name": "miniconsole", "visible": false}
+    ],
+    "widescreenLayout3": [
+      {"name": "miscellaneous", "visible": false},
+      {"name": "spoolman", "visible": false},
+      {"name": "mmu", "visible": false},
+      {"name": "temperature", "visible": false}
+    ]
+  }
+}

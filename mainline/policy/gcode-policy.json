@@ -1,0 +1,54 @@
+{
+  "policy_version": 1,
+  "max_file_bytes": 536870912,
+  "max_line_bytes": 16384,
+  "max_lines": 5000000,
+  "max_findings": 256,
+  "max_objects": 4096,
+  "max_polygon_points": 2048,
+  "max_total_object_points": 65536,
+  "max_candidate_files": 1024,
+  "max_spool_bytes": 1073741824,
+  "min_system_free_bytes": 1073741824,
+  "max_rejection_records": 256,
+  "max_timelapse_frames": 10000,
+  "kamp_purge_margin": 20.0,
+  "kamp_purge_amount": 30.0,
+  "kamp_breakaway_distance": 10.0,
+  "nozzle_temp_max": 300.0,
+  "bed_temp_max": 100.0,
+  "hotend_max_power": 1.0,
+  "bed_max_power": 1.0,
+  "min_extrude_temp_floor": 150.0,
+  "max_velocity": 600.0,
+  "max_accel": 12000.0,
+  "max_z_velocity": 12.0,
+  "max_z_accel": 100.0,
+  "max_square_corner_velocity": 3.0,
+  "minimum_cruise_ratio_floor": 0.75,
+  "max_extrude_cross_section": 5.0,
+  "max_extrude_only_distance": 100.0,
+  "max_extrude_only_velocity": 2000.0,
+  "max_extrude_only_accel": 10000.0,
+  "max_instantaneous_corner_velocity": 10.0,
+  "max_stationary_positive_extrude": 5.0,
+  "filament_diameter": 1.75,
+  "x": {
+    "minimum": -2.0,
+    "maximum": 302.0
+  },
+  "y": {
+    "minimum": -6.0,
+    "maximum": 302.0
+  },
+  "z": {
+    "minimum": -5.0,
+    "maximum": 370.0
+  },
+  "tmc_current_max": {
+    "stepper_x": 1.1,
+    "stepper_y": 1.5,
+    "stepper_z": 0.75,
+    "extruder": 1.0
+  }
+}

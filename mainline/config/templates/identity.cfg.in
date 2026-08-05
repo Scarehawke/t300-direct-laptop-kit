@@ -1,0 +1,3 @@
+# Generated locally. Never commit the rendered serial identity.
+[mcu]
+serial: @MCU_SERIAL@

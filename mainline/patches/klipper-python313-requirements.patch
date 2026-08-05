@@ -1,0 +1,18 @@
+diff --git a/scripts/klippy-requirements.txt b/scripts/klippy-requirements.txt
+index 70467ef7..00d2c1eb 100644
+--- a/scripts/klippy-requirements.txt
++++ b/scripts/klippy-requirements.txt
+@@ -2,10 +2,11 @@
+ # the Klipper host software (Klippy).  These package requirements are
+ # typically installed via the command:
+ #   pip install -r klippy-requirements.txt
+-cffi==1.14.6
++cffi==1.14.6 ; python_version < '3.12'
++cffi==1.17.1 ; python_version >= '3.12'
+ pyserial==3.4
+ greenlet==2.0.2 ; python_version < '3.12'
+-greenlet==3.0.3 ; python_version >= '3.12'
++greenlet==3.1.1 ; python_version >= '3.12'
+ Jinja2==2.11.3
+ python-can==3.3.4
+ markupsafe==1.1.1

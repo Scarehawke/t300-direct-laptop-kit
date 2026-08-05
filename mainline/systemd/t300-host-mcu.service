@@ -1,0 +1,53 @@
+[Unit]
+Description=T300 maintenance-only Klipper Linux host MCU
+Before=klipper-maintenance.service
+PartOf=klipper-maintenance.service
+ConditionPathExists=/dev/spidev0.0
+ConditionPathExists=/opt/t300/firmware/linux-host/klipper_mcu
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=t300-host-mcu
+Group=t300-comms
+SupplementaryGroups=t300-host-mcu
+RuntimeDirectory=t300-host-mcu
+RuntimeDirectoryMode=0750
+ExecStart=/opt/t300/firmware/linux-host/klipper_mcu -r -I /run/t300-host-mcu/klipper_host_mcu
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=10
+MemoryHigh=48M
+MemoryMax=64M
+CPUWeight=900
+IOWeight=500
+TasksMax=16
+LimitNOFILE=64
+LimitMEMLOCK=infinity
+OOMScoreAdjust=-400
+CapabilityBoundingSet=CAP_IPC_LOCK CAP_SYS_NICE
+AmbientCapabilities=CAP_IPC_LOCK CAP_SYS_NICE
+DevicePolicy=closed
+DeviceAllow=/dev/spidev0.0 rw
+DeviceAllow=/dev/ptmx rw
+DeviceAllow=char-pts rw
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=no
+RestrictAddressFamilies=AF_UNIX
+ReadOnlyPaths=/etc/t300 /opt/t300/firmware
+ReadWritePaths=/run/t300-host-mcu
+UMask=0027
+
+# No [Install] section. Attended maintenance pulls this service in, and
+# stopping maintenance stops it again.

@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "generated": "2026-08-03",
+  "sources": [
+    {
+      "id": "klipper-v0.12.0",
+      "url": "https://github.com/Klipper3d/klipper.git",
+      "revision": "0d67d9c45d2dc39f8b4be7d1bb54b94b2698a2b6",
+      "license": "GPL-3.0",
+      "purpose": "Exact upstream compatibility harness for the vendor firmware base",
+      "decision": "test-only"
+    },
+    {
+      "id": "kamp",
+      "url": "https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging.git",
+      "revision": "b0dad8ec9ee31cb644b94e39d4b8a8fb9d6c9ba0",
+      "license": "GPL-3.0",
+      "purpose": "Pinned Smart Park and Line Purge implementation; adaptive mesh excluded",
+      "decision": "t300-park-and-purge-only"
+    },
+    {
+      "id": "kamp-lite",
+      "url": "https://github.com/3DPrintDemon/KAMP_LiTE.git",
+      "revision": "9288cdb220bd1fb39db57035ac751e8091ce9b78",
+      "license": "GPL-3.0",
+      "purpose": "Native-adaptive-mesh purge and parking reference",
+      "decision": "reference-only"
+    },
+    {
+      "id": "dkeu",
+      "url": "https://github.com/3DPrintDemon/Demon_Klipper_Essentials_Unified.git",
+      "revision": "1b1a8b8068f5617893965bfbe50e8d76530fdc6a",
+      "license": "GPL-3.0",
+      "purpose": "Legacy-Klipper lifecycle and diagnostics reference",
+      "decision": "reference-only"
+    },
+    {
+      "id": "mainsail-config",
+      "url": "https://github.com/mainsail-crew/mainsail-config.git",
+      "revision": "ff3869a621db17ce3ef660adbbd3fa321995ac42",
+      "license": "GPL-3.0",
+      "purpose": "Pinned pause, resume, cancel, and client-variable runtime component",
+      "decision": "runtime-candidate-generated-with-path-adaptation"
+    },
+    {
+      "id": "klippain",
+      "url": "https://github.com/Frix-x/klippain.git",
+      "revision": "ac565f2f85dff846a584be600b593b76c8afe52b",
+      "license": "GPL-3.0",
+      "purpose": "Full-stack Klipper configuration reference",
+      "decision": "reference-only"
+    },
+    {
+      "id": "jschuh-klipper-macros",
+      "url": "https://github.com/jschuh/klipper-macros.git",
+      "revision": "ebae0a3b6ec4bf7096e7b068967b283992078f5f",
+      "license": "GPL-3.0",
+      "purpose": "Parameterized lifecycle and adaptive-mesh reference",
+      "decision": "reference-only"
+    },
+    {
+      "id": "shaketune",
+      "url": "https://github.com/Frix-x/klippain-shaketune.git",
+      "revision": "354ee4be6db218715239f7b9411c2c37fdea23dd",
+      "license": "GPL-3.0",
+      "purpose": "Laptop-side resonance graphing from raw accelerometer data",
+      "decision": "laptop-tool"
+    },
+    {
+      "id": "ellis-print-tuning-guide",
+      "url": "https://github.com/AndrewEllis93/Print-Tuning-Guide.git",
+      "revision": "bef55254f88044149478561e6f6e7cea3d1aa352",
+      "license": "NOASSERTION",
+      "purpose": "Calibration ordering and attended TEST_SPEED reference",
+      "decision": "reference-only"
+    },
+    {
+      "id": "klipper-auto-speed",
+      "url": "https://github.com/Anonoei/klipper_auto_speed.git",
+      "revision": "63315317c465edc135e4712e4327de5b8b852082",
+      "license": "MIT",
+      "purpose": "Automated motion-limit search evaluated for compatibility",
+      "decision": "rejected-for-stock-t300"
+    },
+    {
+      "id": "tmc-autotune",
+      "url": "https://github.com/andrewmcgr/klipper_tmc_autotune.git",
+      "revision": "3d1ab9f106910604a046b4140b3755935cfaa0c9",
+      "license": "GPL-3.0",
+      "purpose": "TMC register tuning evaluated for compatibility",
+      "decision": "deferred-until-motors-identified"
+    },
+    {
+      "id": "z-calibration",
+      "url": "https://github.com/protoloft/klipper_z_calibration.git",
+      "revision": "374d487feabe738e910b1b1d2f68ceaf3742a235",
+      "license": "GPL-3.0",
+      "purpose": "Automatic nozzle-contact Z calibration evaluated for compatibility",
+      "decision": "rejected-for-stock-hardware"
+    },
+    {
+      "id": "moonraker-timelapse",
+      "url": "https://github.com/mainsail-crew/moonraker-timelapse.git",
+      "revision": "c7fff11e542b95e0e15b8bb1443cea8159ac0274",
+      "license": "GPL-3.0",
+      "purpose": "Comparison with the vendor-bundled timelapse macro",
+      "decision": "retain-vendor-version"
+    }
+  ]
+}

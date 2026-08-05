@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "target": "Comgrow/Sovol T300 stock controller and MKS-Klipad50",
+  "klipper": {
+    "version": "v0.13.0",
+    "commit": "61c0c8d2ef40340781835dd53fb04cc7a454e37a"
+  },
+  "vendor_evidence": {
+    "release": "COMGROW_T300_V1.5.2_20240316",
+    "source_url": "https://wiki.sovol3d.com/en/T300",
+    "full_image_sha256": "7fe893c9a5f2a8f64500f7fc1f1681c48754c7665c4215f5fdc0395b922de3ba",
+    "application_package_sha256": "0e3953bde38cc0cbe40cb7dc08ec6f1d4aeafb42fe820a21f54a51777d647513",
+    "vendor_klipper_commit": "28f06a104bc0cfe3a7d36db343ade5a805b3e132",
+    "vendor_stm32_config_sha256": "83b592d63a52d07b682c9432feb1d8d3b081105d856da1f815468d62e4134056",
+    "vendor_linux_config_sha256": "f2fcb6b355e65d17af7ed33a121b06f91327528d0292637ad9aa1600e4f60b11",
+    "vendor_recovery_firmware_sha256": "7de03716925f3a3ff612f76eefd213d244c9928a7dee5c38ffc0d83e78a760e8",
+    "vendor_update_script_sha256": "080fb1754ce3f762fb5710bb5cbef7597c65f0585a7ed4a822680e9e4682b72e",
+    "recovery_vector_initial_stack_pointer": "0x20010000",
+    "recovery_vector_reset_handler": "0x0800c35d"
+  },
+  "builds": {
+    "controller": {
+      "config": "stm32f401.config",
+      "config_sha256": "47ea24beba65b43408346570133e726361fca90488b94ea02a7e119f4affb161",
+      "mcu": "stm32f401xc",
+      "clock_hz": 84000000,
+      "clock_reference_hz": 8000000,
+      "transport": "USB PA11/PA12",
+      "flash_base": "0x08000000",
+      "application_address": "0x08008000",
+      "flash_size_bytes": 262144,
+      "maximum_application_bytes": 229376,
+      "output": "klipper.bin"
+    },
+    "linux_host": {
+      "config": "linux-host.config",
+      "config_sha256": "f4fb8a5fd11f5bbe314e504fe7769b0b576b152f0a2fa042bb0a7f9c6148a81e",
+      "mcu": "linux",
+      "clock_hz": 50000000,
+      "spi_device": "/dev/spidev0.0",
+      "output": "klipper.elf"
+    }
+  },
+  "dfu_evidence_only": {
+    "rom_usb_id": "0483:df11",
+    "flash_address": "0x08008000",
+    "rk3328_boot0_line": "GPIO2_C6 (vendor global GPIO 86)",
+    "rk3328_reset_line": "GPIO2_C3 (vendor global GPIO 83)",
+    "deployment_status": "blocked until line identity, polarity, DFU entry, recovery firmware, and rollback are physically proven on the pinned candidate kernel"
+  }
+}

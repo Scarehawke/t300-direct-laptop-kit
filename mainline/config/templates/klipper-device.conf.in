@@ -1,0 +1,6 @@
+[Unit]
+ConditionPathExists=@MCU_SERIAL@
+
+[Service]
+DevicePolicy=closed
+DeviceAllow=@MCU_SERIAL@ rw

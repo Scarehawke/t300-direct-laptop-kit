@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "product": "OrcaSlicer",
+  "version": "2.4.2",
+  "artifact": "OrcaSlicer.AppImage",
+  "bytes": 137759224,
+  "sha256": "d12fb8c8eac1aecd2dfb6377acd48f994f8fa439ed5292fa532dd82880f029fd",
+  "purpose": "Exact slicer used to build and audit the T300 calibration and Frieren G-code",
+  "policy": "Verify the AppImage hash before every headless build; never run printer-side updates"
+}

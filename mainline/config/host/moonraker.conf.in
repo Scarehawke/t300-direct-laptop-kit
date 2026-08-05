@@ -1,0 +1,79 @@
+[server]
+host: 127.0.0.1
+port: 7125
+klippy_uds_address: /run/t300/klipper/klippy.sock
+max_upload_size: 512
+
+[authorization]
+force_logins: False
+enable_api_key: False
+trusted_clients:
+  127.0.0.0/8
+  ::1/128
+cors_domains:
+  http://@PRINTER_HOSTNAME@
+  http://@PRINTER_HOSTNAME@.local
+
+[database]
+database_path: /var/lib/t300/moonraker-data/database
+
+[file_manager]
+enable_object_processing: False
+enable_config_write_access: False
+
+[job_queue]
+load_on_startup: False
+automatic_transition: False
+
+[history]
+
+[timelapse]
+output_path: /mnt/t300-data/timelapse/videos
+frame_path: /mnt/t300-data/timelapse/frames
+storage_mount_path: /mnt/t300-data
+minimum_free_bytes: 1073741824
+maximum_frame_bytes: 16777216
+maximum_frames: 10000
+maximum_video_bytes: 1073741824
+render_timeout_seconds: 1800
+ffmpeg_binary_path: /usr/bin/ffmpeg
+ffprobe_binary_path: /usr/bin/ffprobe
+enabled: True
+mode: layermacro
+snapshoturl: http://127.0.0.1:8080/?action=snapshot
+stream_delay_compensation: 0.05
+gcode_verbose: False
+parkhead: False
+parkpos: back_left
+park_custom_pos_x: 10.0
+park_custom_pos_y: 10.0
+park_custom_pos_dz: 0.0
+park_travel_speed: 100
+park_retract_speed: 15
+park_extrude_speed: 15
+park_retract_distance: 1.0
+park_extrude_distance: 1.0
+park_time: 0.1
+fw_retract: False
+hyperlapse_cycle: 30
+autorender: True
+saveframes: False
+constant_rate_factor: 26
+output_framerate: 30
+pixelformat: yuv420p
+variable_fps: True
+targetlength: 30
+variable_fps_min: 5
+variable_fps_max: 30
+rotation: 0
+flip_x: False
+flip_y: False
+duplicatelastframe: 0
+extraoutputparams:
+previewimage: True
+
+[announcements]
+subscriptions:
+
+# No update_manager and no machine provider are configured. Stable pins and
+# system changes are deployed from the laptop after a reviewed diff.

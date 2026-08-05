@@ -15,7 +15,8 @@ Usage:
 Creates a private Ethernet link for a Comgrow/Sovol T300. NetworkManager runs
 DHCP on the laptop-side interface. Internet access and Wi-Fi are not required.
 If the laptop has another network connection, this profile leaves its default
-route unchanged.
+route unchanged. NetworkManager shared mode can also provide forwarding and NAT,
+so this is a convenient direct link, not a network-isolation boundary.
 
 The script refuses to take over an Ethernet interface that is already active.
 EOF
@@ -110,8 +111,9 @@ link_up() {
   fi
 
   nmcli connection up "$PROFILE_NAME" ifname "$interface"
-  printf '\nPrivate T300 link is active on %s.\n' "$interface"
+  printf '\nDirect T300 link is active on %s.\n' "$interface"
   printf 'Laptop address: 10.42.42.1\n'
+  printf 'Note: NetworkManager shared mode may route the printer through laptop Wi-Fi.\n'
   printf 'On the T300, open Advanced -> Show IP after the Ethernet cable is connected.\n'
 }
 

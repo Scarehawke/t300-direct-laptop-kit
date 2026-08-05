@@ -1,0 +1,7 @@
+DICTIONARY linuxprocess.dict
+CONFIG t300-core.cfg
+
+T_CORE_STATUS
+END_PRINT
+PAUSE
+CANCEL_PRINT

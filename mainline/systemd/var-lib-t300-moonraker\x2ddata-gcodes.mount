@@ -1,0 +1,17 @@
+[Unit]
+Description=T300 removable G-code upload storage
+Requires=mnt-t300\x2ddata.mount
+After=mnt-t300\x2ddata.mount
+Before=t300-admission.service klipper.service moonraker.service
+ConditionPathExists=/etc/t300/commissioning/storage-enabled
+
+[Mount]
+What=/mnt/t300-data/gcodes
+Where=/var/lib/t300/moonraker-data/gcodes
+Type=none
+Options=bind,nosuid,nodev,noexec
+DirectoryMode=0550
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target

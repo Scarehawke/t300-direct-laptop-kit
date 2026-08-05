@@ -1,0 +1,19 @@
+{
+  "type": "machine",
+  "name": "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+  "from": "User",
+  "instantiation": "true",
+  "inherits": "Comgrow T300 0.4 nozzle",
+  "printer_settings_id": "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+  "gcode_flavor": "klipper",
+  "enable_power_loss_recovery": "printer_configuration",
+  "print_sequence": "by layer",
+  "gcode_label_objects": "1",
+  "exclude_object": "1",
+  "machine_start_gcode": "START_PRINT BED_TEMP=[bed_temperature_initial_layer_single] EXTRUDER_TEMP=[nozzle_temperature_initial_layer]\n",
+  "machine_end_gcode": "END_PRINT\n",
+  "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\n;[layer_z]\nG92 E0\nTIMELAPSE_TAKE_FRAME\n",
+  "machine_pause_gcode": "PAUSE",
+  "change_filament_gcode": "M600",
+  "version": "2.4.2.0"
+}

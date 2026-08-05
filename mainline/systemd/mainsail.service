@@ -1,0 +1,42 @@
+[Unit]
+Description=T300 pinned Mainsail web interface
+After=network.target moonraker.service crowsnest.service
+Wants=crowsnest.service
+ConditionPathExists=/etc/t300/commissioning/host-validated
+
+[Service]
+Type=simple
+User=mainsail
+Group=mainsail
+RuntimeDirectory=t300/mainsail
+RuntimeDirectoryMode=0750
+ExecCondition=+/opt/t300/venvs/control/bin/python /opt/t300/control/bin/t300-candidate.py check-service-gate host
+ExecStart=/usr/sbin/nginx -c /etc/t300/nginx/nginx.conf -g "daemon off;"
+Restart=on-failure
+RestartSec=5
+MemoryMax=128M
+CPUWeight=10
+IOWeight=10
+TasksMax=64
+LimitNOFILE=1024
+OOMScoreAdjust=500
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadOnlyPaths=/etc/t300 /etc/nginx/mime.types /opt/t300/www/mainsail
+ReadWritePaths=/run/t300/mainsail /var/log/t300/mainsail
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

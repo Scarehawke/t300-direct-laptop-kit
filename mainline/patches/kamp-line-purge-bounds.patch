@@ -1,0 +1,65 @@
+diff --git a/Configuration/Line_Purge.cfg b/Configuration/Line_Purge.cfg
+--- a/Configuration/Line_Purge.cfg
++++ b/Configuration/Line_Purge.cfg
+@@ -30,11 +30,23 @@ gcode:
+     {% set purge_y_min = (all_points | map(attribute=1) | min | default(0)) %}                          # Object y min
+     {% set purge_y_max = (all_points | map(attribute=1) | max | default(0)) %}                          # Object y max
+ 
+-    {% set purge_x_center = ([((purge_x_max + purge_x_min) / 2) - (purge_amount / 2), 0] | max) %}      # Create center point of purge line relative to print on X axis
+-    {% set purge_y_center = ([((purge_y_max + purge_y_min) / 2) - (purge_amount / 2), 0] | max) %}      # Create center point of purge line relative to print on Y axis
++    {% set breakaway_distance = 10.0 %}
++    {% set max_x_start = (printer.toolhead.axis_maximum.x | float) - purge_amount - breakaway_distance %}
++    {% set max_y_start = (printer.toolhead.axis_maximum.y | float) - purge_amount - breakaway_distance %}
++    {% set requested_x_center = ((purge_x_max + purge_x_min) / 2) - (purge_amount / 2) %}
++    {% set requested_y_center = ((purge_y_max + purge_y_min) / 2) - (purge_amount / 2) %}
++    {% set purge_x_center = ([[requested_x_center, 0] | max, max_x_start] | min) %}
++    {% set purge_y_center = ([[requested_y_center, 0] | max, max_y_start] | min) %}
+ 
+     {% set purge_x_origin = ([purge_x_min - purge_margin, 0] | max) %}                                  # Add margin to x min, compare to 0, and choose the larger
+     {% set purge_y_origin = ([purge_y_min - purge_margin, 0] | max) %}                                  # Add margin to y min, compare to 0, and choose the larger
++    {% set has_front_lane = purge_y_min >= purge_margin and max_x_start >= 0 %}
++    {% set has_left_lane = purge_x_min >= purge_margin and max_y_start >= 0 %}
++    {% set purge_on_x = has_front_lane %}
++
++    {% if not has_front_lane and not has_left_lane %}
++        {action_raise_error("KAMP purge refused: objects leave no bounded front or left purge lane.")}
++    {% endif %}
+ 
+     # Calculate purge speed
+     {% set purge_move_speed = (flow_rate / 5.0) * 60 | float %}
+@@ -58,7 +70,7 @@ gcode:
+             {action_respond_info("KAMP purge is not using firmware retraction, it is recommended to configure it.")}
+         {% endif %}
+ 
+-        {% if purge_y_origin > 0 %}
++        {% if purge_on_x %}
+         
+             {action_respond_info("KAMP purge starting at {}, {} and purging {}mm of filament, requested flow rate is {}mm3/s.".format(                                                                 
+                 (purge_x_center),
+@@ -80,7 +92,7 @@ gcode:
+ 
+         SAVE_GCODE_STATE NAME=Prepurge_State                                                    # Create gcode state
+ 
+-        {% if purge_y_origin > 0 %}                                                             # If there's room on Y, purge along X axis in front of print area
++        {% if purge_on_x %}                                                                     # If there's room on Y, purge along X axis in front of print area
+ 
+             G92 E0                                                                              # Reset extruder
+             G0 F{travel_speed}                                                                  # Set travel speed
+@@ -91,7 +103,7 @@ gcode:
+             G1 E{tip_distance} F{purge_move_speed}                                              # Move filament tip
+             G1 X{purge_x_center + purge_amount} E{purge_amount} F{purge_move_speed}             # Purge line
+             {RETRACT}                                                                           # Retract
+-            G0 X{purge_x_center + purge_amount + 10} F{travel_speed}                            # Rapid move to break string
++            G0 X{purge_x_center + purge_amount + breakaway_distance} F{travel_speed}             # Rapid move to break string
+             G92 E0                                                                              # Reset extruder distance
+             M82                                                                                 # Absolute extrusion mode
+             G0 Z{purge_height * 2} F{travel_speed}                                              # Z hop
+@@ -107,7 +119,7 @@ gcode:
+             G1 E{tip_distance} F{purge_move_speed}                                              # Move filament tip
+             G1 Y{purge_y_center + purge_amount} E{purge_amount} F{purge_move_speed}             # Purge line
+             {RETRACT}                                                                           # Retract
+-            G0 Y{purge_y_center + purge_amount + 10} F{travel_speed}                            # Rapid move to break string
++            G0 Y{purge_y_center + purge_amount + breakaway_distance} F{travel_speed}             # Rapid move to break string
+             G92 E0                                                                              # Reset extruder distance
+             M82                                                                                 # Absolute extrusion mode
+             G0 Z{purge_height * 2} F{travel_speed}                                              # Z hop

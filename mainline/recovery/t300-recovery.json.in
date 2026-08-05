@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "board": "MKS-Klipad50",
+  "recovery_id": "@RECOVERY_ID@"
+}

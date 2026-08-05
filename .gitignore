@@ -1,6 +1,9 @@
 __pycache__/
 *.pyc
+*.log
+/result.json
 t300-backups/
+.cache/
 
 # Licensed/private GerGo downloads must never enter the public repository.
 *.zip

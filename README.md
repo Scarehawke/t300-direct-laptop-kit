@@ -1,13 +1,32 @@
 # T300 Direct Laptop Kit
 
 Connect an Arch Linux laptop directly to a Sovol/Comgrow T300 over Ethernet
-while the laptop keeps its normal Internet connection over Wi-Fi. No router and
-no Internet connection on the printer are required.
+while the laptop keeps its normal Internet connection over Wi-Fi. No router is
+required.
 
 The kit also provides bounded, read-only configuration backups and includes an
 original, MIT-licensed `GANTRY_LEVEL_T300` macro. The macro measures the gantry
 with the inductive probe and reports how far to turn the stock right Z knob. It
 does not use the T300's inaccurate top-ramming routine.
+
+## Current printer and mainline status
+
+The owner's printer is still running the restorable Comgrow **1.5.2** image and
+its patched Klipper **0.12.0**. The `mainline/` and `t300_mainline/` trees are a
+local, commissioning-locked Klipper **v0.13.0** candidate. They have not been
+written to eMMC, have not flashed either MCU, and are not approved for an
+unattended print.
+
+Read [the mainline migration guide](docs/MAINLINE_MIGRATION.md) before using any
+mainline command. Its implementation and remaining physical gates are recorded
+in [the mainline audit](docs/MAINLINE_IMPLEMENTATION_AUDIT_20260804.md). The
+latest restart point is [the 2026-08-05 handover](docs/HANDOVER_20260805.md).
+The matching OrcaSlicer contract is documented in
+[the runtime profile notes](docs/ORCASLICER_RUNTIME_PROFILE.md).
+Read it before continuing after a chat reset, reboot, or context compaction. The
+candidate deliberately provides no automatic eMMC or MCU flashing command;
+those owner-attended operations remain blocked until recovery and hardware
+identity have been proven on the actual screen.
 
 ## What you need
 
@@ -28,9 +47,12 @@ cd t300-direct-laptop-kit
 ./bin/t300-link up
 ```
 
-NetworkManager creates a private `10.42.42.0/24` network, supplies DHCP to the
+NetworkManager creates a direct `10.42.42.0/24` network, supplies DHCP to the
 printer, and marks the Ethernet connection as never-default so it does not take
-over the laptop's Wi-Fi route.
+over the laptop's Wi-Fi route. Its `ipv4.method shared` mode also enables IP
+forwarding and NAT to the laptop's default connection. The printer can therefore
+reach the Internet through Wi-Fi; this helper is convenient connectivity, not
+an isolation or firewall boundary.
 
 On the printer, open **Advanced → Show IP**. It should show an address beginning
 with `10.42.42.`. If it does, open the address in a browser:
@@ -74,6 +96,11 @@ Sovol firmware **1.5.2** is the complete vendor release; it contains Klipper
 
 ## Install the included open leveling macro
 
+**Owner-specific warning:** do not install this alternative on the current
+printer. The purchased GerGo v3 workflow is already selected and must remain
+the only gantry-leveling owner. This section is retained for other repository
+users who have not installed GerGo.
+
 The installer reads the T300's live `bed_mesh`, probe offsets, axis limits, and
 Z `rotation_distance`. It calculates and displays safe probe/nozzle positions
 before offering to upload anything. No other owner's hard-coded coordinates are
@@ -96,7 +123,8 @@ The apply operation:
 
 1. Verifies that Klipper is ready and not printing or paused.
 2. Validates the live mesh, probe, axis, and Z-screw configuration.
-3. Refuses to overwrite a different existing macro file.
+3. Refuses to overwrite a different existing macro file or coexist with the
+   selected GerGo include.
 4. Downloads a complete configuration backup.
 5. Uploads `t300_gantry_level.cfg`.
 6. Adds `[include t300_gantry_level.cfg]` immediately after the existing
@@ -155,7 +183,7 @@ The exact archive name may differ. You can supply the complete ZIP downloaded
 from Cults, the nested `macro_v3(extract!).zip`, or the extracted CFG. The helper
 finds `macro_z_tilt_via_knob.cfg`, validates both archive layers and the macro as
 a small UTF-8 Klipper configuration, and shows the proposed `printer.cfg` diff.
-It makes no changes without `--apply`.
+It refuses an active open-gantry include and makes no changes without `--apply`.
 
 After reviewing the output, install it:
 
@@ -166,8 +194,11 @@ python3 ./bin/t300ctl.py install-gergo \
   --apply
 ```
 
-The separate macro file may remain uploaded after an automatic rollback, but it
-is inert because the restored `printer.cfg` does not include it.
+Uploads are verified byte for byte. If any upload, restart, or readiness check
+fails, the helper restores every changed file and removes any file newly created
+by the failed transaction. It restarts again only if a Klipper reload had
+already been attempted; disk-only staging failures are restored without an
+unnecessary printer interruption.
 
 ### GerGo touchscreen test
 
@@ -195,8 +226,59 @@ description labels that bundle reference-only.
 ./bin/t300-link down
 ```
 
-This deactivates the private connection without deleting the saved profile.
+This deactivates the direct connection without deleting the saved profile.
 Your Wi-Fi connection is not modified.
+
+## Optional KAMP park and purge
+
+The approved KAMP integration keeps the T300 native adaptive mesher and
+installs only Smart Park and Line Purge. Read
+[`docs/KAMP_T300_INTEGRATION.md`](docs/KAMP_T300_INTEGRATION.md) before use.
+Perform a dry run first, then apply only while the printer is idle:
+
+```bash
+python3 ./bin/t300ctl.py install-kamp-subset --host PRINTER_IP
+python3 ./bin/t300ctl.py install-kamp-subset --host PRINTER_IP --apply
+```
+
+## Optional laptop camera recording
+
+The printer's layer timelapse and a continuous laptop recording are separate.
+To record the existing MJPEG stream on the laptop with reconnect handling and a
+space-conscious default, run:
+
+```bash
+./bin/record-t300-camera.sh --host PRINTER_IP --duration 30m
+```
+
+Recordings default to `.cache/camera-recordings/` as interruption-tolerant
+Matroska files. A browser preview plus this recorder are two simultaneous stream
+clients and can add load to the printer and network. Prefer the built-in
+non-parking layer timelapse for normal prints and use continuous recording as an
+optional diagnostic observer.
+
+## Community macro research
+
+Live changes are governed by
+[docs/CHANGE_POLICY.md](docs/CHANGE_POLICY.md). In short: T300-specific
+community evidence, compatibility review, and explicit owner approval are all
+required before a macro or configuration change reaches the printer.
+
+See [docs/COMMUNITY_STACK_RESEARCH.md](docs/COMMUNITY_STACK_RESEARCH.md) for the
+stock-hardware macro and extension evaluation, safety findings, and proposed
+phased T300 package architecture.
+
+The earlier quarantined implementation and its historical hookup sequence are
+in [docs/PREPARED_T300_UPGRADE.md](docs/PREPARED_T300_UPGRADE.md). The locally
+authored core overlay is quarantined and must not be applied or used by a print.
+
+The preliminary whole-stack review remains in
+[docs/PRELIMINARY_RUNTIME_DESIGN_20260804.md](docs/PRELIMINARY_RUNTIME_DESIGN_20260804.md),
+with its earlier findings in
+[docs/PRELIMINARY_IMPLEMENTATION_AUDIT_20260804.md](docs/PRELIMINARY_IMPLEMENTATION_AUDIT_20260804.md).
+The newer mainline guide and audit supersede those documents for migration
+status. Nothing from the mainline candidate has been sent to the printer, and
+no generated G-code from it is approved to print yet.
 
 ## Authentication
 

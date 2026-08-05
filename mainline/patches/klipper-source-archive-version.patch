@@ -1,0 +1,21 @@
+--- a/scripts/buildcommands.py
++++ b/scripts/buildcommands.py
+@@ -477,8 +477,16 @@
+ # Obtain version info from "git" program
+ def git_version():
+     if not os.path.exists('.git'):
+-        logging.debug("No '.git' file/directory found")
+-        return ""
++        try:
++            with open('.version', 'r') as version_file:
++                ver = version_file.read().strip()
++        except IOError:
++            logging.debug("No '.git' or '.version' file found")
++            return ""
++        if not ver or '\n' in ver or '\r' in ver:
++            logging.debug("Invalid '.version' file")
++            return ""
++        return ver
+     ver = check_output("git describe --always --tags --long --dirty").strip()
+     logging.debug("Got git version: %s" % (repr(ver),))
+     return ver

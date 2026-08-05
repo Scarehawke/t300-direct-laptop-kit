@@ -1,0 +1,46 @@
+[Unit]
+Description=T300 fail-closed G-code admission scanner
+Requires=var-lib-t300-moonraker\x2ddata-gcodes.mount
+After=local-fs.target var-lib-t300-moonraker\x2ddata-gcodes.mount
+Before=klipper.service moonraker.service
+ConditionPathExists=/etc/t300/commissioning/production-enabled
+
+[Service]
+Type=simple
+User=t300-policy
+Group=t300-gcode
+SupplementaryGroups=t300-policy
+ExecCondition=+/opt/t300/venvs/control/bin/python /opt/t300/control/bin/t300-candidate.py check-service-gate production
+WorkingDirectory=/opt/t300/control
+Environment=PYTHONPATH=/opt/t300/control
+ExecStartPre=/opt/t300/venvs/control/bin/python -m t300_mainline.admission_daemon --gcode-root /var/lib/t300/moonraker-data/gcodes --approval-dir /var/lib/t300/gcode-approvals --spool-dir /var/lib/t300/approved-gcodes --rejected-dir /var/lib/t300/gcode-rejections --policy /etc/t300/gcode-policy.json --startup-preflight
+ExecStart=/opt/t300/venvs/control/bin/python -m t300_mainline.admission_daemon --gcode-root /var/lib/t300/moonraker-data/gcodes --approval-dir /var/lib/t300/gcode-approvals --spool-dir /var/lib/t300/approved-gcodes --rejected-dir /var/lib/t300/gcode-rejections --policy /etc/t300/gcode-policy.json
+Restart=on-failure
+RestartSec=5
+MemoryMax=256M
+CPUQuota=50%
+CPUWeight=10
+IOWeight=10
+TasksMax=32
+LimitNOFILE=256
+Nice=10
+IOSchedulingClass=idle
+OOMScoreAdjust=500
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX
+ReadOnlyPaths=/etc/t300 /var/lib/t300/moonraker-data/gcodes
+ReadWritePaths=/var/lib/t300/gcode-approvals /var/lib/t300/approved-gcodes /var/lib/t300/gcode-rejections
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+# Restricted T300 laptop transport. The base image's later, more permissive
+# defaults cannot override these first values.
+Port 22
+AddressFamily inet
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+HostbasedAuthentication no
+GSSAPIAuthentication no
+X11Forwarding no
+AllowAgentForwarding no
+AllowTcpForwarding no
+PermitTunnel no
+PermitTTY no
+PermitUserEnvironment no
+PermitUserRC no
+MaxAuthTries 3
+MaxSessions 1
+LoginGraceTime 30
+AllowUsers t300-deploy@@TRUSTED_LAPTOP_CIDR@
+
+Match User t300-deploy
+    AuthorizedKeysFile /etc/t300/deploy_authorized_keys
+    ForceCommand /opt/t300/venvs/control/bin/python /opt/t300/control/bin/t300-transfer-receive.py
+    DisableForwarding yes
+    PermitTTY no
+    PermitUserRC no
+
+Match all

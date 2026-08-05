@@ -1,0 +1,15 @@
+[Unit]
+Description=T300 removable timelapse storage
+Before=moonraker.service
+ConditionPathExists=/etc/t300/commissioning/storage-enabled
+
+[Mount]
+What=/dev/disk/by-uuid/@DATA_USB_UUID@
+Where=/mnt/t300-data
+Type=vfat
+Options=rw,nosuid,nodev,noexec,noatime,uid=moonraker,gid=t300-gcode,dmask=0027,fmask=0137,utf8=1,flush,errors=remount-ro
+DirectoryMode=0755
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target
