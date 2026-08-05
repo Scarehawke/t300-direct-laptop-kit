@@ -140,6 +140,20 @@
                 "content": [
                   {
                     "type": "text",
+                    "text": "The complete official Comgrow 1.5.2 image, screen firmware, and integrated package are downloaded into a private owner-only laptop directory and have recorded SHA-256 hashes."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
                     "text": "No mainline files have been written to eMMC."
                   }
                 ]

@@ -56,6 +56,10 @@
   "recentChanges": [
     {
       "date": "2026-08-05",
+      "summary": "Downloaded the complete official Comgrow 1.5.2 stock image, screen firmware, and integrated package into owner-only private storage; verified listed sizes, file structure, and SHA-256 hashes."
+    },
+    {
+      "date": "2026-08-05",
       "summary": "Pushed commit 891fa61 with the audited pressure-advance and extrusion policy, portable Orca profiles, large-format test, staged-project evidence, and a persistent warn-first hull/floor-line slicing rule."
     },
     {

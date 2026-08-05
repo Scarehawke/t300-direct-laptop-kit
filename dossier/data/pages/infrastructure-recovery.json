@@ -241,6 +241,92 @@
         "content": [
           {
             "type": "text",
+            "text": "Official stock recovery artifacts"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Downloaded on 2026-08-05 from the firmware folder linked by Sovol's official T300 support page: https://drive.google.com/drive/folders/1rFLPNeZ_xBWPsWQtqwa89L1O_wsu9wDe. The files are stored outside Git in /home/devianttoaster/Downloads/T300-Private-Recovery-20260805 with a mode-700 directory and mode-600 files. Google Drive's listed byte counts matched every completed download."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Comgrow_T300_V1.5.2_20240316.img: 6,738,149,376 bytes; SHA-256 7fe893c9a5f2a8f64500f7fc1f1681c48754c7665c4215f5fdc0395b922de3ba. It contains a 256 MiB FAT partition and a 6 GiB Linux partition."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Screen_firmware_V1.5.2.tft: 9,668,308 bytes; SHA-256 7326ce53567553f4b7fa7b6d64fcf714d901be905f49e2e05548f4af9aafba4e."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "zc_app.deb: 161,684,496 bytes; SHA-256 0e3953bde38cc0cbe40cb7dc08ec6f1d4aeafb42fe820a21f54a51777d647513. Its Debian archive contains debian-binary, control.tar.xz, and data.tar.xz."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The empty owner-only destination reserved for this printer's exact eMMC capture is /home/devianttoaster/T300-Private-Backups/stock-1.5.2-20260805. The recovery session will create the compressed image and manifest there only after board identity, root-on-USB, and unmounted-eMMC checks pass."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "These files improve rollback preparedness but do not replace the required byte-for-byte eMMC capture from this exact printer. Do not run or flash any of them during ordinary recovery inspection."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Service model"
           }
         ]
