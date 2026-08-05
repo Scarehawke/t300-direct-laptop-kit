@@ -1,0 +1,57 @@
+[
+  {
+    "id": "start",
+    "title": "Start Here",
+    "summary": "Owner sign-off entry point, current truth, and reading order.",
+    "order": 0,
+    "ignoreInOrphanCheck": true,
+    "internal": false,
+    "contentRole": "project-home",
+    "countForSingleDossierMode": false
+  },
+  {
+    "id": "signoff",
+    "title": "Sign-off Report",
+    "summary": "Approval snapshot, practical implications, and recommendations for owner review.",
+    "order": 10,
+    "ignoreInOrphanCheck": false,
+    "internal": false,
+    "contentRole": "project-work"
+  },
+  {
+    "id": "safety",
+    "title": "Safety and Recovery",
+    "summary": "Hardware-protection invariants, build-plate arming, validation, release gates, and rollback.",
+    "order": 20,
+    "ignoreInOrphanCheck": false,
+    "internal": false,
+    "contentRole": "project-work"
+  },
+  {
+    "id": "architecture",
+    "title": "Architecture and Infrastructure",
+    "summary": "Pinned stack, recovery foundation, service model, and reproducible deployment architecture.",
+    "order": 30,
+    "ignoreInOrphanCheck": false,
+    "internal": false,
+    "contentRole": "project-work"
+  },
+  {
+    "id": "print-workflow",
+    "title": "Print Workflow",
+    "summary": "START_PRINT, END_PRINT, OrcaSlicer contract, timelapse, UI, and practical print-feel changes.",
+    "order": 40,
+    "ignoreInOrphanCheck": false,
+    "internal": false,
+    "contentRole": "project-work"
+  },
+  {
+    "id": "archive",
+    "title": "Archive",
+    "summary": "Changelog and superseded historical context retained for traceability.",
+    "order": 90,
+    "ignoreInOrphanCheck": true,
+    "internal": false,
+    "contentRole": "project-work"
+  }
+]

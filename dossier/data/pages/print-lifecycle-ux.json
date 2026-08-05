@@ -1,0 +1,313 @@
+{
+  "id": "print-lifecycle-ux",
+  "title": "Print Lifecycle and User Experience",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "print-workflow",
+  "documentRole": "project-work",
+  "section": "Print Workflow",
+  "order": 40,
+  "summary": "What START_PRINT, END_PRINT, CANCEL_PRINT, M600, UI prompts, and timelapse will feel like.",
+  "tags": [
+    "lifecycle",
+    "ui",
+    "timelapse",
+    "mainsail",
+    "klipperscreen"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": false,
+    "readFirstOrder": null
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The print experience should feel calmer and more predictable: you confirm the plate, select an approved Orca file, the printer does its own warmup, homing, mesh, park, and moving purge, then it prints. End and cancel lift before traveling and park high enough for nozzle cleaning when safe."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Start of print"
+          }
+        ]
+      },
+      {
+        "type": "orderedList",
+        "attrs": {
+          "start": 1
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The file must already have object metadata and approved temperatures."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "You press Cleaned and rearmed before homing or print start."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The nozzle waits at a low standby temperature while the bed heats."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The printer homes through standard sensor-based Klipper behavior."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A full 9x9 mesh is generated at bed temperature."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The printer parks, heats the nozzle to final temperature, and performs KAMP moving line purge."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The first model move begins only after those checks pass."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "End and cancel"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "END_PRINT retracts only if Klipper says the hotend can safely extrude, turns heaters and fan off, lifts first, then parks at or above Z 200 when limits allow."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "CANCEL_PRINT turns heaters off first and then does optional retract and park only when state is safe."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Neither path lowers the head to reach the cleaning position."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "If axes are not homed or clearance is unsafe, the macro skips movement instead of guessing."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Emergency Stop remains the immediate unsafe-condition button; ordinary Cancel can queue behind active homing, probing, or temperature waits."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "UI design"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "KlipperScreen and Mainsail are simplified around the normal user workflow: build-plate check, file selection, attended homing, print monitoring, camera, and notifications. Raw movement, heaters, extrusion, shell-like console use, machine panels, and upload-and-print shortcuts are hidden by default as mistake reduction. The real safety boundary remains the policy layer, not UI hiding."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Timelapse"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The planned timelapse takes one non-parking frame per layer and stores frames on USB with space and frame-count preflights. If the camera or USB fails, timelapse disables itself without pausing or changing the print."
+          }
+        ]
+      }
+    ]
+  }
+}

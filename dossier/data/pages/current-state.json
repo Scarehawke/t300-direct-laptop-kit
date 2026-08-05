@@ -1,0 +1,332 @@
+{
+  "id": "current-state",
+  "title": "Current State and Approval Snapshot",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "signoff",
+  "documentRole": "project-work",
+  "section": "Sign-off Report",
+  "order": 10,
+  "summary": "What exists now, what is proven, what is not proven, and what owner approval means.",
+  "tags": [
+    "current-state",
+    "approval",
+    "commissioning"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": true,
+    "readFirstOrder": 10
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The work is a strong candidate package, not a finished printer conversion. It is built to make the next session safer and more reproducible. It does not imply that the printer has already been changed."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Current physical state"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The printer remains on Comgrow/Sovol firmware 1.5.2 and patched Klipper 0.12.0."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "No mainline files have been written to eMMC."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "No MCU has been flashed."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "No new movement, homing, probing, or heating was triggered during this documentation and commit pass."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The purchased GerGo macro remains private and is not included in the public repository."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Current repository state"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The printer repo contains the public mainline candidate, policy code, test harnesses, staging tools, recovery tools, runtime configs, docs, lockfiles, and Orca profile."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "GitHub origin/main now includes commit 0590c50: Add T300 mainline migration candidate."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Ignored local caches still contain backups, camera recordings, generated files, and private material. They are intentionally outside the commit."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The Dossier project lives in dossier/ as data-only project content. It contains no Dossier Engine runtime source."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "What approval should mean"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Approval should mean: the documented design is coherent enough to proceed to recovery preparation and attended commissioning. It should not mean: skip backup, skip screen identity proof, skip physical inspection, or let automation command the printer without you."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Main open risks"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The T300 stock bed may still have physical unevenness. Software can compensate only so far."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The removable steel sheet still has no real presence sensor. The checkmark workflow reduces user error but cannot detect a sheet removed after confirmation."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Frieren stringing is mainly filament and slicer tuning work, not a firmware migration problem by itself."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Powerline network stability during long prints remains a home electrical/network issue, so camera/timelapse failures must not affect print motion or safety."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Mainline migration still needs hardware commissioning evidence on the actual printer."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "id": "safety-design",
+  "title": "Safety Design",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "safety",
+  "documentRole": "project-work",
+  "section": "Safety and Recovery",
+  "order": 20,
+  "summary": "Hardware protection invariants, forbidden commands, build-plate arming, and fail-closed behavior.",
+  "tags": [
+    "safety",
+    "hardware-protection",
+    "policy"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": false,
+    "readFirstOrder": null
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The safety design assumes people make mistakes and software fails. The printer should stop heaters and refuse work before it accepts unknown state. Convenience features are allowed only when they fail before hardware protections are weakened."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Safety layer boundaries"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Klipper core remains responsible for sensors, heaters, endstops, MCU communication, watchdog behavior, and emergency stop."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The custom t300_safety extra does not replace heater or motion control. It rejects unsafe commands, clamps runtime limits, and controls the build-plate readiness state."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Macros can request actions, but they cannot raise hard ceilings for temperature, velocity, acceleration, current, or extrusion limits."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Uploaded G-code is scanned and then copied into a protected snapshot before Klipper may print it."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Failure paths turn heaters off before optional parking, UI prompts, timelapse cleanup, or notifications."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Commands blocked in production"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The production path forbids commands that can bypass the normal model of the printer: force movement, inventing positions, raw heater or output control, unrestricted TMC fields, shell commands, firmware writes, config writes, manual motor release, direct probing commands, and legacy power-loss resume paths."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Build-plate checkmark workflow"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Before a Z home or print, the operator confirms that the magnetic sheet is installed, flat, clipped, clean, and clear of loose filament. The confirmation survives harmless idle actions, but it is consumed or invalidated by printing, purging, hot extrusion, filament load or unload, M600, cancellation, Klipper restart, and loaded-print errors."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The check cannot be set while a print is loaded or paused, while the hotend has any target temperature, or while the hotend is at extrusion temperature. This prevents rearming during a hot, filament-processing state."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Important limitation"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "This is not a physical sheet sensor. If a human confirms the sheet and then removes it, software cannot know. A real plate-presence sensor is the only hardware-grade fix for the missing-sheet accident class."
+          }
+        ]
+      }
+    ]
+  }
+}

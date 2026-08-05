@@ -1,0 +1,346 @@
+{
+  "id": "validation-release-gates",
+  "title": "Validation, Release Gates, and Rollback",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "safety",
+  "documentRole": "project-work",
+  "section": "Safety and Recovery",
+  "order": 60,
+  "summary": "Evidence already collected and what still gates release.",
+  "tags": [
+    "validation",
+    "release",
+    "rollback"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": false,
+    "readFirstOrder": null
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The software side is well tested for a candidate, but the physical printer gates still matter most. The next approval step is not trust, it is proof: boot recovery, image eMMC, verify restore path, then commission with you present."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Evidence already collected"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Post-rebase repository tests: 303 unit tests passed."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Publishable-tree scan: passed, with 147 files scanned and no private artifacts detected."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Diff hygiene: git diff --check passed after the rebase."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Saved candidate evidence records 25 Klipper v0.13 production cases and 11 vendor 0.12 compatibility cases from the previous harness run."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The validation report records the private GerGo package absent from the public stage."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Release gates still open"
+          }
+        ]
+      },
+      {
+        "type": "orderedList",
+        "attrs": {
+          "start": 1
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Boot recovery USB three times and prove the eMMC is not mounted as root."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Capture, hash, validate, and read-only inspect the entire stock eMMC image."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Download/checksum complete Comgrow 1.5.2 recovery material."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Test guarded image inspect, capture, verify, and write commands without touching the real target until approved."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Boot the candidate from USB with printer control disabled and prove screen, touch, fan, Ethernet, Wi-Fi, USB, camera, storage, and service permissions."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Only after recovery proof, write candidate image to eMMC."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Establish MCU communication without movement or heat."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Flash MCUs only after exact original recovery firmware and bootloader settings are proven."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Commission with attended sensor, fan, endstop, probe, axis, heater, communication-loss, and emergency-stop checks."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Recalibrate PID, rotation distance, GerGo alignment, probe repeatability, Z offset, mesh, input shaping, temperature, flow, pressure advance, retraction, and volumetric flow."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Print a standard first-layer test and a small dimensional print before camera bracket or Frieren approval."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Rollback"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Rollback means booting recovery USB, restoring the verified stock eMMC image over Ethernet, restoring original MCU firmware if it was changed, and verifying stock Comgrow 1.5.2 before any movement. A rollback drill is part of release, not an optional comfort step."
+          }
+        ]
+      }
+    ]
+  }
+}

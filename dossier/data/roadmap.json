@@ -1,0 +1,97 @@
+{
+  "kind": "dossier-project-roadmap",
+  "schemaVersion": 4,
+  "projectId": "t300-printer",
+  "title": "T300 Printer Project roadmap",
+  "summary": "Recovery-first path from stock printer to audited mainline candidate, then print-quality commissioning.",
+  "updated": "2026-08-05",
+  "currentMilestoneId": "owner-signoff",
+  "lifecycle": [
+    "planned",
+    "in-progress",
+    "proposed",
+    "changes-requested",
+    "complete",
+    "waiting",
+    "deferred"
+  ],
+  "milestones": [
+    {
+      "id": "owner-signoff",
+      "title": "Owner sign-off on candidate design",
+      "status": "proposed",
+      "summary": "Review Dossier, migration guide, safety UI audit, Orca contract, and release gates before physical migration."
+    },
+    {
+      "id": "recovery-proof",
+      "title": "Recovery USB and full stock backup",
+      "status": "planned",
+      "summary": "Boot recovery, identify hardware, capture and verify eMMC image, and prove rollback path."
+    },
+    {
+      "id": "usb-boot-candidate",
+      "title": "USB-boot mainline candidate with printer control disabled",
+      "status": "planned",
+      "summary": "Validate screen, services, camera, storage, network, and permissions without motion or heat."
+    },
+    {
+      "id": "attended-commissioning",
+      "title": "Attended hardware commissioning",
+      "status": "planned",
+      "summary": "Owner initiates sensor, fan, endstop, probe, axis, heater, MCU-loss, and emergency-stop tests."
+    },
+    {
+      "id": "print-quality-baseline",
+      "title": "Print-quality baseline",
+      "status": "planned",
+      "summary": "Run standard first-layer, dimensional print, camera bracket, and calibrated filament tests before Frieren."
+    }
+  ],
+  "recentChanges": [
+    {
+      "date": "2026-08-05",
+      "summary": "Pushed public printer project commit 0590c50 with mainline candidate, tests, docs, and Orca runtime profile."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Created data-only Dossier project inside the printer repository using Dossier Engine 0.7.0."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Disabled Dossier Engine origin push URL locally to keep it downstream-update-only on this laptop."
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "safety",
+      "title": "Safety and rollback",
+      "status": "proposed"
+    },
+    {
+      "id": "firmware",
+      "title": "Mainline firmware stack",
+      "status": "proposed"
+    },
+    {
+      "id": "slicing",
+      "title": "OrcaSlicer profiles and calibration",
+      "status": "in-progress"
+    },
+    {
+      "id": "camera",
+      "title": "Camera and timelapse",
+      "status": "planned"
+    },
+    {
+      "id": "print-quality",
+      "title": "Filament and model quality tuning",
+      "status": "planned"
+    }
+  ],
+  "canvas": {
+    "version": 1,
+    "layoutOverrides": [],
+    "nodes": [],
+    "attachments": []
+  }
+}

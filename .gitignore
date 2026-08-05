@@ -4,6 +4,10 @@ __pycache__/
 /result.json
 t300-backups/
 .cache/
+dossier/.dossier-local/
+dossier/.dossier-backups/
+dossier/ai/pages/
+dossier/public/ai/pages/
 
 # Licensed/private GerGo downloads must never enter the public repository.
 *.zip

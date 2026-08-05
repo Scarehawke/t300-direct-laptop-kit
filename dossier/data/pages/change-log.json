@@ -1,0 +1,345 @@
+{
+  "id": "change-log",
+  "title": "Changelog",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "archive",
+  "documentRole": "project-work",
+  "section": "Archive",
+  "order": 70,
+  "summary": "Chronological record of the printer software work now captured in the repository.",
+  "tags": [
+    "changelog",
+    "history"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": false,
+    "readFirstOrder": null
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The project moved from ad hoc printer setup and file fixes into a versioned, reviewable firmware and workflow package. The live printer stayed stock while the candidate was prepared and tested locally."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Printer setup and early print findings"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "OrcaSlicer was set up with stock T300 profiles, then refined for safer macro-owned startup behavior."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A Benchy printed successfully before first-layer testing."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "First-layer tests showed uniform gaps between lines, strong bed adhesion, and likely bed/mesh/flow interactions rather than a single obvious Z-only problem."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A missing-sheet homing accident made plate-presence defense a hard requirement."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The nozzle appeared visually undamaged, while the bed had a small puncture."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Community macro and runtime work"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "GerGo gantry-leveling was kept as the selected private workflow and protected from public redistribution."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "KAMP research led to using Smart Park and Line Purge concepts, with adaptive meshing held back because the stock bed range remained too large."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Factory corner purge and unsafe slicer startup were replaced in design by firmware-owned lifecycle macros."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "End and cancel parking were redesigned to lift first and avoid lowering the head."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Timelapse support was bounded so camera/storage failure cannot affect print safety."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Mainline migration package"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Pinned stack.lock.json records sources, versions, commits, hashes, and licenses."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Recovery and imaging tooling was added for eMMC capture, verification, write guards, and transfer safety."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Production and maintenance config trees were separated."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Safety policy, G-code admission scanning, Klipper extra, lifecycle macros, host service units, and UI defaults were added."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Full documentation, handover, audits, and release gates were added."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "GitHub publication"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The full public printer project was committed as 0590c50 Add T300 mainline migration candidate and pushed to GitHub origin/main after rebasing on the upstream t300-link documentation change."
+          }
+        ]
+      }
+    ]
+  }
+}

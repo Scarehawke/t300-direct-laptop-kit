@@ -1,0 +1,15 @@
+{
+  "state": "Workbench",
+  "kind": "Working Note",
+  "content": {
+    "type": "doc",
+    "content": [
+      { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "Current question" }] },
+      { "type": "paragraph", "content": [{ "type": "text", "text": "What are you trying to explore?" }] },
+      { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "Raw thoughts" }] },
+      { "type": "paragraph" },
+      { "type": "heading", "attrs": { "level": 2 }, "content": [{ "type": "text", "text": "Promising directions" }] },
+      { "type": "paragraph" }
+    ]
+  }
+}

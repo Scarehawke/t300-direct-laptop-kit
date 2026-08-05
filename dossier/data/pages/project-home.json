@@ -1,0 +1,341 @@
+{
+  "id": "project-home",
+  "title": "T300 Printer Project Sign-off Home",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "start",
+  "documentRole": "project-home",
+  "section": "Main",
+  "order": 0,
+  "summary": "Owner sign-off entry point for the T300 firmware, safety, slicing, and commissioning work.",
+  "tags": [
+    "project-context",
+    "signoff",
+    "handover"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": true,
+    "readFirstOrder": 0
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Parked"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains a reviewed, commissioning-locked mainline candidate, recovery tooling, safety policy, Orca profile rules, and validation tests."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "My recommendation is to treat the current repository state as ready for owner review and recovery preparation, not ready for unattended installation. The next real-world gate is proving the recovery USB and full eMMC backup before any write to the printer."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "What changed in the project"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A pinned mainline stack was prepared around Klipper v0.13.0, Moonraker, Mainsail, KlipperScreen, Crowsnest, KAMP line purge, and a bounded timelapse service."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Safety is moved out of fragile slicer start G-code and into a policy layer, an admission scanner, and reviewed lifecycle macros."
+                  },
+                  {
+                    "type": "hardBreak"
+                  }
+                ]
+              },
+              {
+                "type": "agentRequest",
+                "attrs": {
+                  "requestId": "agent-request-3f79607a-357d-45e6-b1ae-b935bac942e6",
+                  "kind": "review",
+                  "status": "open",
+                  "title": "Review g-code safety layer",
+                  "instruction": "explain to me why g-code is a fragile place for safety and if moving this layer somewhere different has any downsides.  \n\nI have concerns that since g-code is something produced by slicers the slicers will be expecting these safety features in this layer. is that something we have accounted for?",
+                  "resolution": "",
+                  "createdAt": "2026-08-05T09:38:26.523Z",
+                  "updatedAt": "2026-08-05T09:38:26.523Z"
+                }
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The OrcaSlicer profile now emits a small contract: object definitions, START_PRINT temperatures, END_PRINT, pause, M600, and optional per-layer timelapse frames."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The Dossier Engine clone is downstream-only on this laptop: it fetches updates, and its push URL is disabled."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The printer GitHub repo was pushed with commit 0590c50, after rebasing onto the remote network-clarification commit."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Sign-off position"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Approve the design direction if you agree with the priorities: hardware safety first, reversible recovery first, no hidden firmware updates, no private GerGo redistribution, no hand-edited model meshes, and no printer movement or heat initiated by automation without you physically choosing it."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Do not approve physical installation yet unless the recovery checklist, image backup, boot identity checks, and attended commissioning steps are completed in order."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Read next"
+          }
+        ]
+      },
+      {
+        "type": "orderedList",
+        "attrs": {
+          "start": 1
+        },
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Current State and Approval Snapshot"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Safety Design"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Infrastructure and Recovery Architecture"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Print Lifecycle and User Experience"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "OrcaSlicer and Practical Print Impact"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Validation, Release Gates, and Rollback"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Changelog"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Future Recommendations"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph"
+      }
+    ]
+  }
+}

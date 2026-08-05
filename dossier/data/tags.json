@@ -1,0 +1,38 @@
+{
+  "description": "Runtime/tool tags for Dossier Engine documentation. Project-specific tags live in data-only project folders.",
+  "aliases": {
+    "project-library": "project-switcher",
+    "updater": "updates",
+    "update-system": "updates",
+    "ia": "ia-audit"
+  },
+  "curated": [
+    "runtime",
+    "tooling",
+    "handoff",
+    "agent-handoff",
+    "architecture",
+    "boundaries",
+    "project-switcher",
+    "data-only-projects",
+    "runtime-data-separation",
+    "updates",
+    "migration",
+    "health",
+    "audit",
+    "ia-audit",
+    "help",
+    "contextual-help",
+    "studio",
+    "ux",
+    "roadmap",
+    "changelog",
+    "tool-handbook",
+    "theme-tokens",
+    "standalone",
+    "governance",
+    "source-of-truth",
+    "local-state",
+    "project-kits"
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "id": "infrastructure-recovery",
+  "title": "Infrastructure and Recovery Architecture",
+  "state": "Current",
+  "kind": "Dossier Page",
+  "dossier": "architecture",
+  "documentRole": "project-work",
+  "section": "Architecture and Infrastructure",
+  "order": 30,
+  "summary": "Pinned stack, recovery USB, eMMC imaging, services, permissions, and rollback model.",
+  "tags": [
+    "infrastructure",
+    "recovery",
+    "rollback"
+  ],
+  "updated": "2026-08-05",
+  "embeddable": false,
+  "dashboard": {
+    "readFirst": false,
+    "readFirstOrder": null
+  },
+  "work": {
+    "active": false,
+    "priority": "normal",
+    "nextAction": "",
+    "status": "Current"
+  },
+  "publish": {
+    "include": false,
+    "visibility": "internal"
+  },
+  "ai": {
+    "include": "auto",
+    "stale": true,
+    "lastExported": null,
+    "exportPath": null
+  },
+  "content": {
+    "type": "doc",
+    "content": [
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Plain summary"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The migration is designed like a reversible appliance conversion. First prove that we can boot recovery, identify the exact screen hardware, image the entire eMMC, verify the backup, and restore it. Only after that should mainline be written."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Pinned stack"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Base OS target: Armbian for MKS-Klipad50, recorded in stack.lock.json."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Production Klipper pin: v0.13.0 at commit 61c0c8d2ef40340781835dd53fb04cc7a454e37a."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Moonraker, Mainsail, KlipperScreen, Crowsnest, KAMP subset, and timelapse components are pinned by source, version, hash, and compatibility notes."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Non-deploying next compatibility is separated from the stable production pin."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "KIAUH-style interactive updates are deliberately not part of production."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Recovery foundation"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Use the existing USB stick for recovery boot preparation and direct Ethernet for image transfer."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before any eMMC write, confirm screen identity, block layout, U-Boot identity, and that root is running from USB recovery."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Capture the whole eMMC, record geometry and hashes, validate compressed and raw data, and loop-mount read-only for inspection."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Keep Comgrow 1.5.2 restorable from the laptop."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "All destructive write commands are guarded by recovery markers, size checks, machine identity checks, --apply, and typed confirmation."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Service model"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest, admission scanning, host MCU, and display support are staged as separate services with narrow writable directories, resource limits, and explicit device access. Camera, network, and storage failures must degrade those features without blocking emergency shutdown or printer safety."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Why this design"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The stock firmware works but mixes vendor macros, power-loss recovery, touchscreen assumptions, and hidden state. Rebuilding the stack from pinned sources gives us a base where safety decisions, updates, and rollback are visible instead of guessed."
+          }
+        ]
+      }
+    ]
+  }
+}

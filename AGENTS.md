@@ -6,6 +6,9 @@ z-tilt-via-knob package. That licensed package must never be committed, uploaded
 to a public release, quoted in project documentation, or obtained from an
 unofficial mirror.
 
+When working inside the `dossier/` folder, read and follow `dossier/AGENTS.md`
+in addition to this repository handoff.
+
 ## Private macro handoff
 
 The untouched Cults download has been placed on the owner's printer USB at this

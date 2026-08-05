@@ -1,0 +1,143 @@
+{
+  "id": "t300-printer",
+  "title": "T300 Printer Project",
+  "updated": "2026-08-05",
+  "dashboard": {
+    "mode": "dossiers",
+    "singleDossierMode": {
+      "enabledWhen": "one visible non-internal project dossier",
+      "layout": "page-browser"
+    },
+    "hero": {
+      "eyebrow": "Project dossier",
+      "description": "Project direction, active work, evidence, owner decisions, and prepared context for agents."
+    },
+    "copy": {
+      "blocks": {
+        "dossiers": {
+          "title": "Project areas",
+          "note": "Open the part of the project you need without turning the dashboard into a list of every note.",
+          "linkLabel": "Browse project areas"
+        },
+        "roadmap-snapshot": {
+          "title": "Roadmap",
+          "note": "Current direction and the next milestone that can move.",
+          "linkLabel": "Open Roadmap"
+        },
+        "continue-work": {
+          "title": "Continue work",
+          "note": "A small owner-controlled queue of pages that are active now.",
+          "empty": "No pages are marked active.",
+          "linkLabel": "View active work"
+        },
+        "read-first": {
+          "title": "Read first",
+          "note": "The shortest route into current project context."
+        },
+        "health": {
+          "title": "Project health",
+          "note": "Signals that project records may need attention.",
+          "empty": "No documentation maintenance is currently flagged."
+        }
+      }
+    },
+    "continueWork": {
+      "limit": 5
+    },
+    "readFirst": {
+      "limit": 5
+    },
+    "blocks": [
+      {
+        "id": "dossiers",
+        "label": "Project areas",
+        "column": "main",
+        "order": 10,
+        "enabled": true
+      },
+      {
+        "id": "roadmap-snapshot",
+        "label": "Roadmap",
+        "column": "main",
+        "order": 20,
+        "enabled": true
+      },
+      {
+        "id": "continue-work",
+        "label": "Continue work",
+        "column": "side",
+        "order": 10,
+        "enabled": true
+      },
+      {
+        "id": "read-first",
+        "label": "Read first",
+        "column": "side",
+        "order": 20,
+        "enabled": true
+      },
+      {
+        "id": "health",
+        "label": "Project health",
+        "column": "side",
+        "order": 30,
+        "enabled": true
+      },
+      {
+        "id": "recent-changes",
+        "label": "Recent changes",
+        "column": "side",
+        "order": 40,
+        "enabled": false
+      }
+    ]
+  },
+  "theme": {
+    "name": "Toaster dark",
+    "preset": "toaster-dark",
+    "density": "compact",
+    "colors": {
+      "background": "#141216",
+      "topbar": "#211d25",
+      "panel": "#27232b",
+      "panelAlt": "#322b39",
+      "panelDark": "#211d25",
+      "input": "#141216",
+      "text": "#d8cab8",
+      "muted": "#a99b8d",
+      "border": "#4a414f",
+      "accent": "#ac82e9",
+      "accentText": "#141216",
+      "current": "#263228",
+      "currentText": "#c4e881",
+      "draft": "#233039",
+      "draftText": "#92fcfa",
+      "workbench": "#3a3024",
+      "workbenchText": "#fcb167",
+      "archived": "#29262c",
+      "archivedText": "#a99b8d",
+      "danger": "#fc6f73",
+      "button": "#211d25",
+      "row": "#211d25",
+      "headerA": "#27232b",
+      "headerB": "#211d25",
+      "callout": "#211d25",
+      "calloutBorder": "#766b7c",
+      "lede": "#d8cab8",
+      "green": "#c4e881",
+      "blue": "#92fcfa",
+      "purple": "#ac82e9",
+      "red": "#fc6f73",
+      "yellow": "#fcb167"
+    }
+  },
+  "aiPolicy": {
+    "byStatus": {
+      "Current": "auto",
+      "Draft": "auto",
+      "Workbench": "manual",
+      "Archived": "off"
+    },
+    "byKind": {}
+  }
+}

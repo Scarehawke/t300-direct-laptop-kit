@@ -23,6 +23,8 @@ in [the mainline audit](docs/MAINLINE_IMPLEMENTATION_AUDIT_20260804.md). The
 latest restart point is [the 2026-08-05 handover](docs/HANDOVER_20260805.md).
 The matching OrcaSlicer contract is documented in
 [the runtime profile notes](docs/ORCASLICER_RUNTIME_PROFILE.md).
+The owner-facing sign-off report lives in the data-only
+[T300 Dossier project](dossier/README.md).
 Read it before continuing after a chat reset, reboot, or context compaction. The
 candidate deliberately provides no automatic eMMC or MCU flashing command;
 those owner-attended operations remain blocked until recovery and hardware

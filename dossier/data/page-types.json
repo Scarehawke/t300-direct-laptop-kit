@@ -1,0 +1,460 @@
+{
+  "pageTypes": {
+    "Working Note": {
+      "label": "Working note",
+      "description": "Loose exploration, rough thinking, and temporary notes.",
+      "defaultStatus": "Workbench",
+      "defaultDossier": "design-direction",
+      "template": "working-note",
+      "embeddableDefault": false,
+      "aiDefault": "manual",
+      "category": "Working",
+      "whenToUse": "Use this for messy thinking, fragments, and notes you expect to reshape later.",
+      "previewSections": [
+        "Question",
+        "Raw material",
+        "Promising directions",
+        "Next test"
+      ],
+      "standardSections": [
+        "Question",
+        "Raw material",
+        "Promising directions",
+        "Next test"
+      ],
+      "qualityBar": [
+        "Names the question",
+        "Preserves raw thinking",
+        "Ends with a next test"
+      ]
+    },
+    "Dossier Page": {
+      "label": "Dossier page",
+      "description": "Clean page that can become part of the current direction.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "game-concept",
+      "template": "dossier-page",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Design",
+      "whenToUse": "Use this for a clean page that may become accepted project direction.",
+      "previewSections": [
+        "Current position",
+        "Rationale",
+        "Constraints",
+        "Open questions"
+      ],
+      "standardSections": [
+        "Current position",
+        "Rationale",
+        "Constraints",
+        "Open questions"
+      ],
+      "qualityBar": [
+        "States current position",
+        "Explains rationale",
+        "Captures constraints/open questions"
+      ]
+    },
+    "Image Board": {
+      "label": "Image board",
+      "description": "Visual research, art studies, screenshots, and style notes.",
+      "defaultStatus": "Workbench",
+      "defaultDossier": "research-references",
+      "template": "image-board",
+      "embeddableDefault": false,
+      "aiDefault": "manual",
+      "category": "Research",
+      "whenToUse": "Use this for visual research, art direction studies, screenshots, and mood boards.",
+      "previewSections": [
+        "Study goal",
+        "Image board",
+        "Observations",
+        "Design takeaway"
+      ],
+      "standardSections": [
+        "Study goal",
+        "Image board",
+        "Observations",
+        "Design takeaway"
+      ],
+      "qualityBar": [
+        "States study goal",
+        "Uses sourced media records",
+        "Turns observations into design takeaways"
+      ]
+    },
+    "Reference Study": {
+      "label": "Reference study",
+      "description": "A game, artist, source, or technique study that starts as reviewable research.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "reference-study",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Research",
+      "whenToUse": "Use this to study a game, artist, technique, source, or comparator before deciding what belongs in the current direction.",
+      "previewSections": [
+        "Research question",
+        "What to inspect",
+        "Useful observations",
+        "Design takeaway"
+      ],
+      "standardSections": [
+        "Research question",
+        "What to inspect",
+        "Useful observations",
+        "Design takeaway"
+      ],
+      "qualityBar": [
+        "Defines research question",
+        "Separates observations from takeaways",
+        "Links back to production/design use"
+      ]
+    },
+    "Reusable Block": {
+      "label": "Reusable entry",
+      "description": "Small source page for a concept, mechanic, item, status effect, character, or lore entry.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "reusable-entry",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for small source pages that can be embedded into other pages.",
+      "previewSections": [
+        "Definition",
+        "Use in other pages",
+        "Update rules"
+      ],
+      "standardSections": [
+        "Definition",
+        "Use in other pages",
+        "Update rules"
+      ],
+      "qualityBar": [
+        "Small enough to embed",
+        "Defines single source of truth",
+        "States update rules"
+      ]
+    },
+    "Design Direction": {
+      "label": "Design hypothesis",
+      "description": "Structured proposal for a design direction or solution path.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "design-direction",
+      "template": "design-direction",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Design",
+      "whenToUse": "Use this for a proposed solution path that still needs validation.",
+      "previewSections": [
+        "Current hypothesis",
+        "Why it fits the pillars",
+        "Options considered",
+        "What needs proving"
+      ],
+      "standardSections": [
+        "Current hypothesis",
+        "Why it fits the pillars",
+        "Options considered",
+        "What needs proving"
+      ],
+      "qualityBar": [
+        "States hypothesis",
+        "Connects to pillars/requirements",
+        "Identifies proof needed"
+      ]
+    },
+    "Requirement": {
+      "label": "Requirement",
+      "description": "A constraint that later design must satisfy.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "design-requirements",
+      "template": "requirement",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Design",
+      "whenToUse": "Use this for a constraint later design must satisfy.",
+      "previewSections": [
+        "Requirement statement",
+        "Why it matters",
+        "Validation question"
+      ],
+      "standardSections": [
+        "Requirement statement",
+        "Why it matters",
+        "Validation question"
+      ],
+      "qualityBar": [
+        "Is checkable",
+        "Explains why it matters",
+        "Has a validation question"
+      ]
+    },
+    "Decision": {
+      "label": "Decision",
+      "description": "A recorded project decision with reasoning and consequences.",
+      "defaultStatus": "Current",
+      "defaultDossier": "start",
+      "template": "decision",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Design",
+      "whenToUse": "Use this when a choice has been made and should be traceable later.",
+      "previewSections": [
+        "Decision",
+        "Reasoning",
+        "Consequences",
+        "Follow-up"
+      ],
+      "standardSections": [
+        "Decision",
+        "Reasoning",
+        "Consequences",
+        "Follow-up"
+      ],
+      "qualityBar": [
+        "Records choice",
+        "Explains reasoning",
+        "States consequences/follow-up"
+      ]
+    },
+    "Prototype Test": {
+      "label": "Prototype test",
+      "description": "A planned or completed test tied to a design question.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "prototype-implementation",
+      "template": "prototype-test",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "Prototype",
+      "whenToUse": "Use this to plan or record a prototype tied to a design question.",
+      "previewSections": [
+        "Question",
+        "Test setup",
+        "Findings",
+        "Next action"
+      ],
+      "standardSections": [
+        "Question",
+        "Test setup",
+        "Findings",
+        "Next action"
+      ],
+      "qualityBar": [
+        "Frames a question",
+        "Defines setup/success/failure",
+        "Records findings and next action"
+      ]
+    },
+    "Lore Entry": {
+      "label": "Lore entry",
+      "description": "Reusable lore note for characters, places, factions, objects, and theories.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "lore-entry",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for reusable lore notes, theories, and source-connected entries.",
+      "previewSections": [
+        "Summary",
+        "Evidence or source",
+        "Connections"
+      ],
+      "standardSections": [
+        "Summary",
+        "Evidence or source",
+        "Connections"
+      ],
+      "qualityBar": [
+        "Summarizes entity",
+        "Provides evidence/source",
+        "Maps connections"
+      ]
+    },
+    "Item": {
+      "label": "Item",
+      "description": "Small item or equipment entry for reuse in lore/design pages.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "item",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for item/equipment entries that should update everywhere they are embedded.",
+      "previewSections": [
+        "Description",
+        "Properties",
+        "Related pages"
+      ],
+      "standardSections": [
+        "Description",
+        "Properties",
+        "Related pages"
+      ],
+      "qualityBar": [
+        "Describes item",
+        "Lists properties/constraints",
+        "Links related pages"
+      ]
+    },
+    "Status Effect": {
+      "label": "Status effect",
+      "description": "Small status/effect entry for reuse in design or lore pages.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "status-effect",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for status/effect definitions that can be embedded in builds, items, or system notes.",
+      "previewSections": [
+        "Definition",
+        "Behavior",
+        "Related entries"
+      ],
+      "standardSections": [
+        "Definition",
+        "Behavior",
+        "Related entries"
+      ],
+      "qualityBar": [
+        "Defines effect",
+        "Explains behavior",
+        "Links related entries"
+      ]
+    },
+    "Equipment": {
+      "label": "Equipment",
+      "description": "Small equipment entry for lore/design use.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "equipment",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for reusable equipment entries.",
+      "previewSections": [
+        "Description",
+        "Properties",
+        "Related entries"
+      ],
+      "standardSections": [
+        "Description",
+        "Properties",
+        "Related entries"
+      ],
+      "qualityBar": [
+        "Describes equipment",
+        "Lists properties/constraints",
+        "Links related entries"
+      ]
+    },
+    "Character": {
+      "label": "Character",
+      "description": "Small character entry for lore/design use.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "character",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for character entries in lore or game-design projects.",
+      "previewSections": [
+        "Summary",
+        "Role",
+        "Connections"
+      ],
+      "standardSections": [
+        "Summary",
+        "Role",
+        "Connections"
+      ],
+      "qualityBar": [
+        "Summarizes role",
+        "States function in world/design",
+        "Maps connections"
+      ]
+    },
+    "Place": {
+      "label": "Place",
+      "description": "Small place/location entry for lore/design use.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "place",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for location entries in lore or design projects.",
+      "previewSections": [
+        "Summary",
+        "Conditions",
+        "Connections"
+      ],
+      "standardSections": [
+        "Summary",
+        "Conditions",
+        "Connections"
+      ],
+      "qualityBar": [
+        "Summarizes location",
+        "States conditions",
+        "Maps connections"
+      ]
+    },
+    "Faction": {
+      "label": "Faction",
+      "description": "Small faction entry for lore/design use.",
+      "defaultStatus": "Draft",
+      "defaultDossier": "research-references",
+      "template": "faction",
+      "embeddableDefault": true,
+      "aiDefault": "auto",
+      "category": "Reusable entries",
+      "whenToUse": "Use this for faction or organization entries.",
+      "previewSections": [
+        "Summary",
+        "Motives",
+        "Connections"
+      ],
+      "standardSections": [
+        "Summary",
+        "Motives",
+        "Connections"
+      ],
+      "qualityBar": [
+        "Summarizes faction",
+        "States motives",
+        "Maps connections"
+      ]
+    },
+    "Overview": {
+      "label": "Overview",
+      "description": "Dossier overview or index page.",
+      "defaultStatus": "Current",
+      "defaultDossier": "start",
+      "template": "overview",
+      "embeddableDefault": false,
+      "aiDefault": "auto",
+      "category": "System pages",
+      "whenToUse": "Use this for dossier overview/index pages.",
+      "previewSections": [
+        "Purpose",
+        "Pages in this dossier",
+        "Current status"
+      ],
+      "standardSections": [
+        "Purpose",
+        "Pages in this dossier",
+        "Current status"
+      ],
+      "qualityBar": [
+        "Explains purpose",
+        "Provides reading path",
+        "Shows current state"
+      ]
+    }
+  }
+}

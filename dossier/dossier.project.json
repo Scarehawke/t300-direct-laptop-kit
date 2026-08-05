@@ -1,0 +1,96 @@
+{
+  "id": "t300-printer",
+  "title": "T300 Printer Project",
+  "engine": "dossier-engine-v2",
+  "engineVersion": "0.7.0",
+  "dataVersion": 1,
+  "projectKind": "data-only-project",
+  "created": "2026-08-05",
+  "updated": "2026-08-05",
+  "entry": {
+    "workspace": "data/workspace.json",
+    "activeProjectId": "t300-printer"
+  },
+  "paths": {
+    "data": "data",
+    "pages": "data/pages",
+    "media": "data/media",
+    "dossiers": "data/dossiers.json",
+    "pageTypes": "data/page-types.json",
+    "projects": "data/projects",
+    "activeProject": "data/projects/t300-printer.json",
+    "glossary": "data/glossary.json",
+    "publicMedia": "public/media",
+    "exports": "exports",
+    "pdfExports": "exports/pdf",
+    "aiExports": "ai"
+  },
+  "capabilities": {
+    "singleProjectEditing": true,
+    "multiProjectEditing": false,
+    "projectKits": true,
+    "opensAsDataOnlyProject": true,
+    "runtimeSeparatedFromProjectData": true,
+    "generatedFromKit": true,
+    "professionalJargonTooltips": "project-glossary-v1",
+    "createdFromProjectSwitcher": true,
+    "canOpenFromDesktopShell": true
+  },
+  "notes": "Data-only Dossier project created from the kit \"Codex Project Dossier\". Open through a Dossier Engine runtime rather than running this folder directly.",
+  "lastUpdated": "2026-08-05",
+  "runtimePaths": {
+    "localUiState": ".dossier-local/ui-state.json",
+    "portableAppState": "runtime .dossier-app/",
+    "desktopShellAppState": "OS app data when Start Dossier Desktop.bat is used",
+    "appProjectLibraryState": "shared OS app state by default; runtime .dossier-app only in explicit portable mode",
+    "appUpdateState": "runtime .dossier-app or OS app data pending/history update records"
+  },
+  "version": "0.7.0",
+  "schemaVersion": 1,
+  "engineCompatibility": {
+    "minimum": "0.6.10",
+    "tested": "0.7.0",
+    "testedWith": "0.7.0"
+  },
+  "boundary": {
+    "engineFilesAreProjectLocal": false,
+    "projectDataIsPortable": true,
+    "projectLocalStateIsFolderScoped": true,
+    "generatedOutputsAreDerived": true,
+    "runtimeSeparatedFromProjectData": true,
+    "canOpenFromStandaloneRuntime": true,
+    "runtimeOwnedToolHandbook": true,
+    "dataToolContractsLiveInRuntime": true,
+    "dataToolContractsAreProjectLocal": false,
+    "desktopShellAppStateLivesOutsideProject": true
+  },
+  "updatePolicy": {
+    "defaultUpdateTouchesProjectContent": false,
+    "migrationsRequireDryRun": true,
+    "migrationsRequireBackup": true,
+    "tagRenamesUseAliasBeforeRewrite": true,
+    "migrationRegistry": "runtime:data/tool/migration-registry.json",
+    "toolContractsSource": "runtime"
+  },
+  "dashboardMode": {
+    "mode": "dossiers",
+    "singleDossierMode": "show-page-browser-when-one-visible-project-dossier"
+  },
+  "package": {
+    "version": "0.7.0",
+    "kind": "data-only-project"
+  },
+  "release": {
+    "version": "0.7.0",
+    "updated": "2026-08-05"
+  },
+  "handoff": {
+    "updated": "2026-08-05",
+    "status": "created-through-0.7.0"
+  },
+  "generatedFromKit": {
+    "title": "Codex Project Dossier",
+    "createdBy": "project-switcher",
+    "createdAt": "2026-08-05T09:25:06.448Z"
+  }
+}
