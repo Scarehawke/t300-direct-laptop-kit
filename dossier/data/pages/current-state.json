@@ -227,7 +227,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "GitHub origin/main includes the original mainline candidate at commit 0590c50. The pressure-advance, extrusion-accounting, status, and Orca refinement described in this Dossier is the current local release candidate until its final commit is published."
+                    "text": "GitHub origin/main includes the current audited refinement at commit 891fa61. It contains the pressure-advance boundary, scale-safe extrusion accounting, status action, portable Orca profiles, large-format digital test, and the warn-first hull/floor-line slicing rule."
                   }
                 ]
               }

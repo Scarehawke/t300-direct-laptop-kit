@@ -56,6 +56,10 @@
   "recentChanges": [
     {
       "date": "2026-08-05",
+      "summary": "Pushed commit 891fa61 with the audited pressure-advance and extrusion policy, portable Orca profiles, large-format test, staged-project evidence, and a persistent warn-first hull/floor-line slicing rule."
+    },
+    {
+      "date": "2026-08-05",
       "summary": "Added bounded admitted-print pressure advance, retraction-credit accounting, cleanup resets, and a read-only Printer Status action; exact Klipper and policy tests pass."
     },
     {
