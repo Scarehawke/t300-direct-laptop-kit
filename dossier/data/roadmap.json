@@ -56,6 +56,10 @@
   "recentChanges": [
     {
       "date": "2026-08-05",
+      "summary": "Added the Factorian/Orca filament-calibration order to the Dossier: printer baseline, temperature, max volumetric speed, pressure advance, flow ratio, then retraction/stringing."
+    },
+    {
+      "date": "2026-08-05",
       "summary": "Installed the reviewed T300 runtime Orca machine preset as this laptop's default for new projects and added a portable Linux/Windows/macOS installer for other Orca setups."
     },
     {

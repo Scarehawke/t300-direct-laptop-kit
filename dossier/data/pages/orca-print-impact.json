@@ -349,6 +349,116 @@
         "content": [
           {
             "type": "text",
+            "text": "Recommended filament calibration order"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "After reviewing Factorian Designs' Filament Calibration Masterclass and OrcaSlicer's calibration guidance, the practical lesson is: do not use a first-layer sheet or a big flow multiplier to tune a whole spool. First-layer tests are mainly for bed contact, Z offset, mesh behavior, and adhesion. Filament calibration should happen on normal Orca calibration tools and should be saved per filament profile."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "First prove the printer-side baseline: Z offset, full mesh at bed temperature, GerGo gantry alignment, and one slow extruder rotation-distance measurement if extrusion amount still looks suspicious."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Then run Orca's temperature calibration for the chosen spool. Temperature affects stringing, gloss, layer bonding, bridging, and how much flow the hotend can actually melt."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Next run maximum volumetric speed so Orca knows the safe melt-rate ceiling for that filament and hotend. This prevents high-speed under-extrusion that can look like bad flow or bad Z."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Then tune pressure advance or Orca flow dynamics, because it changes how starts, stops, corners, and support islands are fed."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "After that, tune flow ratio with Orca's flow tests and save it to the filament profile. Do not carry forward the old 125 percent first-layer experiment unless a real calibration proves it is needed."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Finally tune retraction and run a small stringing check. If stringing remains after sane temperature and retraction values, test a fresher or dried spool before blaming the model."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Practical feel during prints"
           }
         ]
