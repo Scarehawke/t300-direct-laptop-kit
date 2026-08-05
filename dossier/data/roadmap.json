@@ -42,9 +42,9 @@
     },
     {
       "id": "orca-mainline-frieren-prep",
-      "title": "OrcaSlicer mainline profile and Frieren slice prep",
+      "title": "OrcaSlicer mainline profile and staged print prep",
       "status": "planned",
-      "summary": "After recovery backup and mainline calibration, make Orca use the new firmware contract, run filament/stringing calibration, then finalize the Frieren slice from editable Orca project files."
+      "summary": "After recovery backup and mainline calibration, make Orca use the new firmware contract, run filament/stringing calibration, then stage the camera bracket and Frieren from editable Orca project files."
     },
     {
       "id": "print-quality-baseline",
@@ -54,6 +54,10 @@
     }
   ],
   "recentChanges": [
+    {
+      "date": "2026-08-05",
+      "summary": "Recorded the post-calibration staging rule: camera bracket and Frieren remain editable until calibrated profiles are known, then accepted G-code exports are staged on the USB."
+    },
     {
       "date": "2026-08-05",
       "summary": "Added the Factorian/Orca filament-calibration order to the Dossier: printer baseline, temperature, max volumetric speed, pressure advance, flow ratio, then retraction/stringing."

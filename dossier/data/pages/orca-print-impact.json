@@ -489,7 +489,7 @@
         "content": [
           {
             "type": "text",
-            "text": "After the recovery backup is proven and the mainline runtime is commissioned, OrcaSlicer must be re-pointed at the audited T300 mainline profile before we slice real prints. Frieren should stay as an editable Orca project until the post-migration calibrations are known; then we can regenerate the final G-code from Orca-supported settings."
+            "text": "After the recovery backup is proven and the mainline runtime is commissioned, OrcaSlicer must be re-pointed at the audited T300 mainline profile before we slice real prints. Frieren and the camera bracket should stay as editable Orca projects until the post-migration calibrations are known; then we can regenerate final G-code from Orca-supported settings."
           }
         ]
       },
@@ -505,6 +505,34 @@
                   {
                     "type": "text",
                     "text": "Use only Orca-supported orientation, supports, brim, seam, temperature, retraction, flow, pressure advance, timelapse, and profile settings."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Once the relevant filament profile is calibrated, stage both the orange camera bracket and the Frieren figure: keep the editable 3MFs, export final G-code only from those reviewed projects, and place the accepted exports on the print USB."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Treat the bracket as the first practical functional print after calibration. Treat Frieren as a quality-gated print that waits for the white PLA's temperature, pressure advance, flow, and retraction choices."
                   }
                 ]
               }
