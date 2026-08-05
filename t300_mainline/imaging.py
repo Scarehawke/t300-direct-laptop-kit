@@ -360,6 +360,16 @@ def _check_inspection(inspection: dict[str, Any], purpose: str) -> None:
         or bootloader.get("device_tree_handoff_identifies_board") is not True
     ):
         raise ImagingError("recovery bootloader handoff identity is malformed")
+    emmc = inspection.get("emmc")
+    if (
+        not isinstance(emmc, dict)
+        or emmc.get("non_removable") is not True
+        or emmc.get("card_type") != "MMC"
+        or emmc.get("boot0_present") is not True
+        or emmc.get("boot1_present") is not True
+        or emmc.get("identifies_emmc") is not True
+    ):
+        raise ImagingError("recovery target lacks exact non-removable eMMC evidence")
 
 
 def capture_image(

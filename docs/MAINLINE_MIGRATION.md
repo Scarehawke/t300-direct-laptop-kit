@@ -264,11 +264,70 @@ Do not use a stage merely because these commands pass. A commissioning stage
 with bootstrap calibration is deliberately locked against motion, heat, steel
 sheet arming, and printing.
 
+## Recovery-media preflight
+
+The recovery stick's kernel, initrd, boot scripts, root filesystem UUID, and
+Klipad50 device tree are pinned in `stack.lock.json`. Audit the mounted boot
+partition before every boot attempt:
+
+```bash
+python3 bin/t300-recovery-media.py audit --boot-root /path/to/armbi_boot
+```
+
+The audit must report `ready_for_interactive_usb_boot: true`. The stick found
+during the 2026-08-06 preflight correctly matched every pinned payload hash but
+lacked an explicit `fdtfile=rockchip/rk3328-mksklipad50.dtb` assignment. That
+is unsafe with the stock screen's older U-Boot environment, so a corrected
+laptop-local review file was rendered and the audit intentionally fails until
+the owner approves copying it to the USB. Never replace the device tree by
+guessing from the stock firmware name.
+
+The owner-local recovery overlay has its own external manifest hash. Verify the
+source before copying, then run the same read-only comparison against the
+mounted recovery root after copying:
+
+```bash
+python3 bin/t300-recovery-media.py audit-overlay \
+  --overlay-root PATH_TO_OVERLAY \
+  --manifest-sha256 MANIFEST_SHA256
+sudo python3 bin/t300-recovery-media.py audit-overlay \
+  --overlay-root PATH_TO_OVERLAY \
+  --manifest-sha256 MANIFEST_SHA256 \
+  --installed-root /path/to/armbi_root
+```
+
+The second command needs read access to root-owned recovery files. Both audits
+must report `ready: true`; neither command writes media.
+
+The screen's service serial console runs at 1,500,000 baud, 8 data bits, no
+parity, one stop bit, and no flow control. The repository helper is interactive
+only:
+
+```bash
+python3 bin/t300-serial.py list
+python3 bin/t300-serial.py console --device /dev/serial/by-id/EXACT_DEVICE
+```
+
+It validates the device path and permissions but sends no command. The owner
+interrupts U-Boot and types its ordinary `run bootcmd_usb0` command. Do not use
+kexec, intentionally damage eMMC bootability, or automate the boot command as
+the primary recovery route.
+
+The recovery root partition starts at about 2 GB and is expected to expand on
+its first real USB boot through Armbian's enabled resize service. Confirm the
+expanded filesystem and required free space before provisioning. A successful
+Linux boot is not sufficient by itself: the recovery agent and laptop client
+must both identify the target as fixed non-removable MMC with both eMMC boot
+partitions, root must be on USB, eMMC must be unmounted, and three separate
+eligible boots must be recorded before capture.
+
 ## Owner-gated migration order
 
 1. Back up the existing printer USB and keep the private GerGo ZIP outside Git.
-2. Create the pinned recovery USB and verify its signature and checksum.
-3. Use USB-C serial to verify MKS-Klipad50 identity, root-on-USB, unmounted eMMC,
+2. Create the pinned recovery USB, apply the reviewed boot-environment and
+   recovery-overlay files with the owner present, remount read-only, and require
+   the media audit above to pass.
+3. Use the screen's service USB serial port to verify MKS-Klipad50 identity, root-on-USB, unmounted eMMC,
    bootloader handoff, and direct Ethernet. Record three separate successful
    USB boots. Stop immediately if the board, root disk, or eMMC differs.
 4. Capture every eMMC sector over Ethernet. The tool performs a second raw

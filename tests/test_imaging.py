@@ -56,6 +56,13 @@ def inspection(size: int) -> dict[str, object]:
             "partitions": [{"node": "/dev/mmcblk2p1", "start": 1, "size": 1}],
         },
         "bootloader": {"device_tree_handoff_identifies_board": True},
+        "emmc": {
+            "non_removable": True,
+            "card_type": "MMC",
+            "boot0_present": True,
+            "boot1_present": True,
+            "identifies_emmc": True,
+        },
         "blocked_reasons": [],
     }
 

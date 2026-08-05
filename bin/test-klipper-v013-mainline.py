@@ -269,7 +269,7 @@ def prepare_stage(
     supplied_stage: Path | None = None,
     supplied_manifest_sha256: str | None = None,
     fixture_components: tuple[Path, Path] | None = None,
-) -> tuple[Path, bool, bool]:
+) -> tuple[Path, bool, bool, Path | None]:
     output = directory / "stage"
     private_gergo = False
     if fixture_components is not None:
@@ -332,7 +332,22 @@ def prepare_stage(
     commissioning_lock = re.search(
         r"(?m)^commissioning_lock:\s*True\s*$", safety
     ) is not None
-    return config / "printer.cfg", commissioning_lock, private_gergo
+    maintenance_cfg = None
+    if private_gergo:
+        source = output / "etc/t300/maintenance/printer.cfg"
+        maintenance_cfg = source.with_name("printer-harness.cfg")
+        text = source.read_text(encoding="utf-8")
+        resonance_include = "[include resonance.cfg]\n"
+        if text.count(resonance_include) != 1:
+            raise HarnessError("maintenance configuration resonance include changed")
+        maintenance_cfg.write_text(
+            text.replace(
+                resonance_include,
+                "# ADXL host MCU is deliberately absent from this syntax harness.\n",
+            ),
+            encoding="utf-8",
+        )
+    return config / "printer.cfg", commissioning_lock, private_gergo, maintenance_cfg
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -436,7 +451,7 @@ def main(argv: list[str] | None = None) -> int:
                     args.kamp_source,
                 )
             next_report["klipper_commit"] = tested_commit
-            printer_cfg, commissioning_lock, private_gergo = prepare_stage(
+            printer_cfg, commissioning_lock, private_gergo, maintenance_cfg = prepare_stage(
                 temp,
                 args.stage,
                 args.stage_manifest_sha256,
@@ -513,6 +528,28 @@ def main(argv: list[str] | None = None) -> int:
             env["MPLCONFIGDIR"] = str(ROOT / ".cache/matplotlib")
             run_dir = temp / "run"
             run_dir.mkdir()
+            if maintenance_cfg is not None:
+                maintenance_fixture = temp / "maintenance-load.test"
+                maintenance_fixture.write_text(
+                    "DICTIONARY linuxprocess.dict\nCONFIG %s\nSTATUS\n"
+                    % (maintenance_cfg,),
+                    encoding="ascii",
+                )
+                maintenance_output = run(
+                    [
+                        str(test_python),
+                        "scripts/test_klippy.py",
+                        "-d",
+                        str(dict_dir),
+                        "-t",
+                        str(run_dir),
+                        str(maintenance_fixture),
+                    ],
+                    source_dir,
+                    env,
+                )
+                print(maintenance_output)
+                print("PASS: exact private maintenance configuration loads")
             output = run(
                 [
                     str(test_python),

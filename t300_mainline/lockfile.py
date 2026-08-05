@@ -81,6 +81,35 @@ def validate_lock(lock: dict[str, Any]) -> None:
         "base_image.signing_key.verification_guide",
     )
 
+    recovery_boot = lock.get("recovery_boot")
+    if not isinstance(recovery_boot, dict):
+        raise LockfileError("recovery_boot must be an object")
+    if recovery_boot.get("method") != "interactive-serial-u-boot-usb0":
+        raise LockfileError("recovery_boot.method must require interactive serial U-Boot")
+    if recovery_boot.get("serial_baud") != 1500000:
+        raise LockfileError("recovery_boot.serial_baud must match the Klipad50 console")
+    root_uuid = recovery_boot.get("root_uuid")
+    if (
+        not isinstance(root_uuid, str)
+        or re.fullmatch(
+            r"[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-"
+            r"[89ab][0-9a-f]{3}-[0-9a-f]{12}",
+            root_uuid,
+        )
+        is None
+    ):
+        raise LockfileError("recovery_boot.root_uuid must be a lowercase filesystem UUID")
+    if recovery_boot.get("fdtfile") != "rockchip/rk3328-mksklipad50.dtb":
+        raise LockfileError("recovery_boot.fdtfile must select the Klipad50 device tree")
+    for key in (
+        "dtb_sha256",
+        "image_sha256",
+        "uinitrd_sha256",
+        "boot_cmd_sha256",
+        "boot_scr_sha256",
+    ):
+        _require_sha(recovery_boot.get(key), f"recovery_boot.{key}")
+
     components = lock.get("components")
     if not isinstance(components, list) or not components:
         raise LockfileError("components must be a non-empty list")

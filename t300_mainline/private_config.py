@@ -31,7 +31,6 @@ FORBIDDEN_PRIVATE_COMMANDS = (
     "SET_HEATER_TEMPERATURE",
     "SET_KINEMATIC_POSITION",
     "SET_PIN",
-    "SET_STEPPER_ENABLE",
     "SET_TMC_CURRENT",
     "SET_TMC_FIELD",
     "SHUTDOWN",
@@ -108,6 +107,15 @@ def _validate_macro(content: bytes) -> bytes:
             raise PrivateConfigError(
                 "private macro contains a command outside the maintenance policy"
             )
+    stepper_lines = re.findall(r"(?mi)^\s*SET_STEPPER_ENABLE\b[^\r\n]*", text)
+    if any(
+        " ".join(line.split()).upper()
+        != "SET_STEPPER_ENABLE STEPPER=STEPPER_Z ENABLE=0"
+        for line in stepper_lines
+    ):
+        raise PrivateConfigError(
+            "private macro may only release the reviewed Z stepper in maintenance mode"
+        )
     return content
 
 

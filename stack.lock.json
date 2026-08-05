@@ -27,6 +27,17 @@
     },
     "license": "Armbian-distribution"
   },
+  "recovery_boot": {
+    "method": "interactive-serial-u-boot-usb0",
+    "serial_baud": 1500000,
+    "root_uuid": "3a703405-2025-4c62-aae4-7fb9accdb996",
+    "fdtfile": "rockchip/rk3328-mksklipad50.dtb",
+    "dtb_sha256": "8db9862998cbe698201afd8f0e86a65859a54b3c190500873a22633626b15fa1",
+    "image_sha256": "b6cc9395839e4cd99c45b0e083e47e1df0768823e7aaa505af30c1f57ae297ab",
+    "uinitrd_sha256": "dd76210a666302dbc1d9536e0d23fa063388da20d85bb994c6c3072c0496fbca",
+    "boot_cmd_sha256": "91b5e22d036bb2defcfeb1612d502510b6ebe9e19d2f1eeeebad4dc08a1fad37",
+    "boot_scr_sha256": "96a8d7cd67f4040be96117c5caee8bb9152ea20b836ff2c6763591d157e14080"
+  },
   "components": [
     {
       "name": "klipper",

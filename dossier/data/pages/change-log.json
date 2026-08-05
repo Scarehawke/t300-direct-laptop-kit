@@ -12,7 +12,7 @@
     "changelog",
     "history"
   ],
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "embeddable": false,
   "dashboard": {
     "readFirst": false,
@@ -433,7 +433,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Validated the candidate with 324 repository tests, 29 exact Klipper v0.13 cases, 11 vendor Klipper v0.12 cases, exact Orca 2.4.2 normal slices, calibration-command contract tests, and a stage-bound large-format digital print."
+                    "text": "Validated the candidate with 338 repository tests, 29 exact Klipper v0.13 production cases, one exact private-maintenance configuration load, 11 vendor Klipper v0.12 cases, exact Orca 2.4.2 normal slices, calibration-command contract tests, and a stage-bound large-format digital print."
                   }
                 ]
               }
@@ -448,6 +448,79 @@
                   {
                     "type": "text",
                     "text": "Transcribed and researched the hull/floor-line tutorial against OrcaSlicer pull request 8107, Prusa's Benchy investigation, and Orca's setting documentation. Added a warn-first model review rule, flagged the camera bracket's base transition and inherited 25 percent overlap for owner review, and left both bracket and Frieren settings unchanged."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Recovery preflight and v14 candidate"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Read-only live inspection confirmed the stock eMMC/USB layout and old eMMC-first U-Boot behavior. The selected recovery route is now an owner-operated 1,500,000-baud serial console and the ordinary U-Boot USB command; kexec is not the primary plan."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Added locked recovery boot hashes, an offline media auditor, a no-automation serial helper, exact Armbian identity correction, and matching laptop/recovery-agent eMMC identity checks."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Built owner-local commissioning stage v14 with the exact purchased GerGo package confined to maintenance mode. Its one reviewed Z-stepper release command is allowed only in that private attended configuration; production G-code still forbids motor-release commands."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The final offline validation report passed all eleven checks, including the exact v14 stage, both Klipper versions, UI/services, secret scan, and a near-full-build-volume synthetic print."
                   }
                 ]
               }

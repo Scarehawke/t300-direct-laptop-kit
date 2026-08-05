@@ -292,6 +292,35 @@ def _machine_identity(
     return hashlib.sha256(material).hexdigest()
 
 
+def _emmc_evidence(
+    device: str, sys_block_root: Path = Path("/sys/class/block")
+) -> dict[str, Any]:
+    name = os.path.basename(os.path.realpath(device))
+    node = sys_block_root / name
+    removable_path = node / "removable"
+    type_path = node / "device" / "type"
+    try:
+        removable = _read_text(removable_path).strip()
+        card_type = _read_text(type_path).strip().upper()
+    except RecoveryError:
+        removable = ""
+        card_type = ""
+    boot0 = sys_block_root / (name + "boot0")
+    boot1 = sys_block_root / (name + "boot1")
+    return {
+        "non_removable": removable == "0",
+        "card_type": card_type,
+        "boot0_present": boot0.exists(),
+        "boot1_present": boot1.exists(),
+        "identifies_emmc": (
+            removable == "0"
+            and card_type == "MMC"
+            and boot0.exists()
+            and boot1.exists()
+        ),
+    }
+
+
 def _history_directory(create: bool) -> Path | None:
     directory = BOOT_HISTORY_PATH.parent
     try:
@@ -435,6 +464,7 @@ def inspect_target(
     block_geometry = _block_geometry(device, target_size)
     partition_table = _partition_table(device, target_size)
     target_mounts = _mounted_nodes(device)
+    emmc = _emmc_evidence(device)
     machine_id = _machine_identity(board, compatible, device, target_size)
     bootloader = _bootloader_evidence(board, compatible)
     history = _load_boot_history(marker["recovery_id"], machine_id)
@@ -452,8 +482,8 @@ def inspect_target(
         blocked.append("target device contains the running root filesystem")
     if target_mounts:
         blocked.append("target device or a target partition is mounted")
-    if not os.path.basename(device).startswith("mmcblk"):
-        blocked.append("target is not eMMC/MMC storage")
+    if not emmc["identifies_emmc"]:
+        blocked.append("target sysfs evidence does not identify non-removable eMMC")
 
     # A boot is only eligible for recording after all immutable identity and
     # root-on-USB gates pass. Existing target mounts remain a blocker.
@@ -487,6 +517,7 @@ def inspect_target(
         "partition_table": partition_table,
         "bootloader": bootloader,
         "target_mounts": target_mounts,
+        "emmc": emmc,
         "machine_id": machine_id,
         "blocked_reasons": blocked,
         "safe_for_capture": safe,

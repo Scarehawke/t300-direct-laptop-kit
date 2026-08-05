@@ -40,7 +40,8 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 ROOT_SOURCE_RE = re.compile(r"^/dev/(sd[a-z]+)[0-9]+$")
 EXPECTED_ARMBIAN = {
     "BOARD": "mksklipad50",
-    "BOARDFAMILY": "rk3328",
+    "BOARDFAMILY": "rockchip64",
+    "BOOT_SOC": "rk3328",
     "ARCH": "arm64",
     "DISTRIBUTION_CODENAME": "trixie",
 }

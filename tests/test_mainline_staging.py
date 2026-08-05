@@ -118,6 +118,40 @@ class StagingTests(unittest.TestCase):
         self.assertEqual(
             sha256_file(ROOT / kamp_patch["path"]), kamp_patch["sha256"]
         )
+        self.assertEqual(
+            lock["recovery_boot"],
+            {
+                "method": "interactive-serial-u-boot-usb0",
+                "serial_baud": 1500000,
+                "root_uuid": "3a703405-2025-4c62-aae4-7fb9accdb996",
+                "fdtfile": "rockchip/rk3328-mksklipad50.dtb",
+                "dtb_sha256": "8db9862998cbe698201afd8f0e86a65859a54b3c190500873a22633626b15fa1",
+                "image_sha256": "b6cc9395839e4cd99c45b0e083e47e1df0768823e7aaa505af30c1f57ae297ab",
+                "uinitrd_sha256": "dd76210a666302dbc1d9536e0d23fa063388da20d85bb994c6c3072c0496fbca",
+                "boot_cmd_sha256": "91b5e22d036bb2defcfeb1612d502510b6ebe9e19d2f1eeeebad4dc08a1fad37",
+                "boot_scr_sha256": "96a8d7cd67f4040be96117c5caee8bb9152ea20b836ff2c6763591d157e14080",
+            },
+        )
+
+    def test_recovery_boot_lock_rejects_route_or_device_tree_drift(self):
+        original = json.loads(
+            (ROOT / "stack.lock.json").read_text(encoding="utf-8")
+        )
+        mutations = (
+            ("method", "automatic-kexec", "interactive serial U-Boot"),
+            ("serial_baud", 115200, "Klipad50 console"),
+            ("fdtfile", "rockchip/rk3328-roc-cc.dtb", "Klipad50 device tree"),
+        )
+        for key, value, message in mutations:
+            lock = json.loads(json.dumps(original))
+            lock["recovery_boot"][key] = value
+            with tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "stack.lock.json"
+                path.write_text(json.dumps(lock), encoding="utf-8")
+                with self.subTest(key=key), self.assertRaisesRegex(
+                    LockfileError, message
+                ):
+                    load_lock(path)
 
     def test_repository_debian_artifact_lock_is_valid(self):
         lock = load_debian_lock(ROOT / "mainline/build/debian-artifacts.lock.json")
@@ -346,6 +380,36 @@ class StagingTests(unittest.TestCase):
                 sha256_file(outer),
             ):
                 with self.assertRaisesRegex(PrivateConfigError, "maintenance policy"):
+                    load_purchased_gergo(outer)
+
+    def test_private_gergo_allows_only_exact_z_release(self):
+        accepted = (
+            b"[gcode_macro ONE]\ngcode:\n"
+            b"  SET_STEPPER_ENABLE STEPPER=stepper_z ENABLE=0\n"
+            b"[gcode_macro TWO]\ngcode:\n  M400\n"
+            b"[gcode_macro THREE]\ngcode:\n  M400\n"
+        )
+        rejected = (
+            accepted.replace(b"ENABLE=0", b"ENABLE=1"),
+            accepted.replace(b"stepper_z", b"stepper_x"),
+            accepted.replace(b"ENABLE=0", b"ENABLE=0 EXTRA=1"),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            outer = private_gergo_fixture(root, accepted)
+            with mock.patch(
+                "t300_mainline.private_config.GERGO_OUTER_SHA256",
+                sha256_file(outer),
+            ):
+                self.assertEqual(load_purchased_gergo(outer), accepted)
+        for index, macro in enumerate(rejected):
+            with self.subTest(index=index), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                outer = private_gergo_fixture(root, macro)
+                with mock.patch(
+                    "t300_mainline.private_config.GERGO_OUTER_SHA256",
+                    sha256_file(outer),
+                ), self.assertRaisesRegex(PrivateConfigError, "only release"):
                     load_purchased_gergo(outer)
 
     def test_private_gergo_rejects_unreviewed_outer_bytes(self):

@@ -4,7 +4,7 @@
   "projectId": "t300-printer",
   "title": "T300 Printer Project roadmap",
   "summary": "Recovery-first path from stock printer to audited mainline candidate, then print-quality commissioning.",
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "currentMilestoneId": "recovery-proof",
   "lifecycle": [
     "planned",
@@ -26,7 +26,7 @@
       "id": "recovery-proof",
       "title": "Recovery USB and full stock backup",
       "status": "in-progress",
-      "summary": "Recovery USB is prepared and locally verified; next prove USB boot identity, Ethernet access, and full stock eMMC backup."
+      "summary": "Recovery files are locally verified. Next, apply the owner-approved device-tree and recovery-overlay update to the USB, re-audit it, prove three serial-selected USB boots, then capture the full stock eMMC."
     },
     {
       "id": "usb-boot-candidate",
@@ -54,6 +54,18 @@
     }
   ],
   "recentChanges": [
+    {
+      "date": "2026-08-06",
+      "summary": "Completed live read-only hardware preflight, rejected kexec as the primary recovery route, and pinned owner-operated 1,500,000-baud serial U-Boot USB selection."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "Found the recovery USB's missing explicit Klipad50 device-tree selection; staged the corrected file and refreshed recovery overlay locally without writing mounted media."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "Built and validated owner-local v14 with private GerGo confined to maintenance mode; 338 repository tests and all eleven end-to-end validation checks pass."
+    },
     {
       "date": "2026-08-05",
       "summary": "Downloaded the complete official Comgrow 1.5.2 stock image, screen firmware, and integrated package into owner-only private storage; verified listed sizes, file structure, and SHA-256 hashes."

@@ -20,7 +20,7 @@ unattended print.
 Read [the mainline migration guide](docs/MAINLINE_MIGRATION.md) before using any
 mainline command. Its implementation and remaining physical gates are recorded
 in [the mainline audit](docs/MAINLINE_IMPLEMENTATION_AUDIT_20260804.md). The
-latest restart point is [the 2026-08-05 handover](docs/HANDOVER_20260805.md).
+latest restart point is [the 2026-08-06 handover](docs/HANDOVER_20260806.md).
 The matching OrcaSlicer contract is documented in
 [the runtime profile notes](docs/ORCASLICER_RUNTIME_PROFILE.md).
 The owner-facing sign-off report lives in the data-only
@@ -30,7 +30,7 @@ candidate deliberately provides no automatic eMMC or MCU flashing command;
 those owner-attended operations remain blocked until recovery and hardware
 identity have been proven on the actual screen.
 
-The current v13 refinement adds bounded admitted-print pressure advance,
+The current v14 refinement adds bounded admitted-print pressure advance,
 retraction-credit accounting, a read-only Printer Status action, portable Orca
 2.4.2 machine/filament/process presets, and editable first-layer, bracket, and
 Frieren review projects. No final print G-code or unverified filament tuning is
@@ -38,6 +38,12 @@ presented as accepted; provisional profile values remain visibly labeled
 `CALIBRATION REQUIRED`. Its stage-bound digital large-print test covers a
 900-layer, 250 x 234 x 270 mm job representing roughly 1.5 kg of deposited PLA
 without using a print-length-dependent rounding limit.
+
+The recovery stick is not yet approved for boot. Its pinned boot payload is
+intact, but an explicit Klipad50 device-tree selection and refreshed recovery
+overlay are staged on the laptop for an owner-approved update. Recovery boot
+will then be selected manually through the screen's 1,500,000-baud service
+serial console; the helper sends no boot command automatically.
 
 ## What you need
 

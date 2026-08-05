@@ -13,7 +13,7 @@
     "approval",
     "commissioning"
   ],
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "embeddable": false,
   "dashboard": {
     "readFirst": true,
@@ -126,7 +126,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The backed-up printer USB has been repurposed as a verified Armbian recovery USB with the T300 recovery overlay installed."
+                    "text": "The backed-up printer USB contains the pinned Armbian recovery image and an earlier recovery overlay. Its kernel, initrd, boot scripts, root UUID, and Klipad50 device tree match the lock. It is not yet approved for boot: the older stock U-Boot requires an explicit Klipad50 device-tree line, and the refreshed v3 recovery overlay is still staged on the laptop for an owner-approved USB update."
                   }
                 ]
               }
@@ -196,7 +196,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The purchased GerGo macro remains private and is not included in the public repository."
+                    "text": "The purchased GerGo macro remains private and is not included in the public repository. Its exact purchased bytes are present only in the ignored owner-local v14 maintenance stage, where the configuration now syntax-loads successfully on pinned Klipper 0.13 without executing movement or heat."
                   }
                 ]
               }
@@ -241,7 +241,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "GitHub origin/main includes the current audited refinement at commit 891fa61. It contains the pressure-advance boundary, scale-safe extrusion accounting, status action, portable Orca profiles, large-format digital test, and the warn-first hull/floor-line slicing rule."
+                    "text": "The current audited refinement contains the pressure-advance boundary, scale-safe extrusion accounting, status action, portable Orca profiles, large-format digital test, warn-first hull/floor-line slicing rule, serial recovery helper, locked recovery boot identity, and stricter eMMC target checks."
                   }
                 ]
               }
@@ -270,6 +270,20 @@
                   {
                     "type": "text",
                     "text": "The Dossier project lives in dossier/ as data-only project content. It contains no Dossier Engine runtime source."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The v14 stage passed 338 repository tests, 29 production Klipper 0.13 cases, 11 vendor Klipper 0.12 cases, exact private-maintenance configuration loading, secret and service reviews, and a 900-layer near-full-volume digital print admission test. Hardware commissioning evidence is still intentionally absent."
                   }
                 ]
               }

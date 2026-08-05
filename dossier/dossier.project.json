@@ -6,7 +6,7 @@
   "dataVersion": 1,
   "projectKind": "data-only-project",
   "created": "2026-08-05",
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "entry": {
     "workspace": "data/workspace.json",
     "activeProjectId": "t300-printer"
@@ -37,7 +37,7 @@
     "canOpenFromDesktopShell": true
   },
   "notes": "Data-only Dossier project created from the kit \"Codex Project Dossier\". Open through a Dossier Engine runtime rather than running this folder directly.",
-  "lastUpdated": "2026-08-05",
+  "lastUpdated": "2026-08-06",
   "runtimePaths": {
     "localUiState": ".dossier-local/ui-state.json",
     "portableAppState": "runtime .dossier-app/",
@@ -82,10 +82,10 @@
   },
   "release": {
     "version": "0.7.0",
-    "updated": "2026-08-05"
+    "updated": "2026-08-06"
   },
   "handoff": {
-    "updated": "2026-08-05",
+    "updated": "2026-08-06",
     "status": "created-through-0.7.0"
   },
   "generatedFromKit": {

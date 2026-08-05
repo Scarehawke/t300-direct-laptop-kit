@@ -13,7 +13,7 @@
     "signoff",
     "handover"
   ],
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "embeddable": false,
   "dashboard": {
     "readFirst": true,
@@ -55,7 +55,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains the v13 commissioning-locked mainline candidate, recovery tooling, safety policy, portable Orca 2.4.2 profiles, editable review projects, and validation tests."
+            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains the v14 commissioning-locked mainline candidate, recovery tooling, safety policy, portable Orca 2.4.2 profiles, editable review projects, and validation tests."
           }
         ]
       },
@@ -64,7 +64,7 @@
         "content": [
           {
             "type": "text",
-            "text": "My recommendation is to treat the current repository state as ready for attended recovery and backup work, not ready for unattended installation. The recovery USB is prepared; the next real-world gate is proving recovery boot identity and capturing the full eMMC backup before any write to the printer. Orca is already staged on this laptop, but the first-layer test, bracket, and Frieren remain editable projects until commissioning and their required filament calibrations are accepted."
+            "text": "My recommendation is to treat the current repository state as ready for the final attended recovery-media update and backup work, not ready for installation. The USB image and boot files verify correctly, but one explicit Klipad50 device-tree setting and the refreshed recovery safety overlay are still staged on the laptop rather than written to the stick. After that owner-approved update, the next real-world gate is proving three recovery boots and capturing the full eMMC backup before any printer write. Orca is already staged on this laptop, but the first-layer test, bracket, and Frieren remain editable projects until commissioning and their required filament calibrations are accepted."
           }
         ]
       },
@@ -163,7 +163,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The printer GitHub repo was pushed with commit 0590c50, after rebasing onto the remote network-clarification commit."
+                    "text": "The public printer repository contains only redistributable code, profiles, tests, and documentation. Purchased GerGo material, recovery images, credentials, and generated owner-specific stages remain ignored and local."
                   }
                 ]
               }
@@ -297,7 +297,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The old generic 5 mm stationary-extrusion allowance is gone. A stationary positive move can only return filament that the same print previously retracted. Tiny, capped allowances cover Orca 2.4.2 decimal rounding without creating a usable stationary purge allowance."
+            "text": "The old generic 5 mm stationary-extrusion allowance is gone. A stationary positive move can only return filament that the same print previously retracted. Tiny, capped allowances cover Orca 2.4.2 decimal rounding without creating a usable stationary purge allowance. A stage-bound 900-layer digital job near the T300 build limits passed with 36,000 retract/wipe recoveries, while repeated stationary and microscopic-move allowance farming was rejected."
           }
         ]
       },

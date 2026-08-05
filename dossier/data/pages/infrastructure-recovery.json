@@ -13,7 +13,7 @@
     "recovery",
     "rollback"
   ],
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "embeddable": false,
   "dashboard": {
     "readFirst": false,
@@ -226,6 +226,76 @@
                   {
                     "type": "text",
                     "text": "All destructive write commands are guarded by recovery markers, size checks, machine identity checks, --apply, and typed confirmation."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Live read-only inspection identified the stock screen as the expected MKS-Klipad50 class hardware, with the stock system on non-removable eMMC and the recovery stick on removable USB. The older stock U-Boot checks eMMC before USB, so recovery boot will be selected manually from the 1,500,000-baud service serial console. No command is sent automatically."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The recovery stick's boot files and root UUID match the pinned lock, but its boot environment still lacks the explicit rockchip/rk3328-mksklipad50.dtb selection needed to prevent the old U-Boot environment from supplying the wrong device tree. A corrected review file is staged locally and has not been copied to USB."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The refreshed recovery agent now requires Linux sysfs to identify the target as fixed, non-removable MMC with both eMMC boot partitions. The laptop independently checks the same evidence. A similarly named SD card or removable device therefore fails closed before capture or restore. A separate read-only overlay audit binds the owner-local source manifest and can compare every installed recovery file, mode, size, and hash after the copy."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The recovery root partition is currently about 2 GB because first-boot expansion has not run. Armbian's enabled resize service should expand it on the first successful USB boot; provisioning remains blocked until the expanded size and free-space gate are verified."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Kexec, corrupted-eMMC tricks, and automated boot commands are rejected as the primary route. The owner will interrupt U-Boot and choose its ordinary USB boot command; three successful boots must be recorded before imaging is admitted."
                   }
                 ]
               }

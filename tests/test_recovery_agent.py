@@ -102,6 +102,33 @@ class RecoveryAgentTests(unittest.TestCase):
             )
             self.assertRegex(identity, r"^[0-9a-f]{64}$")
 
+    def test_emmc_evidence_requires_fixed_mmc_and_both_boot_partitions(self):
+        agent = self.agent
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "mmcblk1"
+            (target / "device").mkdir(parents=True)
+            (target / "removable").write_text("0\n", encoding="ascii")
+            (target / "device/type").write_text("MMC\n", encoding="ascii")
+            (root / "mmcblk1boot0").mkdir()
+            (root / "mmcblk1boot1").mkdir()
+            evidence = agent._emmc_evidence("/dev/mmcblk1", root)
+            self.assertTrue(evidence["identifies_emmc"])
+            (target / "removable").write_text("1\n", encoding="ascii")
+            self.assertFalse(
+                agent._emmc_evidence("/dev/mmcblk1", root)["identifies_emmc"]
+            )
+            (target / "removable").write_text("0\n", encoding="ascii")
+            (target / "device/type").write_text("SD\n", encoding="ascii")
+            self.assertFalse(
+                agent._emmc_evidence("/dev/mmcblk1", root)["identifies_emmc"]
+            )
+            (target / "device/type").write_text("MMC\n", encoding="ascii")
+            (root / "mmcblk1boot1").rmdir()
+            self.assertFalse(
+                agent._emmc_evidence("/dev/mmcblk1", root)["identifies_emmc"]
+            )
+
     def _write_fixture(self, incoming: bytes, expected_size: int, expected_hash: str):
         agent = self.agent
         with tempfile.TemporaryDirectory() as directory:

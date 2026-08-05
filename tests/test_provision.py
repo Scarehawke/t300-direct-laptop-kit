@@ -13,6 +13,7 @@ from t300_mainline.display_auth import DisplayAuthError, create_authority
 from t300_mainline.lockfile import sha256_file
 from t300_mainline.provision import (
     BUILD_WORKSPACE_BYTES,
+    EXPECTED_ARMBIAN,
     MIN_POST_PROVISION_FREE_BYTES,
     T300_UNITS,
     ProvisionError,
@@ -66,6 +67,18 @@ def make_stage(root: Path) -> tuple[Path, str]:
 
 
 class ProvisionTests(unittest.TestCase):
+    def test_pinned_armbian_identity_matches_exact_base_image(self):
+        self.assertEqual(
+            EXPECTED_ARMBIAN,
+            {
+                "BOARD": "mksklipad50",
+                "BOARDFAMILY": "rockchip64",
+                "BOOT_SOC": "rk3328",
+                "ARCH": "arm64",
+                "DISTRIBUTION_CODENAME": "trixie",
+            },
+        )
+
     def test_verified_stage_binds_external_manifest_and_internal_locks(self):
         with tempfile.TemporaryDirectory() as directory:
             stage, digest = make_stage(Path(directory))
