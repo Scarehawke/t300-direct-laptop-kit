@@ -50,6 +50,10 @@
   "recentChanges": [
     {
       "date": "2026-08-05",
+      "summary": "Answered owner Agent Requests in the Dossier: G-code safety layering, concrete unsafe-behavior classes, print limits, cooling-fan behavior, advanced-control visibility, and USB-versus-network migration roles."
+    },
+    {
+      "date": "2026-08-05",
       "summary": "Pushed public printer project commit 0590c50 with mainline candidate, tests, docs, and Orca runtime profile."
     },
     {

@@ -5,7 +5,7 @@
   "kind": "Dossier Page",
   "dossier": "safety",
   "documentRole": "project-work",
-  "section": "Safety and Recovery",
+  "section": "Main",
   "order": 60,
   "summary": "Evidence already collected and what still gates release.",
   "tags": [
@@ -23,7 +23,7 @@
     "active": false,
     "priority": "normal",
     "nextAction": "",
-    "status": "Current"
+    "status": "Parked"
   },
   "publish": {
     "include": false,
@@ -313,6 +313,129 @@
                   {
                     "type": "text",
                     "text": "Print a standard first-layer test and a small dimensional print before camera bracket or Frieren approval."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "agentRequest",
+        "attrs": {
+          "requestId": "agent-request-e3e539ce-1093-49fa-8076-68478d0cb519",
+          "kind": "review",
+          "status": "resolved",
+          "title": "usb vs alternatives",
+          "instruction": "explain if it would be possible to run these tests and apply the new firmware over natwork from this device rather than from the usb so you always can run diagnostics immediately?  Or will that be impossible due to network capabilities even when the printer is on ethernet getting disabled when we mess with firmware?",
+          "resolution": "Answered in USB versus network during migration: the design uses USB for an independent boot/root safety base and Ethernet for diagnostics, capture, restore, and bounded transfers. Rewriting the live eMMC OS over its own network stack is the unsafe case.",
+          "createdAt": "2026-08-05T09:51:59.828Z",
+          "updatedAt": "2026-08-05T10:12:00.000Z"
+        }
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "USB versus network during migration"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Short answer: the safe migration uses both. USB is the independent boot root; direct Ethernet is the diagnostics and data-transfer path while that known recovery system is running."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Network is useful and expected for diagnostics. Once the printer is booted into the marked recovery USB, the laptop can inspect the board, stream the eMMC image, verify hashes, and restore a matching image over direct Ethernet."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "USB is still needed because the eMMC is the disk we are trying to back up or replace. If the printer is booted from eMMC and we rewrite that same eMMC, the operating system, network config, SSH service, and files being used to do the write can disappear or corrupt mid-operation."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The recovery USB keeps the printer running from a disk that is not being written. If an Ethernet transfer fails, the recovery system is still alive and the operation can be restarted safely."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The candidate also has a restricted key-only transport for reviewed configuration bundles after the system is installed and idle. That is for bounded updates, not for blindly replacing the root operating system while it is running."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Maintenance mode intentionally has no network. That is a safety choice: bypass tools live in a local-only configuration, not behind a web UI or LAN endpoint."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Practical meaning for you: you should still have immediate diagnostics from this laptop during recovery because the laptop talks to the USB-booted printer over direct Ethernet. The unsafe path is depending on the old or half-replaced eMMC network stack as the only control plane."
                   }
                 ]
               }

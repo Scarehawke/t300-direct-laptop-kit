@@ -5,7 +5,7 @@
   "kind": "Dossier Page",
   "dossier": "safety",
   "documentRole": "project-work",
-  "section": "Safety and Recovery",
+  "section": "Main",
   "order": 20,
   "summary": "Hardware protection invariants, forbidden commands, build-plate arming, and fail-closed behavior.",
   "tags": [
@@ -23,7 +23,7 @@
     "active": false,
     "priority": "normal",
     "nextAction": "",
-    "status": "Current"
+    "status": "Parked"
   },
   "publish": {
     "include": false,
@@ -139,6 +139,453 @@
                   {
                     "type": "text",
                     "text": "Failure paths turn heaters off before optional parking, UI prompts, timelapse cleanup, or notifications."
+                  },
+                  {
+                    "type": "hardBreak"
+                  },
+                  {
+                    "type": "hardBreak"
+                  }
+                ]
+              },
+              {
+                "type": "agentRequest",
+                "attrs": {
+                  "requestId": "agent-request-543e1da4-a3bc-4880-a70d-356159b352ae",
+                  "kind": "review",
+                  "status": "resolved",
+                  "title": "provide more details",
+                  "instruction": "this still reads like a summary. I'd like a clear list of the behaviour changes and safety changes you implemented especially also what you classified as \"unsafe behaviour\" etc.  And what kind of print limits.",
+                  "resolution": "Expanded in this page with implemented behavior changes, unsafe-behavior classes, and the concrete production print limits from the candidate policy.",
+                  "createdAt": "2026-08-05T09:49:01.619Z",
+                  "updatedAt": "2026-08-05T10:12:00.000Z"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Implemented behavior changes"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "These are candidate behavior changes in the repository. They are not active on the live printer until the owner performs the recovery, install, and commissioning gates."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Print startup requires the build plate to be marked clean and rearmed before heat or motion. The check is consumed by print startup and becomes required again after printing, purging, hot filament handling, cancellation, errors, Klipper restart, or shutdown."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Uploaded or USB G-code is scanned first, then copied into a protected read-only snapshot. Klipper prints the approved snapshot, not the mutable uploaded file."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Orca files must contain object definitions before one START_PRINT call and one END_PRINT call. Missing object data is refused because the purge lane cannot be chosen safely."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "START_PRINT uses a 150 C nozzle standby, heats the bed, homes through the normal probe path, runs a full 9x9 mesh, parks, finishes nozzle heating, then performs KAMP moving purge. There is no stationary positive blob purge."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "END_PRINT and CANCEL_PRINT retract only while Klipper says extrusion is hot enough, shut heaters down, lift before XY travel, and park at or above Z 200 only when axes and clearance are known."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Normal idle after ten minutes turns heaters and the part-cooling fan off, while leaving motors enabled so the gantry is not released as a side effect of heater safety."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Runout pauses once. M600, load, and unload are attended workflows: they require pause state, hot-enough extrusion, bounded filament movement, and they mark the plate dirty again."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Production KlipperScreen exposes a short workflow instead of raw movement, heaters, extrusion, mesh, console, updater, pins, or limits. Mainsail hides raw panels by default but the command policy remains the real guard."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Maintenance is a separate local-only configuration. There is no G-code command that switches production into maintenance mode."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Vendor power-loss recovery paths are disabled in the candidate because they can invent position or restart stale state after an interruption."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Unsafe behavior classification"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "I classified behavior as unsafe when it can bypass a sensor, invent state, raise a reviewed hardware limit, move or extrude without enough context, mutate the machine while a print could be active, or hide a failure that should stop the printer."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Fake or forced motion state: FORCE_MOVE, SET_KINEMATIC_POSITION, raw G28 inside print files, direct PROBE commands, direct bed-mesh commands from print files, and Z or gantry calibration commands in production print files."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Direct thermal or pin control: raw heater/object-pin commands, temperature targets above policy, malformed temperature commands, heater verification failures, invalid sensor readings, and scripts that try to keep cleanup running after a heater fault."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Driver and current bypasses: raw TMC register writes, unapproved steppers, current above the verified factory currents, and direct stepper enable/disable commands from prints."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Unbounded extrusion: cold extrusion, E-only moves over the limit, stationary positive extrusion over the limit, extrusion cross-section over the policy limit, malformed relative extrusion after an unknown position, or flow overrides above 100 percent."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Host or firmware mutation: SAVE_CONFIG, shell commands, firmware restart/write paths, config writes, legacy power-loss resume, symlinks, files that change while being scanned, and uploads that exceed file or storage limits."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Lifecycle bypasses: more than one START_PRINT or END_PRINT, commands after END_PRINT, object definitions after START_PRINT, missing object data, direct KAMP/mesh/purge calls from the file, or a purge lane too close to the model."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Operator trapdoors: homing while a print is loaded or paused, homing without a fresh clean-and-rearmed plate state, upload-and-print shortcuts, and treating ordinary queued Cancel as the emergency path."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Important exception: live M112 Emergency Stop remains untouched and immediate. A print file may not contain M112 because a queued file should not be the way emergency shutdown is triggered."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Production print limits"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The limits below are the candidate policy ceilings. Runtime commands may lower them, but production G-code may not raise them."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "File and storage limits: one admitted file up to 512 MiB, lines up to 5,000,000, each line up to 16 KiB, up to 1,024 candidate files, approved spool storage up to 1 GiB, at least 1 GiB of system free space, and up to 10,000 timelapse frame requests."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Object data limits: up to 4,096 objects, up to 2,048 polygon points per object, up to 65,536 total object points, and all object coordinates must be finite and inside the configured bed bounds."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Temperature and heater limits: nozzle targets 0..300 C, START_PRINT nozzle 150..300 C, bed targets 0..100 C, minimum extrusion floor 150 C, hotend max_power 1.0, bed max_power 1.0, with Klipper heater verification still active."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Motion limits: X -2..302 mm, Y -6..302 mm, Z -5..370 mm, max velocity 600 mm/s, max acceleration 12000 mm/s2, max Z velocity 12 mm/s, max Z acceleration 100 mm/s2, square-corner velocity at most 3 mm/s, and minimum_cruise_ratio cannot be lowered below 0.75."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Motor-current limits: X 1.1 A, Y 1.5 A, Z 0.75 A, and extruder 1.0 A. SET_TMC_CURRENT may target only approved steppers and may not exceed those values."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Extrusion limits: max_extrude_cross_section 5 mm2, E-only distance 100 mm, E-only velocity 2000 mm/s, E-only acceleration 10000 mm/s2, instantaneous extruder corner velocity 10, stationary positive extrusion 5 mm, and filament diameter 1.75 mm."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Override limits: M220 and M221 may reduce speed or flow but may not exceed 100 percent. G4 dwell is capped at 60 seconds."
                   }
                 ]
               }

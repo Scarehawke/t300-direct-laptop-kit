@@ -117,12 +117,12 @@
                 "attrs": {
                   "requestId": "agent-request-3f79607a-357d-45e6-b1ae-b935bac942e6",
                   "kind": "review",
-                  "status": "open",
+                  "status": "resolved",
                   "title": "Review g-code safety layer",
                   "instruction": "explain to me why g-code is a fragile place for safety and if moving this layer somewhere different has any downsides.  \n\nI have concerns that since g-code is something produced by slicers the slicers will be expecting these safety features in this layer. is that something we have accounted for?",
-                  "resolution": "",
+                  "resolution": "Answered in this page: slicer G-code remains the print recipe, while reusable hardware protection lives in Klipper, the admission scanner, and bounded lifecycle macros. The downside is a stricter Orca/profile contract and fewer arbitrary files accepted.",
                   "createdAt": "2026-08-05T09:38:26.523Z",
-                  "updatedAt": "2026-08-05T09:38:26.523Z"
+                  "updatedAt": "2026-08-05T10:12:00.000Z"
                 }
               }
             ]
@@ -168,6 +168,106 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Why safety is not mainly in slicer G-code"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "G-code is the recipe for one print. OrcaSlicer generates it, a person can edit it, an old file can sit on a USB stick for months, and a different slicer can produce a different startup style. That makes G-code a poor place for rules that must protect the printer every single time."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The slicer can request heat, speed, fan output, object labels, and macro calls, but it cannot see live sensor failures, MCU communication loss, probe faults, or whether Klipper is blocked inside a home, probe, or temperature wait."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "A stale or wrong slicer profile could omit cleanup, call the wrong startup macro, include an old factory corner purge, or home at the wrong time."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Per-file safety is duplicated safety. Every G-code file becomes another copy that might be outdated, hand-edited, or made for another firmware."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Normal G-code runs through Klipper's queued command path. Emergency stop, heater verification, endstop/probe handling, and MCU watchdog behavior must remain below that queue."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Moving safety lower does have downsides. The printer accepts fewer arbitrary files, the Orca profile has to follow the reviewed contract, and third-party G-code may need to be re-sliced or rejected instead of merely warned about. A bug in the shared policy could also affect all prints, which is why it is tested separately and kept small."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The design accounts for what slicers expect by keeping Orca responsible for model geometry, per-move paths, ordinary print speeds, temperatures within policy, fan commands, flow percentages, object labels, filament-change calls, and optional layer timelapse calls. The printer owns homing, mesh creation, purge placement, the build-plate rearm gate, startup order, end/cancel parking, and hard ceilings. In plain terms: Orca describes what to print; the printer decides whether that recipe is safe to run on this T300."
           }
         ]
       },

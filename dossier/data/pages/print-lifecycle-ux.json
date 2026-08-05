@@ -5,7 +5,7 @@
   "kind": "Dossier Page",
   "dossier": "print-workflow",
   "documentRole": "project-work",
-  "section": "Print Workflow",
+  "section": "Main",
   "order": 40,
   "summary": "What START_PRINT, END_PRINT, CANCEL_PRINT, M600, UI prompts, and timelapse will feel like.",
   "tags": [
@@ -25,7 +25,7 @@
     "active": false,
     "priority": "normal",
     "nextAction": "",
-    "status": "Current"
+    "status": "Parked"
   },
   "publish": {
     "include": false,
@@ -259,6 +259,121 @@
                   {
                     "type": "text",
                     "text": "Emergency Stop remains the immediate unsafe-condition button; ordinary Cancel can queue behind active homing, probing, or temperature waits."
+                  },
+                  {
+                    "type": "hardBreak"
+                  },
+                  {
+                    "type": "hardBreak"
+                  }
+                ]
+              },
+              {
+                "type": "agentRequest",
+                "attrs": {
+                  "requestId": "agent-request-bd2cd2ea-b0c3-40af-9b5d-fa177cea6ea6",
+                  "kind": "review",
+                  "status": "resolved",
+                  "title": "safety questions",
+                  "instruction": "When do you turn the fan off exactly?  those should still be on while cooling down right?",
+                  "resolution": "Answered in Cooling and fans: the part-cooling fan turns off at end, cancel, and idle; the hotend heatsink fan remains Klipper temperature-controlled and should keep cooling the hotend.",
+                  "createdAt": "2026-08-05T09:54:01.003Z",
+                  "updatedAt": "2026-08-05T10:12:00.000Z"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Cooling and fans"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "There are two different fan concepts here. The part-cooling fan cools the printed plastic. The hotend heatsink fan protects the hotend by cooling the heat break. They should not be treated as one switch."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "END_PRINT waits for queued moves, marks the plate dirty, retracts only if the hotend is still safe to extrude, turns heaters off, then sends M107 to turn the part-cooling fan off before the safe park message."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "CANCEL_PRINT uses the pinned Mainsail client path: it shuts heaters off, sends M106 S0 for the part-cooling fan, then calls the T300 cancel hook for hot-only retract and clearance-aware parking."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Normal idle after ten minutes turns heaters off and sends M107 for the part-cooling fan, while leaving motors enabled."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "The hotend heatsink fan is configured as Klipper heater_fan hotend_fan. M106 and M107 do not turn that safety fan off. It follows Klipper heater-fan behavior and should continue running while the hotend is above its cooling threshold."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "For PLA, turning the part-cooling fan off at end/cancel/idle is acceptable. If a future material benefits from controlled post-print part cooling, that should be a material/profile decision, not a replacement for hotend cooling."
                   }
                 ]
               }
@@ -284,6 +399,115 @@
           {
             "type": "text",
             "text": "KlipperScreen and Mainsail are simplified around the normal user workflow: build-plate check, file selection, attended homing, print monitoring, camera, and notifications. Raw movement, heaters, extrusion, shell-like console use, machine panels, and upload-and-print shortcuts are hidden by default as mistake reduction. The real safety boundary remains the policy layer, not UI hiding."
+          }
+        ]
+      },
+      {
+        "type": "agentRequest",
+        "attrs": {
+          "requestId": "agent-request-07112fee-5e4c-4ec0-96a9-f14c9f8316b0",
+          "kind": "review",
+          "status": "resolved",
+          "title": "unhide",
+          "instruction": "hidden by default is fine but are they easy to unhide? I still would like to have easy access to advanced controls",
+          "resolution": "Answered in Advanced controls access: Mainsail advanced panels are easy to reveal through normal UI customization; KlipperScreen production menus stay deliberately narrow and require a reviewed config change or maintenance mode.",
+          "createdAt": "2026-08-05T09:55:05.345Z",
+          "updatedAt": "2026-08-05T10:12:00.000Z"
+        }
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Advanced controls access"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Hidden by default means mistake-reduction, not owner lockout. The design is different on Mainsail and on the small KlipperScreen because the risk of a stray tap is different."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Mainsail: advanced pages and panels are hidden in the seeded defaults, but they are normal Mainsail navigation and dashboard settings. The owner can reveal Console, Machine, Heightmap, G-code Viewer, temperature, toolhead, extruder, and other panels through Mainsail layout/navigation customization on the laptop or tablet."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Mainsail macros are not globally hidden; hiddenMacros is empty. The default visible group is only Owner Actions so the normal screen stays calm, but this is not the safety boundary."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "KlipperScreen: production uses an exact small menu allowlist. Advanced movement, temperature, console, mesh, updater, pins, and system panels are not meant to be one-tap-unhidden on the printer touchscreen. Adding them should be a reviewed config change or done in the separate maintenance configuration."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Revealing an advanced Mainsail panel does not bypass the scanner, t300_safety extra, hard limits, forbidden-command list, or Klipper heater/endstop/probe safeguards. It only makes allowed controls visible."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Recommended operating pattern: keep the printer touchscreen simple for printing and emergency use; use Mainsail on a larger device when you intentionally want advanced diagnostics."
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
