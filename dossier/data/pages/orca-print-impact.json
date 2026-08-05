@@ -197,6 +197,36 @@
         "content": [
           {
             "type": "text",
+            "text": "New-project default"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "This laptop now has the reviewed T300 runtime machine preset installed as Orca's default machine for new projects. After the repo is pushed, another Linux, Windows, or macOS Orca setup can install the same default from the repository with bin/install-orca-runtime-profile.py. If Python is not available, copy orcaslicer/T300 AUDITED Runtime 0.4 - REVIEW ONLY.json into Orca's user/default/machine preset folder and select it as the printer. On Windows the normal Orca config root is %APPDATA%/OrcaSlicer."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "That default contains only printer-wide requirements: Klipper flavor, START_PRINT/END_PRINT, object labels, exclude objects, by-layer printing, printer-owned power-loss behavior, pause/M600 hooks, and the standard layer timelapse hook. It does not contain Frieren supports, first-layer flow experiments, specific temperatures, ironing choices, or other one-print tuning."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "What not to put in Orca"
           }
         ]
@@ -329,6 +359,109 @@
           {
             "type": "text",
             "text": "The start should feel less frantic because the slicer is not drawing a long stationary or corner line before the printer has dealt with purge placement. The first layer should be more predictable because the printer creates a fresh full mesh at bed temperature. The end should be easier to clean because the head parks high, when there is safe room."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "New firmware setup gate"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "After the recovery backup is proven and the mainline runtime is commissioned, OrcaSlicer must be re-pointed at the audited T300 mainline profile before we slice real prints. Frieren should stay as an editable Orca project until the post-migration calibrations are known; then we can regenerate the final G-code from Orca-supported settings."
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Use only Orca-supported orientation, supports, brim, seam, temperature, retraction, flow, pressure advance, timelapse, and profile settings."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Keep the Frieren 3MF/project file editable. Do not hand-edit the STL mesh or final G-code to fix quality issues."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Before the full Frieren print, run a small temperature/retraction/stringing calibration on the same white PLA if stringing remains visible."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "If the calibrated white PLA still strings badly, compare against the orange PLA before blaming the firmware or model."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Stringing and PLA moisture"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "PLA is less moisture-sensitive than nylon, TPU, or many PETG spools, but it can still absorb enough water to string, hiss, pop, become brittle, or leave fuzzy travel hairs. No dryer is not an automatic blocker. First tune temperature, retraction, travel behavior, and support settings; if stringing persists across reasonable settings, drying the spool or testing a fresher spool becomes the clean diagnostic step."
           }
         ]
       },

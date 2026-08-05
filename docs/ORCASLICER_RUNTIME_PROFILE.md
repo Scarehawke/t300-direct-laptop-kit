@@ -17,6 +17,37 @@ It is intentionally marked review-only because the mainline firmware has not
 yet been commissioned on the physical printer. Do not use it on the current
 stock Comgrow firmware unless the matching runtime macros are installed.
 
+To install the machine preset as Orca's default for new projects:
+
+```bash
+python3 ./bin/install-orca-runtime-profile.py
+python3 ./bin/install-orca-runtime-profile.py --apply
+```
+
+The first command is a dry run. The apply command copies only the reviewed
+machine preset and sets Orca's default machine to `T300 AUDITED Runtime 0.4 -
+REVIEW ONLY`, after backing up `OrcaSlicer.conf`.
+
+The installer detects the normal Orca config root on Linux, Windows, and macOS.
+Use `--config-root` if a machine stores Orca profiles somewhere unusual. The
+Windows default is `%APPDATA%\OrcaSlicer`.
+
+Without Python, copy this file manually:
+
+```text
+orcaslicer/T300 AUDITED Runtime 0.4 - REVIEW ONLY.json
+```
+
+to Orca's user machine-preset folder:
+
+```text
+Linux:   ~/.config/OrcaSlicer/user/default/machine/
+Windows: %APPDATA%\OrcaSlicer\user\default\machine\
+macOS:   ~/Library/Application Support/OrcaSlicer/user/default/machine/
+```
+
+Then select `T300 AUDITED Runtime 0.4 - REVIEW ONLY` as the printer in Orca.
+
 ## Required Orca settings
 
 The profile pins these Orca-supported settings:

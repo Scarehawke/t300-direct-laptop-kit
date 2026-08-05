@@ -96,6 +96,20 @@
                 "content": [
                   {
                     "type": "text",
+                    "text": "The backed-up printer USB has been repurposed as a verified Armbian recovery USB with the T300 recovery overlay installed."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
                     "text": "No mainline files have been written to eMMC."
                   }
                 ]

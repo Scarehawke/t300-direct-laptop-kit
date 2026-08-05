@@ -5,7 +5,7 @@
   "title": "T300 Printer Project roadmap",
   "summary": "Recovery-first path from stock printer to audited mainline candidate, then print-quality commissioning.",
   "updated": "2026-08-05",
-  "currentMilestoneId": "owner-signoff",
+  "currentMilestoneId": "recovery-proof",
   "lifecycle": [
     "planned",
     "in-progress",
@@ -25,8 +25,8 @@
     {
       "id": "recovery-proof",
       "title": "Recovery USB and full stock backup",
-      "status": "planned",
-      "summary": "Boot recovery, identify hardware, capture and verify eMMC image, and prove rollback path."
+      "status": "in-progress",
+      "summary": "Recovery USB is prepared and locally verified; next prove USB boot identity, Ethernet access, and full stock eMMC backup."
     },
     {
       "id": "usb-boot-candidate",
@@ -41,6 +41,12 @@
       "summary": "Owner initiates sensor, fan, endstop, probe, axis, heater, MCU-loss, and emergency-stop tests."
     },
     {
+      "id": "orca-mainline-frieren-prep",
+      "title": "OrcaSlicer mainline profile and Frieren slice prep",
+      "status": "planned",
+      "summary": "After recovery backup and mainline calibration, make Orca use the new firmware contract, run filament/stringing calibration, then finalize the Frieren slice from editable Orca project files."
+    },
+    {
       "id": "print-quality-baseline",
       "title": "Print-quality baseline",
       "status": "planned",
@@ -48,6 +54,18 @@
     }
   ],
   "recentChanges": [
+    {
+      "date": "2026-08-05",
+      "summary": "Installed the reviewed T300 runtime Orca machine preset as this laptop's default for new projects and added a portable Linux/Windows/macOS installer for other Orca setups."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Added an explicit OrcaSlicer mainline-profile and Frieren-slice preparation gate after recovery backup and mainline calibration."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Prepared the backed-up printer USB as a verified Armbian recovery USB with the T300 recovery overlay installed."
+    },
     {
       "date": "2026-08-05",
       "summary": "Answered owner Agent Requests in the Dossier: G-code safety layering, concrete unsafe-behavior classes, print limits, cooling-fan behavior, advanced-control visibility, and USB-versus-network migration roles."

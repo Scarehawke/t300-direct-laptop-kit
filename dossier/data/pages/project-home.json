@@ -64,7 +64,7 @@
         "content": [
           {
             "type": "text",
-            "text": "My recommendation is to treat the current repository state as ready for owner review and recovery preparation, not ready for unattended installation. The next real-world gate is proving the recovery USB and full eMMC backup before any write to the printer."
+            "text": "My recommendation is to treat the current repository state as ready for attended recovery and backup work, not ready for unattended installation. The recovery USB is prepared; the next real-world gate is proving recovery boot identity and capturing the full eMMC backup before any write to the printer. After mainline commissioning, OrcaSlicer setup and Frieren slice preparation are explicit gates before a full figure print."
           }
         ]
       },

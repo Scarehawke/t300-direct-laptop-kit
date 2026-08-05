@@ -23,11 +23,13 @@ RUNTIME_START_GCODE = (
     "EXTRUDER_TEMP=[nozzle_temperature_initial_layer]\n"
 )
 RUNTIME_END_GCODE = "END_PRINT\n"
+RUNTIME_PRINTER_SETTINGS_ID = "T300 AUDITED Runtime 0.4 - REVIEW ONLY"
 RUNTIME_REQUIRED_SETTINGS = {
     "enable_power_loss_recovery": "printer_configuration",
     "exclude_object": "1",
     "gcode_flavor": "klipper",
     "gcode_label_objects": "1",
+    "printer_settings_id": RUNTIME_PRINTER_SETTINGS_ID,
     "print_sequence": "by layer",
 }
 LEGACY_FULL_MESH_START_GCODE = (
@@ -303,7 +305,7 @@ def main() -> int:
     print(f"destination sha256: {destination_hash}")
     print("changed setting: machine_start_gcode (parameterized runtime call)")
     print("changed setting: machine_end_gcode (END_PRINT)")
-    print("changed settings: Klipper flavor, object labels, exclude objects, by-layer print sequence")
+    print("changed settings: Klipper flavor, object labels, exclude objects, runtime printer id, by-layer print sequence")
     if args.initial_nozzle_temp is not None:
         print(f"changed setting: nozzle_temperature_initial_layer ({args.initial_nozzle_temp})")
     if args.bottom_flow_ratio is not None:
