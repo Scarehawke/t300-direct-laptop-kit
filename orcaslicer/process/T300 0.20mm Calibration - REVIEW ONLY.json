@@ -1,0 +1,27 @@
+{
+  "type": "process",
+  "name": "T300 0.20mm Calibration - REVIEW ONLY",
+  "from": "User",
+  "instantiation": "true",
+  "inherits": "0.20mm Optimal @Comgrow T300 0.4 - official",
+  "print_settings_id": "T300 0.20mm Calibration - REVIEW ONLY",
+  "layer_height": "0.2",
+  "initial_layer_print_height": "0.2",
+  "adaptive_layer_height": "0",
+  "bottom_solid_infill_flow_ratio": "1",
+  "print_flow_ratio": "1",
+  "enable_support": "0",
+  "brim_type": "no_brim",
+  "brim_width": "0",
+  "ironing_type": "no ironing",
+  "print_sequence": "by layer",
+  "gcode_label_objects": "1",
+  "exclude_object": "1",
+  "compatible_printers_condition": "",
+  "compatible_printers": [
+    "Comgrow T300 0.4 nozzle",
+    "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+    "T300 AUDITED Runtime 0.4 - Collision Clearance - REVIEW ONLY"
+  ],
+  "version": "2.4.2.0"
+}

@@ -1,0 +1,64 @@
+{
+  "type": "filament",
+  "name": "T300 Sovol White PLA - CALIBRATION REQUIRED",
+  "from": "User",
+  "instantiation": "true",
+  "inherits": "Comgrow T300 PLA",
+  "filament_settings_id": [
+    "T300 Sovol White PLA - CALIBRATION REQUIRED"
+  ],
+  "filament_vendor": [
+    "Sovol"
+  ],
+  "filament_type": [
+    "PLA"
+  ],
+  "filament_colour": [
+    "#F4F2EA"
+  ],
+  "filament_diameter": [
+    "1.75"
+  ],
+  "nozzle_temperature_range_low": [
+    "195"
+  ],
+  "nozzle_temperature_range_high": [
+    "220"
+  ],
+  "nozzle_temperature_initial_layer": [
+    "215"
+  ],
+  "nozzle_temperature": [
+    "215"
+  ],
+  "filament_flow_ratio": [
+    "1"
+  ],
+  "filament_max_volumetric_speed": [
+    "12"
+  ],
+  "filament_retraction_length": [
+    "0.5"
+  ],
+  "filament_retract_restart_extra": [
+    "0"
+  ],
+  "filament_z_hop": [
+    "nil"
+  ],
+  "enable_pressure_advance": [
+    "0"
+  ],
+  "adaptive_pressure_advance": [
+    "0"
+  ],
+  "pressure_advance": [
+    "0"
+  ],
+  "compatible_printers": [
+    "Comgrow T300 0.4 nozzle",
+    "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+    "T300 AUDITED Runtime 0.4 - Collision Clearance - REVIEW ONLY"
+  ],
+  "version": "2.4.2.0"
+}

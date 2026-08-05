@@ -24,6 +24,8 @@ class OrcaProfileInstallTests(unittest.TestCase):
         self.assertEqual(profile["print_sequence"], "by layer")
         self.assertEqual(profile["gcode_label_objects"], "1")
         self.assertEqual(profile["exclude_object"], "1")
+        self.assertEqual(profile["z_hop"], ["0"])
+        self.assertEqual(profile["retract_restart_extra"], ["0"])
         self.assertEqual(
             profile["machine_start_gcode"],
             "START_PRINT BED_TEMP=[bed_temperature_initial_layer_single] "
@@ -38,8 +40,8 @@ class OrcaProfileInstallTests(unittest.TestCase):
                 profile_path=installer.DEFAULT_PROFILE,
                 apply=False,
             )
-        self.assertEqual(len(actions), 2)
-        self.assertIn(installer.PROFILE_NAME, actions[1])
+        self.assertEqual(len(actions), 9)
+        self.assertIn(installer.PROFILE_NAME, actions[-1])
 
     def test_apply_installs_machine_preset_and_updates_default(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -59,9 +61,25 @@ class OrcaProfileInstallTests(unittest.TestCase):
             self.assertTrue(target.is_file())
             written_profile = json.loads(target.read_text(encoding="utf-8"))
             self.assertEqual(written_profile["name"], installer.PROFILE_NAME)
+            self.assertEqual(
+                len(list((config_root / "user" / "default").glob("*/*.json"))),
+                8,
+            )
             written_config = json.loads(config_file.read_text(encoding="utf-8"))
             self.assertEqual(written_config["presets"]["machine"], installer.PROFILE_NAME)
             self.assertEqual(len(list(config_root.glob("OrcaSlicer.conf.bak-*"))), 1)
+
+    def test_bundle_rejects_enabled_or_adaptive_pressure_advance(self):
+        source = installer.load_bundled_profile(
+            installer.REPO_ROOT
+            / "orcaslicer/filament/T300 ELEGOO PLA Orange - CALIBRATION REQUIRED.json"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "unsafe.json"
+            source["enable_pressure_advance"] = ["1"]
+            path.write_text(json.dumps(source), encoding="utf-8")
+            with self.assertRaisesRegex(installer.InstallError, "pressure_advance"):
+                installer.load_bundled_profile(path)
 
     def test_windows_default_uses_appdata(self):
         with mock.patch.object(installer.sys, "platform", "win32"):

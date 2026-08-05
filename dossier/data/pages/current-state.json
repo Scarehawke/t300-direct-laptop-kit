@@ -67,6 +67,36 @@
         "content": [
           {
             "type": "text",
+            "text": "Current Orca and print state"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "This laptop's OrcaSlicer 2.4.2 user configuration now has eight reviewed T300 presets installed. New projects default to the audited zero-hop runtime machine. A separate 0.4 mm collision-clearance machine variant is available but is not the default."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Four editable review projects are in Downloads/T300-Orca-Review-20260805. They are not final print files. The first-layer project waits for machine commissioning, the bracket waits for orange PLA calibration, and both Frieren projects wait for the chosen filament calibration plus a successful bracket validation print."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Current physical state"
           }
         ]
@@ -183,7 +213,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The printer repo contains the public mainline candidate, policy code, test harnesses, staging tools, recovery tools, runtime configs, docs, lockfiles, and Orca profile."
+                    "text": "The printer repo contains the public mainline candidate, policy code, test harnesses, staging tools, recovery tools, runtime configs, docs, lockfiles, and portable Orca machine, filament, and process profiles."
                   }
                 ]
               }
@@ -197,7 +227,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "GitHub origin/main now includes commit 0590c50: Add T300 mainline migration candidate."
+                    "text": "GitHub origin/main includes the original mainline candidate at commit 0590c50. The pressure-advance, extrusion-accounting, status, and Orca refinement described in this Dossier is the current local release candidate until its final commit is published."
                   }
                 ]
               }

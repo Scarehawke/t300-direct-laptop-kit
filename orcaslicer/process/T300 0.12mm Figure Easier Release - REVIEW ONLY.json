@@ -1,0 +1,22 @@
+{
+  "type": "process",
+  "name": "T300 0.12mm Figure Easier Release - REVIEW ONLY",
+  "from": "User",
+  "instantiation": "true",
+  "inherits": "T300 0.12mm Figure Quality - REVIEW ONLY",
+  "print_settings_id": "T300 0.12mm Figure Easier Release - REVIEW ONLY",
+  "bottom_solid_infill_flow_ratio": "1",
+  "print_flow_ratio": "1",
+  "print_sequence": "by layer",
+  "gcode_label_objects": "1",
+  "exclude_object": "1",
+  "compatible_printers_condition": "",
+  "support_top_z_distance": "0.24",
+  "support_bottom_z_distance": "0.24",
+  "compatible_printers": [
+    "Comgrow T300 0.4 nozzle",
+    "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+    "T300 AUDITED Runtime 0.4 - Collision Clearance - REVIEW ONLY"
+  ],
+  "version": "2.4.2.0"
+}

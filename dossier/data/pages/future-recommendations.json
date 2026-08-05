@@ -74,7 +74,8 @@
       {
         "type": "orderedList",
         "attrs": {
-          "start": 1
+          "start": 1,
+          "type": null
         },
         "content": [
           {
@@ -186,7 +187,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Run temperature, flow, pressure advance, retraction, and volumetric-flow calibration in Orca-supported workflows."
+                    "text": "Calibrate each filament in this order: temperature, maximum volumetric speed, pressure advance, flow ratio, then retraction. Save the accepted results in that filament's Orca profile."
                   }
                 ]
               }

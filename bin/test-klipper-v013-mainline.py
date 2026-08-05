@@ -458,6 +458,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             cases = {
                 "smoke.test": "STATUS\n",
+                "operator-status.test": "T_STATUS\n",
                 "reject-unarmed-home.test": "SHOULD_FAIL\n\nG28\n",
                 "reject-velocity.test": "SHOULD_FAIL\n\nSET_VELOCITY_LIMIT VELOCITY=601\n",
                 "reject-accel.test": "SHOULD_FAIL\n\nM204 S12001\n",
@@ -594,30 +595,48 @@ def main(argv: list[str] | None = None) -> int:
             gcodes = temp / "gcodes"
             approvals = temp / "approvals"
             spool = temp / "spool"
-            source = gcodes / "snapshot.gcode"
-            source.write_text("M117 SNAPSHOT_LOADER_OK\n", encoding="ascii")
-            digest = hashlib.sha256(source.read_bytes()).hexdigest()
-            protected = spool / (digest + ".gcode")
-            shutil.copy2(source, protected)
-            os.chmod(protected, 0o440)
-            relative = source.name
-            approval = approvals / (approval_id(relative, digest) + ".json")
-            approval.write_text(
-                json.dumps(
-                    {
-                        "schema_version": 2,
-                        "relative_path": relative,
-                        "sha256": digest,
-                        "size": source.stat().st_size,
-                        "policy_sha256": hashlib.sha256(policy.read_bytes()).hexdigest(),
-                        "spool_file": protected.name,
-                    },
-                    sort_keys=True,
+            snapshot_sources = {
+                "snapshot.gcode": (
+                    "SET_PRESSURE_ADVANCE ADVANCE=0.2\n"
+                    "SET_PRESSURE_ADVANCE ADVANCE=0\n"
+                    "M117 SNAPSHOT_LOADER_OK\n"
+                ),
+                "reject-pressure-over.gcode": (
+                    "SET_PRESSURE_ADVANCE ADVANCE=0.20001\n"
+                ),
+                "reject-pressure-smooth.gcode": (
+                    "SET_PRESSURE_ADVANCE ADVANCE=0.02 SMOOTH_TIME=0.04\n"
+                ),
+                "reject-pressure-extruder.gcode": (
+                    "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder\n"
+                ),
+            }
+            for relative, content in snapshot_sources.items():
+                source = gcodes / relative
+                source.write_text(content, encoding="ascii")
+                digest = hashlib.sha256(source.read_bytes()).hexdigest()
+                protected = spool / (digest + ".gcode")
+                shutil.copy2(source, protected)
+                os.chmod(protected, 0o440)
+                approval = approvals / (approval_id(relative, digest) + ".json")
+                approval.write_text(
+                    json.dumps(
+                        {
+                            "schema_version": 2,
+                            "relative_path": relative,
+                            "sha256": digest,
+                            "size": source.stat().st_size,
+                            "policy_sha256": hashlib.sha256(
+                                policy.read_bytes()
+                            ).hexdigest(),
+                            "spool_file": protected.name,
+                        },
+                        sort_keys=True,
+                    )
+                    + "\n",
+                    encoding="ascii",
                 )
-                + "\n",
-                encoding="ascii",
-            )
-            os.chmod(approval, 0o440)
+                os.chmod(approval, 0o440)
             unapproved = gcodes / "unapproved.gcode"
             unapproved.write_text("M117 MUST_NOT_LOAD\n", encoding="ascii")
             loader_cases = {
@@ -628,6 +647,21 @@ def main(argv: list[str] | None = None) -> int:
                 "reject-unapproved-snapshot.test": (
                     "T_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
                     "SHOULD_FAIL\n\nSDCARD_PRINT_FILE FILENAME=unapproved.gcode\n"
+                ),
+                "reject-pressure-over.test": (
+                    "T_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
+                    "SHOULD_FAIL\n\n"
+                    "SDCARD_PRINT_FILE FILENAME=reject-pressure-over.gcode\n"
+                ),
+                "reject-pressure-smooth.test": (
+                    "T_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
+                    "SHOULD_FAIL\n\n"
+                    "SDCARD_PRINT_FILE FILENAME=reject-pressure-smooth.gcode\n"
+                ),
+                "reject-pressure-extruder.test": (
+                    "T_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
+                    "SHOULD_FAIL\n\n"
+                    "SDCARD_PRINT_FILE FILENAME=reject-pressure-extruder.gcode\n"
                 ),
             }
             loader_fixtures = []

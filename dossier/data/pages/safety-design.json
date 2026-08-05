@@ -67,6 +67,45 @@
         "content": [
           {
             "type": "text",
+            "text": "Pressure advance and extrusion accounting"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Orca may set nonzero pressure advance only while Klipper is actively running a protected, admitted print snapshot. The only accepted form is SET_PRESSURE_ADVANCE ADVANCE=value, where value is finite and between 0 and 0.20. Runtime smooth-time changes, alternate extruders, unknown parameters, and uploaded TUNING_TOWER are blocked. START_PRINT, END_PRINT, and cancellation reset pressure advance to zero so one filament cannot leak tuning into the next job. A paused admitted print may issue only the zero reset; this lets cancellation complete without allowing paused tuning changes."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Retraction credit follows a simple rule: pulling filament back earns only that much credit, and a stationary recovery spends it. Normal moving extrusion clears stale credit. Orca writes E values to five decimal places, so exact decimal accounting allows only the discrepancy mathematically explainable by the number of rounded retract and wipe segments, with at most 64 segments in one recovery. Another rounding exception requires real moving deposition. Across the file, rounding-only stationary extrusion is limited to one hundred-thousandth of actual moving extrusion plus one 0.0001 mm startup/path allowance. There is no fixed whole-file ceiling that would reject a legitimate large print merely for having more layers. E-only use, malformed precision, excessive per-event discrepancy, repeated stationary use, or microscopic moves used to farm allowance fail."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The scanner and Klipper divide responsibility deliberately. The scanner rejects attempts to raise velocity or acceleration ceilings and rejects coordinates outside the machine envelope. A raw G1 feed request is still clamped by Klipper's immutable runtime max_velocity. This keeps ordinary Orca speed calibration possible without allowing G-code to raise the hardware ceiling."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Safety layer boundaries"
           }
         ]
@@ -405,7 +444,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Unbounded extrusion: cold extrusion, E-only moves over the limit, stationary positive extrusion over the limit, extrusion cross-section over the policy limit, malformed relative extrusion after an unknown position, or flow overrides above 100 percent."
+                    "text": "Unbounded extrusion: cold extrusion, E-only moves over the limit, positive stationary extrusion without matching retraction credit, extrusion cross-section over the policy limit, malformed relative extrusion after an unknown position, or flow overrides above 100 percent."
                   }
                 ]
               }
@@ -571,7 +610,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Extrusion limits: max_extrude_cross_section 5 mm2, E-only distance 100 mm, E-only velocity 2000 mm/s, E-only acceleration 10000 mm/s2, instantaneous extruder corner velocity 10, stationary positive extrusion 5 mm, and filament diameter 1.75 mm."
+                    "text": "Extrusion limits: max_extrude_cross_section 5 mm2, E-only distance 100 mm, E-only velocity 2000 mm/s, E-only acceleration 10000 mm/s2, instantaneous extruder corner velocity 10, and filament diameter 1.75 mm. Stationary recovery is no longer a generic 5 mm allowance: it may only repay filament that the same print previously retracted, with tightly bounded allowances for Orca's decimal rounding."
                   }
                 ]
               }

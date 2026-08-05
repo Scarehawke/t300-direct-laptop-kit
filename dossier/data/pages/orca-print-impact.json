@@ -56,7 +56,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Yes, the firmware work changes the required Orca printer profile for the mainline candidate. Orca should no longer own homing, meshing, factory wipes, bed calibration, or final parking. It should emit object labels and call the reviewed printer macros."
+            "text": "Yes, the firmware work changes the required Orca setup for the mainline candidate. Orca should no longer own homing, meshing, factory wipes, bed calibration, or final parking. It emits object labels, calls the reviewed lifecycle macros, and stores measured pressure advance in each filament profile."
           }
         ]
       },
@@ -83,7 +83,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Use the repository profile: orcaslicer/T300 AUDITED Runtime 0.4 - REVIEW ONLY.json."
+                    "text": "Use the repository's audited machine profile, calibration-required filament profiles, and review-only process profiles. The default machine is T300 AUDITED Runtime 0.4 - REVIEW ONLY."
                   }
                 ]
               }
@@ -206,7 +206,7 @@
         "content": [
           {
             "type": "text",
-            "text": "This laptop now has the reviewed T300 runtime machine preset installed as Orca's default machine for new projects. After the repo is pushed, another Linux, Windows, or macOS Orca setup can install the same default from the repository with bin/install-orca-runtime-profile.py. If Python is not available, copy orcaslicer/T300 AUDITED Runtime 0.4 - REVIEW ONLY.json into Orca's user/default/machine preset folder and select it as the printer. On Windows the normal Orca config root is %APPDATA%/OrcaSlicer."
+            "text": "This laptop now has all eight reviewed T300 Orca 2.4.2 presets installed, with the zero-hop audited runtime machine selected as the default for new projects. The repository installer supports Linux, Windows, and macOS and makes backups before overwriting a matching profile. On Windows the normal Orca config root is %APPDATA%/OrcaSlicer."
           }
         ]
       },
@@ -215,7 +215,7 @@
         "content": [
           {
             "type": "text",
-            "text": "That default contains only printer-wide requirements: Klipper flavor, START_PRINT/END_PRINT, object labels, exclude objects, by-layer printing, printer-owned power-loss behavior, pause/M600 hooks, and the standard layer timelapse hook. It does not contain Frieren supports, first-layer flow experiments, specific temperatures, ironing choices, or other one-print tuning."
+            "text": "The default machine contains only printer-wide requirements: Klipper flavor, START_PRINT/END_PRINT, object labels, exclude objects, by-layer printing, printer-owned power-loss behavior, pause/M600 hooks, zero Z-hop, zero restart extra, and the standard layer timelapse hook. A separate 0.4 mm Collision Clearance machine variant is available for geometry that needs it. Frieren supports and other one-print choices live in process projects, while temperature, flow, pressure advance, maximum volumetric speed, and retraction live in filament profiles after measurement."
           }
         ]
       },
@@ -600,6 +600,174 @@
           {
             "type": "text",
             "text": "PLA is less moisture-sensitive than nylon, TPU, or many PETG spools, but it can still absorb enough water to string, hiss, pop, become brittle, or leave fuzzy travel hairs. No dryer is not an automatic blocker. First tune temperature, retraction, travel behavior, and support settings; if stringing persists across reasonable settings, drying the spool or testing a fresher spool becomes the clean diagnostic step."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Exact Orca 2.4.2 compatibility"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The compatibility review used OrcaSlicer 2.4.2 source commit 8500fcdccaa10b5099ac20d252af3a7c560046f1. Its Klipper writer emits pressure advance as SET_PRESSURE_ADVANCE ADVANCE=value. The five requested calibration tools use bounded heater commands, ordinary speed changes, direct pressure-advance values, per-object flow ratios baked into moving extrusion, and normal retract/recover moves. They do not require uploaded TUNING_TOWER."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Adaptive pressure advance remains disabled. A measured pressure-advance value belongs in the filament profile, not the machine profile. The firmware accepts only finite values from 0 through 0.20 during an admitted print, and it rejects smooth-time changes, alternate extruders, unknown parameters, and out-of-range values."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Staged editable projects"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Downloads/T300-Orca-Review-20260805 now contains four editable 3MF projects: a 60 mm standard first-layer test, the camera bracket with the orange PLA calibration-required profile, Frieren at 0.12 mm quality, and a second 0.12 mm Frieren candidate with an easier support-release gap. No final G-code is included."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The bracket baseline uses four walls, 20 percent gyroid infill, 0.20 mm layers, no ironing, and currently no supports. Before export, Prepare and Preview must confirm orientation, the camera screw opening, unsupported overhangs, seams, strength paths, and clearance. The calibrated orange filament profile must be selected first."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The Frieren quality baseline uses 0.12 mm layers, three walls, 12 percent gyroid infill, automatic tree-hybrid supports, a 5 mm brim, no ironing, zero Z-hop, and per-layer timelapse calls. The easier-release candidate changes only the support-release choice for comparison. Final support islands, seam placement, estimated duration, collision risk, and timelapse frame count still require visual approval in Prepare and Preview."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Exact Orca CLI slices of the bracket and both Frieren candidates completed successfully and passed the admission scanner. Those G-code files were validation evidence only and are not shipped. The bracket waits for orange PLA calibration; Frieren waits for its chosen filament calibration and a successful bracket print."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Hull and floor-line warning rule"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "A localized horizontal line can appear where a broad solid floor or deck becomes a much thinner continuing wall, or where sparse infill abruptly becomes several solid layers. Cooling and contraction in the large connected solid area can pull on the cosmetic outer wall. This is often called a hull line, Benchy hull line, box bulge, or floor line. It is not automatically a Z-axis or hardware fault. Irregular lines throughout the full height remain a separate machine-diagnostic signal."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Factorian Designs' 2025 video The Most Misdiagnosed Print Error was transcribed and checked against its primary sources: OrcaSlicer pull request 8107, Prusa's Benchy hull-line investigation, and Orca's current wall, precision, cooling, and overlap documentation. The important correction is that layer-time view can help locate the transition, but smoothing layer time did not reliably fix it. Orca pull request 8107 was closed after about 30 tests because the line persisted. Better-supported influences are model geometry, solid-material coupling, cooling, material and environment, solid-infill speed and path, wall order, Precise Wall, and wall-overlap values."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "For every valuable or large model, review Orca Preview by feature type, flow, and layer time before final export. Warn if a broad floor, shelf, or deck changes abruptly into thin walls, if a large solid region terminates beside a cosmetic wall, or if sparse infill changes sharply to solid layers while the same outer wall continues. The warning is advisory: identify the likely height, explain uncertainty, and recommend a small test section when the full job is long or expensive."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Possible remedies include material-appropriate cooling, slower or differently patterned solid infill, Inner/Outer/Inner wall order, Precise Wall, less wall overlap, or owner-directed CAD decoupling such as a chamfer, fillet, rib, segmented ledge, or thicker wall. None is an automatic default. They can change strength, dimensions, overhang behavior, seams, warping, surface character, or print time. Do not manually edit meshes or final G-code."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 3
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Current bracket warning"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The orange camera bracket has plausible floor-line geometry because its broad base transitions into upright structure. At Z 1.20 mm, its exact validation paths drop from about 411.5 mm of connected solid extrusion on the preceding layer to 14.9 mm while about 33.1 mm of outer-wall extrusion continues. That is a strong risk signal, not proof that a visible line will occur. The exact Orca 2.4.2 slice also resolves to 25 percent infill/wall and top/bottom wall overlap, Inner/Outer wall order, Precise Wall off, monotonic internal solid infill, and full PLA fan availability. Orca documents roughly 10-15 percent overlap as an accumulation-aware range, but reducing overlap can trade bonding strength for appearance. Nothing has been changed automatically. Review the transition and choose deliberately before export."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 3
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Current Frieren assessment"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "No automatic Frieren change is justified. The figure has many cross-section changes, but curved and irregular exterior surfaces are less likely to display one long straight hull line than a box or tray. Preview should still be checked for unusually broad solid sections and abrupt feature-flow changes. Support release, stringing, seam placement, cooling, and calibrated filament behavior remain the higher-priority quality risks."
           }
         ]
       },

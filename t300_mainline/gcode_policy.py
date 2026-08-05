@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 import datetime as dt
+from decimal import Decimal, InvalidOperation
 import hashlib
 import json
 import math
@@ -21,10 +22,25 @@ import tempfile
 from typing import Any, Iterable
 
 
-SCANNER_VERSION = "1.4"
+SCANNER_VERSION = "1.7"
 APPROVAL_SCHEMA_VERSION = 2
 KLIPPER_ARGS_RE = re.compile(r"([A-Z_]+|[A-Z*])")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+# Exact Orca 2.4.2 formats relative E to five decimals. Segmented wipe values
+# may therefore sum slightly below the matching recovery. Derive the permitted
+# discrepancy from those quantized terms instead of from total print length.
+ORCA_E_QUANTUM_MM = Decimal("0.00001")
+ORCA_E_HALF_QUANTUM_MM = ORCA_E_QUANTUM_MM / 2
+ORCA_MAX_RETRACTION_SEGMENTS = 64
+# Across a file, rounding-only stationary extrusion may consume no more than
+# one hundred-thousandth of genuinely deposited filament, plus the one-event path
+# allowance below. This scales with real print size without granting a
+# line-count-based budget that a synthetic file could farm.
+ORCA_MAX_ROUNDING_FRACTION = Decimal("0.00001")
+# Tiny source paths can round to unchanged three-decimal XY coordinates while
+# retaining one or more five-decimal E units. This event limit is independent
+# of file length and remains below one ten-thousandth of a millimeter filament.
+ORCA_ZERO_LENGTH_PATH_E_MM = Decimal("0.0001")
 
 
 class PolicyError(ValueError):
@@ -71,7 +87,7 @@ class GCodePolicy:
     max_extrude_only_velocity: float = 2000.0
     max_extrude_only_accel: float = 10000.0
     max_instantaneous_corner_velocity: float = 10.0
-    max_stationary_positive_extrude: float = 5.0
+    max_pressure_advance: float = 0.2
     filament_diameter: float = 1.75
     x: AxisLimit = AxisLimit(-2.0, 302.0)
     y: AxisLimit = AxisLimit(-6.0, 302.0)
@@ -159,7 +175,7 @@ class GCodePolicy:
             "max_extrude_only_velocity",
             "max_extrude_only_accel",
             "max_instantaneous_corner_velocity",
-            "max_stationary_positive_extrude",
+            "max_pressure_advance",
             "filament_diameter",
         )
         for name in numeric_names:
@@ -177,7 +193,7 @@ class GCodePolicy:
             not in (
                 "max_square_corner_velocity",
                 "minimum_cruise_ratio_floor",
-                "max_stationary_positive_extrude",
+                "max_pressure_advance",
             )
         )
         for name in positive_names:
@@ -187,8 +203,8 @@ class GCodePolicy:
             raise PolicyError("square-corner velocity may not be negative")
         if not 0 <= self.minimum_cruise_ratio_floor < 1:
             raise PolicyError("minimum cruise-ratio floor must be in [0,1)")
-        if self.max_stationary_positive_extrude < 0:
-            raise PolicyError("stationary extrusion limit may not be negative")
+        if not 0 <= self.max_pressure_advance <= 0.2:
+            raise PolicyError("pressure-advance ceiling must remain within 0..0.2")
         if not 0 < self.hotend_max_power <= 1 or not 0 < self.bed_max_power <= 1:
             raise PolicyError("heater power ceilings must be in (0,1]")
         if self.min_extrude_temp_floor > self.nozzle_temp_max:
@@ -198,8 +214,6 @@ class GCodePolicy:
                 raise PolicyError(f"axis {name} bounds must be finite")
             if axis.minimum >= axis.maximum:
                 raise PolicyError(f"axis {name} minimum must be below its maximum")
-        if self.max_stationary_positive_extrude > self.max_extrude_only_distance:
-            raise PolicyError("stationary extrusion limit exceeds the E-only distance limit")
         bounded_purge_length = self.kamp_purge_amount + self.kamp_breakaway_distance
         if (
             self.x.maximum < bounded_purge_length
@@ -274,6 +288,7 @@ ALLOWED_EXTENDED_COMMANDS = {
     "M600",
     "PAUSE",
     "SET_PRINT_STATS_INFO",
+    "SET_PRESSURE_ADVANCE",
     "SET_VELOCITY_LIMIT",
     "START_PRINT",
     "TIMELAPSE_TAKE_FRAME",
@@ -442,6 +457,27 @@ def _number(params: dict[str, str], key: str) -> float | None:
     return result
 
 
+def _decimal_number(params: dict[str, str], key: str) -> Decimal | None:
+    value = params.get(key)
+    if value is None:
+        return None
+    try:
+        result = Decimal(value)
+    except InvalidOperation as exc:
+        raise PolicyError(f"{key} is not numeric") from exc
+    if not result.is_finite():
+        raise PolicyError(f"{key} must be finite")
+    return result
+
+
+def _uses_orca_e_precision(value: str) -> bool:
+    try:
+        number = Decimal(value)
+    except InvalidOperation:
+        return False
+    return number.is_finite() and number.as_tuple().exponent >= -5
+
+
 def _bounds(policy: GCodePolicy, axis: str) -> AxisLimit:
     return getattr(policy, axis.lower())
 
@@ -601,7 +637,14 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
     # START_PRINT runs KAMP's geometry-dependent purge, so its final physical
     # XYZ position cannot be guessed safely. The scanner learns each axis only
     # from a subsequent absolute move before accepting relative movement from it.
-    position: dict[str, float | None] = {"X": None, "Y": None, "Z": None, "E": 0.0}
+    position: dict[str, float | None] = {"X": None, "Y": None, "Z": None}
+    extruder_position = Decimal("0")
+    retraction_credit = Decimal("0")
+    retraction_segments = 0
+    retraction_uses_orca_precision = True
+    stationary_rounding_armed = True
+    moving_extrusion_for_rounding = Decimal("0")
+    stationary_rounding_used = Decimal("0")
     lines = 0
     findings_truncated = False
 
@@ -709,7 +752,14 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                         raise PolicyError("START_PRINT bed temperature is outside policy")
                     if nozzle is None or nozzle < 150 or nozzle > policy.nozzle_temp_max:
                         raise PolicyError("START_PRINT nozzle temperature is outside policy")
-                    position.update({"X": None, "Y": None, "Z": None, "E": 0.0})
+                    position.update({"X": None, "Y": None, "Z": None})
+                    extruder_position = Decimal("0")
+                    retraction_credit = Decimal("0")
+                    retraction_segments = 0
+                    retraction_uses_orca_precision = True
+                    stationary_rounding_armed = True
+                    moving_extrusion_for_rounding = Decimal("0")
+                    stationary_rounding_used = Decimal("0")
                     start_line = line_number
                 elif command == "END_PRINT":
                     if start_line is None:
@@ -749,6 +799,16 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                         raise PolicyError("bed temperature exceeds production policy")
                 elif command in {"SET_VELOCITY_LIMIT", "SET_TMC_CURRENT", "M204"}:
                     _check_limit_command(command, params, policy)
+                elif command == "SET_PRESSURE_ADVANCE":
+                    if set(params) != {"ADVANCE"}:
+                        raise PolicyError(
+                            "SET_PRESSURE_ADVANCE permits only one ADVANCE parameter"
+                        )
+                    advance = _number(params, "ADVANCE")
+                    if advance is None or not 0 <= advance <= policy.max_pressure_advance:
+                        raise PolicyError(
+                            "pressure advance is outside the production policy"
+                        )
                 elif command in {"M220", "M221"}:
                     value = _number(params, "S")
                     if value is None or not 0 < value <= 100:
@@ -791,6 +851,9 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                         value = _number(params, axis)
                         if value is not None:
                             position[axis] = value
+                    e_reset = _decimal_number(params, "E")
+                    if e_reset is not None:
+                        extruder_position = e_reset
                 elif command in {"G0", "G1", "G2", "G3"}:
                     feed = _number(params, "F")
                     if feed is not None and feed <= 0:
@@ -828,18 +891,102 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                                 f"{axis} target {target:g} is outside {limit.minimum:g}..{limit.maximum:g}"
                             )
                         position[axis] = target
-                    e_value = _number(params, "E")
-                    e_delta = 0.0
+                    e_value = _decimal_number(params, "E")
+                    e_delta_decimal = Decimal("0")
                     if e_value is not None:
-                        current_e = position["E"] or 0.0
-                        e_delta = e_value - current_e if absolute_extruder else e_value
-                        position["E"] = e_value if absolute_extruder else current_e + e_value
+                        e_delta_decimal = (
+                            e_value - extruder_position
+                            if absolute_extruder
+                            else e_value
+                        )
+                        extruder_position = (
+                            e_value
+                            if absolute_extruder
+                            else extruder_position + e_value
+                        )
+                    e_delta = float(e_delta_decimal)
                     moved_xy = bool(moved_axes.intersection({"X", "Y"}))
                     if e_value is not None and (e_delta < 0 or not moved_xy):
                         if abs(e_delta) > policy.max_extrude_only_distance:
                             raise PolicyError("E-only move exceeds max_extrude_only_distance")
-                        if not moved_xy and e_delta > policy.max_stationary_positive_extrude:
-                            raise PolicyError("stationary positive extrusion exceeds production policy")
+                    if e_delta < 0:
+                        retraction_credit = min(
+                            Decimal(str(policy.max_extrude_only_distance)),
+                            retraction_credit + abs(e_delta_decimal),
+                        )
+                        retraction_segments += 1
+                        retraction_uses_orca_precision = (
+                            retraction_uses_orca_precision
+                            and not absolute_extruder
+                            and _uses_orca_e_precision(params["E"])
+                        )
+                    elif e_delta > 0 and not moved_xy:
+                        is_rounded_xy_path = (
+                            "X" in params
+                            and "Y" in params
+                            and not absolute_extruder
+                            and _uses_orca_e_precision(params["E"])
+                            and e_delta_decimal <= ORCA_ZERO_LENGTH_PATH_E_MM
+                            and stationary_rounding_armed
+                        )
+                        if retraction_credit > 0:
+                            rounding_excess = max(
+                                Decimal("0"),
+                                e_delta_decimal - retraction_credit,
+                            )
+                            if rounding_excess > 0:
+                                rounding_limit = ORCA_E_HALF_QUANTUM_MM * (
+                                    retraction_segments + 1
+                                )
+                                next_rounding_used = (
+                                    stationary_rounding_used + rounding_excess
+                                )
+                                file_rounding_budget = (
+                                    ORCA_ZERO_LENGTH_PATH_E_MM
+                                    + moving_extrusion_for_rounding
+                                    * ORCA_MAX_ROUNDING_FRACTION
+                                )
+                                if (
+                                    not stationary_rounding_armed
+                                    or not retraction_uses_orca_precision
+                                    or absolute_extruder
+                                    or not _uses_orca_e_precision(params["E"])
+                                    or retraction_segments
+                                    > ORCA_MAX_RETRACTION_SEGMENTS
+                                    or rounding_excess > rounding_limit
+                                    or next_rounding_used > file_rounding_budget
+                                ):
+                                    raise PolicyError(
+                                        "stationary positive extrusion exceeds earned retraction credit"
+                                    )
+                                stationary_rounding_used = next_rounding_used
+                                stationary_rounding_armed = False
+                            retraction_credit = max(
+                                Decimal("0"),
+                                retraction_credit - e_delta_decimal,
+                            )
+                            if retraction_credit == 0:
+                                retraction_segments = 0
+                                retraction_uses_orca_precision = True
+                        elif is_rounded_xy_path:
+                            next_rounding_used = (
+                                stationary_rounding_used + e_delta_decimal
+                            )
+                            file_rounding_budget = (
+                                ORCA_ZERO_LENGTH_PATH_E_MM
+                                + moving_extrusion_for_rounding
+                                * ORCA_MAX_ROUNDING_FRACTION
+                            )
+                            if next_rounding_used > file_rounding_budget:
+                                raise PolicyError(
+                                    "stationary positive extrusion exceeds the Orca rounding budget"
+                                )
+                            stationary_rounding_used = next_rounding_used
+                            stationary_rounding_armed = False
+                        else:
+                            raise PolicyError(
+                                "stationary positive extrusion exceeds earned retraction credit"
+                            )
                     if e_delta > 0 and moved_xy:
                         if unknown_moving_origin:
                             raise PolicyError(
@@ -859,6 +1006,11 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                             raise PolicyError(
                                 f"extrusion cross-section {cross_section:.3f} exceeds policy"
                             )
+                        moving_extrusion_for_rounding += e_delta_decimal
+                        retraction_credit = Decimal("0")
+                        retraction_segments = 0
+                        retraction_uses_orca_precision = True
+                        stationary_rounding_armed = True
             except PolicyError as exc:
                 add_finding(line_number, command, str(exc))
 

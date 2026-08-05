@@ -27,6 +27,7 @@ CHECK_NAMES = (
     "vendor_v012_harness_passed",
     "klipper_v013_harness_passed",
     "gcode_policy_tests_passed",
+    "large_print_admission_passed",
     "klipper_lifecycle_reviewed",
     "systemd_units_reviewed",
     "host_network_boundary_reviewed",
@@ -529,9 +530,11 @@ def review_operator_ui(stage_root: Path) -> dict[str, Any]:
             "menu __main print_workflow plate_ready",
             "menu __main print_workflow select_file",
             "menu __main home_printer",
+            "menu __main printer_status",
             "menu __main camera",
             "menu __main notifications",
             "menu __print",
+            "menu __print printer_status",
             "menu __print camera",
             "menu __print notifications",
         }
@@ -541,6 +544,8 @@ def review_operator_ui(stage_root: Path) -> dict[str, Any]:
         required_scripts = {
             "menu __main print_workflow plate_ready": "BUILD_PLATE_READY",
             "menu __main home_printer": "HOME_PRINTER",
+            "menu __main printer_status": "T_STATUS",
+            "menu __print printer_status": "T_STATUS",
         }
         for section, script in required_scripts.items():
             if script not in parser.get(section, "params", fallback=""):
@@ -631,8 +636,14 @@ def review_operator_ui(stage_root: Path) -> dict[str, Any]:
         macros.get("mode") != "expert"
         or set(groups) != {"t300-owner-actions"}
         or macro_names
-        != {"BUILD_PLATE_READY", "HOME_PRINTER", "LOAD_FILAMENT", "UNLOAD_FILAMENT"}
-        or group.get("showInPrinting") is not False
+        != {
+            "T_STATUS",
+            "BUILD_PLATE_READY",
+            "HOME_PRINTER",
+            "LOAD_FILAMENT",
+            "UNLOAD_FILAMENT",
+        }
+        or group.get("showInPrinting") is not True
     ):
         failures.append("Mainsail Owner Actions group is missing or overbroad")
 
@@ -761,8 +772,17 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
     cancel_hook = _klipper_section(lifecycle, "gcode_macro _T_CANCEL_PARK")
     if cancel_hook is None:
         failures.append("T300 cancel hook is missing")
-    elif not _ordered(cancel_hook, ("_T_RETRACT_IF_HOT", "_T_SAFE_PARK")):
-        failures.append("T300 cancel hook does not retract conditionally before parking")
+    elif not _ordered(
+        cancel_hook,
+        (
+            "_T_RETRACT_IF_HOT",
+            "SET_PRESSURE_ADVANCE ADVANCE=0",
+            "_T_SAFE_PARK",
+        ),
+    ):
+        failures.append(
+            "T300 cancel hook does not retract, reset pressure advance, and park in order"
+        )
 
     retract = _klipper_section(lifecycle, "gcode_macro _T_RETRACT_IF_HOT")
     if retract is None or "can_extrude" not in retract:
@@ -793,6 +813,7 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
             "params.EXTRUDER_TEMP is not defined",
             "printer.exclude_object.objects|length == 0",
             "printer.t300_safety.build_plate_ready",
+            "SET_PRESSURE_ADVANCE ADVANCE=0",
         ):
             if required not in start:
                 failures.append("START_PRINT lacks %s" % required)
@@ -870,9 +891,37 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
 
     end = _klipper_section(lifecycle, "gcode_macro END_PRINT")
     if end is None or not _ordered(
-        end, ("M400", "_T_RETRACT_IF_HOT", "TURN_OFF_HEATERS", "_T_SAFE_PARK")
+        end,
+        (
+            "M400",
+            "_T_RETRACT_IF_HOT",
+            "TURN_OFF_HEATERS",
+            "SET_PRESSURE_ADVANCE ADVANCE=0",
+            "_T_SAFE_PARK",
+        ),
     ):
         failures.append("END_PRINT no longer retracts, shuts down, and parks in order")
+
+    status = _klipper_section(lifecycle, "gcode_macro T_STATUS")
+    if status is None:
+        failures.append("read-only T_STATUS macro is missing")
+    else:
+        for required in (
+            "printer.extruder.temperature",
+            "printer.heater_bed.temperature",
+            "printer.toolhead.homed_axes",
+            "printer.t300_safety.build_plate_ready",
+            "printer.t300_safety.commissioning_lock",
+            'printer["filament_switch_sensor filament_runout"]',
+            "action:prompt_begin T300 Status",
+        ):
+            if required not in status:
+                failures.append("T_STATUS lacks %s" % required)
+        if re.search(
+            r"(?mi)^\s*(?:G[0-3]|M10[49]|M1[49]0|TURN_OFF_HEATERS|SET_)\b",
+            status,
+        ):
+            failures.append("T_STATUS can alter printer state")
 
     idle = _klipper_section(machine, "idle_timeout")
     if idle is None or "TURN_OFF_HEATERS" not in idle or re.search(
@@ -1057,6 +1106,18 @@ def generate_report(
             "tests.test_timelapse_policy",
             "tests.test_commissioning",
             "tests.test_config_deploy",
+        ],
+        repo_root,
+        300,
+    )
+    evidence["large_print_admission_passed"] = _command_evidence(
+        [
+            python,
+            "bin/test-large-print-admission.py",
+            "--stage",
+            str(stage),
+            "--stage-manifest-sha256",
+            stage_manifest_sha256,
         ],
         repo_root,
         300,

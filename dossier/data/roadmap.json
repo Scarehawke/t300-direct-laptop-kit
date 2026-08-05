@@ -43,8 +43,8 @@
     {
       "id": "orca-mainline-frieren-prep",
       "title": "OrcaSlicer mainline profile and staged print prep",
-      "status": "planned",
-      "summary": "After recovery backup and mainline calibration, make Orca use the new firmware contract, run filament/stringing calibration, then stage the camera bracket and Frieren from editable Orca project files."
+      "status": "in-progress",
+      "summary": "Portable profiles and editable first-layer, bracket, and Frieren projects are staged. Final profile values and G-code exports wait for commissioning and per-filament calibration."
     },
     {
       "id": "print-quality-baseline",
@@ -54,6 +54,18 @@
     }
   ],
   "recentChanges": [
+    {
+      "date": "2026-08-05",
+      "summary": "Added bounded admitted-print pressure advance, retraction-credit accounting, cleanup resets, and a read-only Printer Status action; exact Klipper and policy tests pass."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Installed eight portable Orca 2.4.2 profiles and staged four editable review projects without final G-code; every provisional filament value remains visibly calibration-required rather than accepted."
+    },
+    {
+      "date": "2026-08-05",
+      "summary": "Verified the requested calibration command forms against exact OrcaSlicer 2.4.2 source and added a pinned compatibility contract."
+    },
     {
       "date": "2026-08-05",
       "summary": "Recorded the post-calibration staging rule: camera bracket and Frieren remain editable until calibrated profiles are known, then accepted G-code exports are staged on the USB."

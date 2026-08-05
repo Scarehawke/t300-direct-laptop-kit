@@ -69,6 +69,45 @@
         "content": [
           {
             "type": "text",
+            "text": "Printer Status action"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Both Mainsail and KlipperScreen show a plainly labeled Printer Status action. It is safe to open while idle or printing because it only reads state. It shows actual and target nozzle and bed temperatures, homed axes, whether the plate is clean and rearmed, whether commissioning is still locked, and whether the filament sensor reports filament. The only prompt button is Close."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The internal command is T_STATUS rather than T300_STATUS because exact Klipper v0.13 rejects macro names containing digits. The human-facing label does not expose that implementation detail during normal use."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "START_PRINT resets pressure advance before the moving purge. END_PRINT and cancellation reset it during cleanup. A failed or cancelled print also invalidates the plate-ready check so the next filament-processing action asks for a fresh cleaned-and-rearmed confirmation."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Start of print"
           }
         ]
@@ -76,7 +115,8 @@
       {
         "type": "orderedList",
         "attrs": {
-          "start": 1
+          "start": 1,
+          "type": null
         },
         "content": [
           {

@@ -126,7 +126,6 @@ class T300Safety(object):
             "SHAPER_CALIBRATE",
             "AXIS_TWIST_COMPENSATION_CALIBRATE",
             "ENDSTOP_PHASE_CALIBRATE",
-            "SET_PRESSURE_ADVANCE",
             "SET_INPUT_SHAPER",
             "SET_EXTRUDER_ROTATION_DISTANCE",
             "SYNC_EXTRUDER_MOTION",
@@ -175,6 +174,9 @@ class T300Safety(object):
         self._wrap_required("M204", self.cmd_M204)
         self._wrap_required("M220", self.cmd_M220)
         self._wrap_required("M221", self.cmd_M221)
+        self._wrap_required(
+            "SET_PRESSURE_ADVANCE", self.cmd_SET_PRESSURE_ADVANCE
+        )
         self._wrap_required("SET_TMC_CURRENT", self.cmd_SET_TMC_CURRENT)
         self._wrap_required(
             "SET_GCODE_VARIABLE", self.cmd_SET_GCODE_VARIABLE
@@ -332,6 +334,7 @@ class T300Safety(object):
             "max_extrude_only_velocity",
             "max_extrude_only_accel",
             "max_instantaneous_corner_velocity",
+            "max_pressure_advance",
         )
         for key in required_numbers:
             value = policy.get(key)
@@ -380,6 +383,10 @@ class T300Safety(object):
         if policy["min_extrude_temp_floor"] > policy["nozzle_temp_max"]:
             raise self.printer.config_error(
                 "T300 safety policy cold-extrusion floor exceeds nozzle temperature"
+            )
+        if not 0.0 <= policy["max_pressure_advance"] <= 0.2:
+            raise self.printer.config_error(
+                "T300 safety policy pressure-advance ceiling exceeds 0.2"
             )
         currents = policy.get("tmc_current_max")
         if not isinstance(currents, dict) or set(currents) != STOCK_TMC_STEPPERS:
@@ -870,6 +877,36 @@ class T300Safety(object):
         if percentage is not None and percentage > 100.0:
             raise gcmd.error("M221 may reduce, but may not raise, extrusion flow")
         return self._original_M221(gcmd)
+
+    def cmd_SET_PRESSURE_ADVANCE(self, gcmd):
+        params = gcmd.get_command_parameters()
+        if set(params) != {"ADVANCE"}:
+            raise gcmd.error(
+                "production SET_PRESSURE_ADVANCE permits only ADVANCE"
+            )
+        advance = self._finite_parameter(gcmd, "ADVANCE")
+        if (
+            advance is None
+            or advance < 0.0
+            or advance > self.policy["max_pressure_advance"]
+        ):
+            raise gcmd.error(
+                "ADVANCE must be between 0 and the T300 production ceiling %.6g"
+                % (self.policy["max_pressure_advance"],)
+            )
+        current = self.virtual_sd.current_file
+        if current is None or not isinstance(current, ApprovedGCodeFile):
+            raise gcmd.error(
+                "pressure advance may change only during an active admitted print"
+            )
+        # Klipper reports a paused virtual-SD print as inactive.  Permit only
+        # the fail-safe zero reset in that state so CANCEL_PRINT cleanup cannot
+        # be interrupted, while nonzero tuning remains tied to executing G-code.
+        if not self.virtual_sd.is_active() and advance != 0.0:
+            raise gcmd.error(
+                "nonzero pressure advance requires an active admitted print"
+            )
+        return self._original_SET_PRESSURE_ADVANCE(gcmd)
 
     def cmd_SET_TMC_CURRENT(self, gcmd):
         stepper = gcmd.get("STEPPER", "")

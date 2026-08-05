@@ -48,6 +48,15 @@ class OrcaProjectUpdateTests(unittest.TestCase):
             "gcode_label_objects": "0",
             "gcode_flavor": "marlin",
             "enable_power_loss_recovery": "enable",
+            "z_hop": ["0.4"],
+            "z_hop_types": ["Slope Lift"],
+            "retract_restart_extra": ["0"],
+            "filament_retract_restart_extra": ["nil"],
+            "adaptive_pressure_advance": ["0"],
+            "enable_pressure_advance": ["0"],
+            "pressure_advance": ["0.02"],
+            "filament_settings_id": ["Old PLA"],
+            "print_settings_id": "Old process",
         }
         model = b"unchanged-model-data"
         with zipfile.ZipFile(path, "w") as archive:
@@ -84,6 +93,32 @@ class OrcaProjectUpdateTests(unittest.TestCase):
             self.assertEqual(settings[key], value)
         self.assertEqual(settings["filament_retraction_length"], ["nil"])
         self.assertEqual(settings["reduce_infill_retraction"], "0")
+        for key, value in updater.RUNTIME_PROJECT_SETTINGS.items():
+            self.assertEqual(settings[key], [value])
+
+    def test_stages_named_profiles_without_unverified_pressure_advance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.3mf"
+            destination = root / "destination.3mf"
+            self.make_project(source, updater.RUNTIME_START_GCODE)
+            updater.update_project(
+                source,
+                destination,
+                filament_profile_id="T300 PLA - CALIBRATION REQUIRED",
+                process_profile_id="T300 Figure - REVIEW ONLY",
+                calibration_required=True,
+            )
+            with zipfile.ZipFile(destination) as archive:
+                settings = json.loads(archive.read(updater.PROJECT_SETTINGS))
+        self.assertEqual(
+            settings["filament_settings_id"],
+            ["T300 PLA - CALIBRATION REQUIRED"],
+        )
+        self.assertEqual(settings["print_settings_id"], "T300 Figure - REVIEW ONLY")
+        self.assertEqual(settings["enable_pressure_advance"], ["0"])
+        self.assertEqual(settings["adaptive_pressure_advance"], ["0"])
+        self.assertEqual(settings["pressure_advance"], ["0"])
 
     def test_rejects_unrecognized_custom_start(self):
         with tempfile.TemporaryDirectory() as directory:

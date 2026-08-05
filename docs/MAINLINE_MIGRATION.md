@@ -89,7 +89,8 @@ scanner accepts only bounded Orca-style print files with:
 
 - object polygons before exactly one `START_PRINT`;
 - exactly one `END_PRINT`;
-- reviewed temperatures, motion, extrusion, and percentage limits;
+- reviewed temperatures, motion, extrusion, percentage limits, and bounded
+  admitted-print pressure advance;
 - no homing, mesh, firmware, shell, config-write, debug, or legacy lifecycle
   commands in the file;
 - a bounded KAMP purge lane and bounded object data.
@@ -113,8 +114,23 @@ runtime refuse to choose a purge lane.
 The immutable macro then checks object data and the build-plate state, sets a
 `150 C` standby nozzle, heats the bed, homes through the normal probe path,
 creates a fresh full `9x9` mesh at bed temperature, parks, finishes nozzle
-heating, and uses KAMP's moving line purge. There is no stationary positive
-extrusion and no handwritten slicer wipe.
+heating, resets pressure advance, and uses KAMP's moving line purge. There is no
+stationary priming and no handwritten slicer wipe. A stationary positive E move
+is accepted only when it recovers filament that the same print already
+retracted; the old generic 5 mm allowance is gone. Orca's five-decimal E
+formatting is accounted for with exact decimal arithmetic. Each discrepancy is
+bounded by the number of quantized retract/wipe terms, requires intervening
+moving deposition before another exception, and contributes to a cumulative
+allowance of at most one hundred-thousandth of actual moving extrusion plus one
+0.0001 mm startup/path allowance. There is no fixed whole-file ceiling that
+would reject a valid long print merely because it has more layers.
+
+The admission harness includes a deterministic 900-layer, 250 x 234 x 270 mm
+digital job representing about 1.5 kg of deposited PLA, 36,000 retract/wipe
+recoveries, pressure advance, layer timelapse calls, protected snapshotting and
+approval-record creation. It admits 0.360 mm of cumulative five-decimal
+discrepancy while rejecting both repeated stationary recovery and attempts to
+farm allowance with microscopic moving extrusions.
 
 KAMP `tip_distance` is zero, its object margin is 20 mm, and the local patch
 adds explicit axis bounds and a short breakaway move. A crowded plate with no
@@ -201,14 +217,25 @@ size ceilings.
 
 The reusable Orca profile uses supported start, end, pause, filament-change,
 object-label, exclude-object, print-sequence, power-loss, and
-before-layer-change fields. It does not hand-edit a model or final G-code.
+before-layer-change fields. It defaults to zero Z-hop and zero restart extra,
+with a separate 0.4 mm collision-clearance machine variant. It does not
+hand-edit a model or final G-code.
+
+Orca pressure advance is stored per filament. During an admitted print the
+safety extra accepts only `SET_PRESSURE_ADVANCE ADVANCE=value`, with a finite
+value from 0 through 0.20. Smooth-time changes, alternate extruders, unknown
+parameters, commands outside a protected print, and uploaded `TUNING_TOWER`
+remain blocked. Startup, end, and cancel cleanup reset pressure advance to zero.
+Klipper considers a paused virtual-SD job inactive, so a still-admitted paused
+job may issue only `ADVANCE=0`; this lets cancellation finish safely without
+opening paused printing to nonzero tuning changes.
 
 ## What this does not tune
 
 The migration does not claim to fix stringing, filament ooze, surface quality,
-or first-layer flow by itself. Those depend on measured temperature, flow,
-pressure advance, retraction, volumetric flow, dry filament, and the final Z
-offset. Old PID, mesh, Z offset, pressure advance, and input-shaper values are
+or first-layer flow by itself. Those depend on measured temperature, maximum
+volumetric speed, pressure advance, flow ratio, retraction, dry filament, and
+the final Z offset. Old PID, mesh, Z offset, pressure advance, and input-shaper values are
 not copied because they belong to the old software and physical state.
 
 The earlier Frieren stringing can be helped by temperature and retraction
@@ -279,8 +306,8 @@ sheet arming, and printing.
     heater at a time, communication-loss shutdown, and Emergency Stop.
 12. Recalibrate in maintenance mode: PID, extruder rotation distance, GerGo
     alignment, probe repeatability, Z offset, full mesh, ADXL input shaping,
-    temperature, flow, pressure advance, retraction, and maximum volumetric
-    flow.
+    machine checks first, then filament temperature, maximum volumetric speed,
+    pressure advance, flow ratio, and retraction in that order.
 13. Deploy the reviewed calibration bundle, rerun exact validation, and unlock
     only through owner evidence tied to that configuration hash.
 14. Print an unmodified standard first-layer test and a small dimensional part,

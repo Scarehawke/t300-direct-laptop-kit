@@ -1,17 +1,17 @@
 {
   "type": "machine",
-  "name": "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+  "name": "T300 AUDITED Runtime 0.4 - Collision Clearance - REVIEW ONLY",
   "from": "User",
   "instantiation": "true",
   "inherits": "Comgrow T300 0.4 nozzle",
-  "printer_settings_id": "T300 AUDITED Runtime 0.4 - REVIEW ONLY",
+  "printer_settings_id": "T300 AUDITED Runtime 0.4 - Collision Clearance - REVIEW ONLY",
   "gcode_flavor": "klipper",
   "enable_power_loss_recovery": "printer_configuration",
   "print_sequence": "by layer",
   "gcode_label_objects": "1",
   "exclude_object": "1",
   "z_hop": [
-    "0"
+    "0.4"
   ],
   "z_hop_types": "Normal Lift",
   "retract_restart_extra": [

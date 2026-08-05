@@ -1,0 +1,47 @@
+T300 ORCA 2.4.2 REVIEW PROJECTS
+
+These are editable Orca projects, not approved print files. No final G-code is
+included. Open each project in OrcaSlicer 2.4.2 and review both Prepare and
+Preview before exporting anything.
+
+The names CALIBRATION REQUIRED and REVIEW ONLY are deliberate safety labels.
+They mean the geometry and baseline process have been staged, while measured
+machine and filament results still need to be accepted.
+
+Calibration order for each filament:
+
+1. Temperature
+2. Maximum volumetric speed
+3. Pressure advance
+4. Flow ratio
+5. Retraction
+
+Release order:
+
+1. Standard first-layer test
+2. Dimensional test
+3. Orange camera bracket
+4. Rendered timelapse
+5. Network and camera soak test
+6. Frieren
+
+The default machine profile uses zero Z-hop. A separate 0.4 mm Collision
+Clearance machine profile is available when the sliced geometry justifies it.
+Adaptive pressure advance stays disabled, and pressure advance belongs in the
+calibrated filament profile.
+
+Before valuable or large exports, also inspect abrupt changes from broad solid
+floors/decks to thin continuing walls. Use Orca's feature type, flow and layer
+time Preview together; layer time alone is not the diagnosis. Warn before
+changing overlap, wall order, Precise Wall, cooling, solid-infill behavior or
+CAD geometry because those options have strength and quality tradeoffs.
+
+The orange camera bracket has a specific base-to-upright hull/floor-line risk.
+Its current resolved overlap is 25%, so review it against Orca's documented
+10-15% accumulation-aware guidance before final export. Nothing has been
+changed automatically. Frieren's organic surfaces make one prominent straight
+line less likely, but its broad solid sections still need normal Preview review.
+
+See staged-projects.json in the repository for artifact hashes and exact hold
+points. Printer movement, heating, calibration, and export acceptance remain
+owner-initiated actions.

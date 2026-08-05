@@ -31,7 +31,7 @@
   "max_extrude_only_velocity": 2000.0,
   "max_extrude_only_accel": 10000.0,
   "max_instantaneous_corner_velocity": 10.0,
-  "max_stationary_positive_extrude": 5.0,
+  "max_pressure_advance": 0.2,
   "filament_diameter": 1.75,
   "x": {
     "minimum": -2.0,

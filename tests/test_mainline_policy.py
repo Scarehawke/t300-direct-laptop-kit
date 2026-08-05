@@ -112,8 +112,131 @@ class GCodePolicyTests(unittest.TestCase):
         self.assertTrue(any("G92 may reset only" in item.message for item in report.findings))
 
     def test_rejects_stationary_purge_but_allows_retraction_recovery(self):
-        self.assertFalse(self.scan(valid_gcode("M83\nG1 E5.1\n")).accepted)
-        self.assertTrue(self.scan(valid_gcode("M83\nG1 E0.8\nG1 E-0.8\n")).accepted)
+        self.assertFalse(self.scan(valid_gcode("M83\nG1 E0.01\n")).accepted)
+        self.assertTrue(
+            self.scan(valid_gcode("M83\nG1 E-0.8\nG92 E0\nG1 E0.8\n")).accepted
+        )
+
+    def test_accepts_only_bounded_orca_rounding_reconciliation(self):
+        orca_wipe = (
+            "M83\n"
+            "G1 E-.35\n"
+            "G1 X20.1 Y10 E-.02704\n"
+            "G1 X20.2 Y10 E-.02443\n"
+            "G1 X20.3 Y10 E-.02378\n"
+            "G1 X20.4 Y10 E-.07472\n"
+            "G1 E.5\n"
+        )
+        self.assertTrue(self.scan(valid_gcode(orca_wipe)).accepted)
+        self.assertFalse(self.scan(valid_gcode(orca_wipe + "G1 E.00001\n")).accepted)
+        self.assertFalse(
+            self.scan(valid_gcode("M83\nG1 E-.5\nG1 E.50011\n")).accepted
+        )
+        repeated_without_printing = (
+            "M83\n"
+            "G1 E-.49999\nG1 E.5\n"
+            "G1 E-.49999\nG1 E.5\n"
+        )
+        self.assertFalse(self.scan(valid_gcode(repeated_without_printing)).accepted)
+
+    def test_orca_rounding_accounting_scales_with_real_printing(self):
+        cycles = ["M83\n"]
+        for index in range(3000):
+            x = 20 if index % 2 else 21
+            cycles.extend(
+                (
+                    "G1 E-.35\n",
+                    "G1 X20 Y10 E-.14999\n",
+                    "G1 E.5\n",
+                    f"G1 X{x} Y11 E1\n",
+                )
+            )
+        report = self.scan(valid_gcode("".join(cycles)))
+        self.assertTrue(report.accepted, report.to_json())
+
+    def test_tiny_print_moves_cannot_farm_rounding_allowance(self):
+        cycles = ["M83\n"]
+        for index in range(20):
+            x = 20 if index % 2 else 21
+            cycles.extend(
+                (
+                    "G1 E-.49999\n",
+                    "G1 E.5\n",
+                    f"G1 X{x} Y11 E.00001\n",
+                )
+            )
+        report = self.scan(valid_gcode("".join(cycles)))
+        self.assertFalse(report.accepted, report.to_json())
+        self.assertTrue(
+            any("retraction credit" in item.message for item in report.findings),
+            report.to_json(),
+        )
+
+    def test_accepts_only_bounded_orca_zero_length_xy_rounding(self):
+        rounded_path = (
+            "M83\n"
+            "G1 X20 Y10 E.00002\n"
+            "G1 X21 Y10 E.01\n"
+            "G1 X21 Y10 E.00002\n"
+        )
+        self.assertTrue(self.scan(valid_gcode(rounded_path)).accepted)
+        for unsafe in (
+            "M83\nG1 X20 Y10 E.00011\n",
+            "M83\nG1 X20 E.00001\n",
+            "M83\nG1 X20 Y10 E.00002\nG1 X20 Y10 E.00002\n",
+        ):
+            with self.subTest(unsafe=unsafe):
+                self.assertFalse(self.scan(valid_gcode(unsafe)).accepted)
+
+    def test_retraction_credit_is_bounded_consumed_and_cleared_by_printing(self):
+        for commands in (
+            "M83\nG1 E-0.8\nG1 E0.81\n",
+            "M83\nG1 E-0.8\nG1 E0.4\nG1 E0.41\n",
+            "M83\nG1 E-0.8\nG1 X30 Y10 E0.2\nG1 E0.1\n",
+        ):
+            with self.subTest(commands=commands):
+                report = self.scan(valid_gcode(commands))
+                self.assertFalse(report.accepted, report.to_json())
+                self.assertTrue(
+                    any("retraction credit" in item.message for item in report.findings),
+                    report.to_json(),
+                )
+
+    def test_accepts_bounded_orca_pressure_advance(self):
+        commands = (
+            "SET_PRESSURE_ADVANCE ADVANCE=0\n"
+            "SET_PRESSURE_ADVANCE ADVANCE=0.02\n"
+            "SET_PRESSURE_ADVANCE ADVANCE=0.2\n"
+        )
+        report = self.scan(valid_gcode(commands))
+        self.assertTrue(report.accepted, report.to_json())
+
+    def test_rejects_unbounded_or_extended_pressure_advance(self):
+        for command in (
+            "SET_PRESSURE_ADVANCE ADVANCE=-0.01",
+            "SET_PRESSURE_ADVANCE ADVANCE=0.20001",
+            "SET_PRESSURE_ADVANCE ADVANCE=nan",
+            "SET_PRESSURE_ADVANCE",
+            "SET_PRESSURE_ADVANCE ADVANCE=0.02 SMOOTH_TIME=0.04",
+            "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder",
+            "TUNING_TOWER COMMAND=SET_PRESSURE_ADVANCE PARAMETER=ADVANCE START=0",
+        ):
+            with self.subTest(command=command):
+                report = self.scan(valid_gcode(command + "\n"))
+                self.assertFalse(report.accepted, report.to_json())
+
+    def test_rejects_pressure_advance_before_start(self):
+        report = self.scan(
+            valid_gcode().replace(
+                "START_PRINT",
+                "SET_PRESSURE_ADVANCE ADVANCE=0.02\nSTART_PRINT",
+            )
+        )
+        self.assertFalse(report.accepted, report.to_json())
+        self.assertTrue(
+            any("before START_PRINT" in item.message for item in report.findings),
+            report.to_json(),
+        )
 
     def test_parser_matches_klipper_for_parentheses_exponents_and_stars(self):
         # Pinned Klipper does not treat parentheses as comments and tokenizes

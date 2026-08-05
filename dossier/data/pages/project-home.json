@@ -20,10 +20,10 @@
     "readFirstOrder": 0
   },
   "work": {
-    "active": false,
-    "priority": "normal",
-    "nextAction": "",
-    "status": "Parked"
+    "active": true,
+    "priority": "high",
+    "nextAction": "Prove recovery boot and capture the full eMMC image before any printer write.",
+    "status": "Awaiting physical recovery gate"
   },
   "publish": {
     "include": false,
@@ -55,7 +55,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains a reviewed, commissioning-locked mainline candidate, recovery tooling, safety policy, Orca profile rules, and validation tests."
+            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains the v13 commissioning-locked mainline candidate, recovery tooling, safety policy, portable Orca 2.4.2 profiles, editable review projects, and validation tests."
           }
         ]
       },
@@ -64,7 +64,7 @@
         "content": [
           {
             "type": "text",
-            "text": "My recommendation is to treat the current repository state as ready for attended recovery and backup work, not ready for unattended installation. The recovery USB is prepared; the next real-world gate is proving recovery boot identity and capturing the full eMMC backup before any write to the printer. After mainline commissioning, OrcaSlicer setup and Frieren slice preparation are explicit gates before a full figure print."
+            "text": "My recommendation is to treat the current repository state as ready for attended recovery and backup work, not ready for unattended installation. The recovery USB is prepared; the next real-world gate is proving recovery boot identity and capturing the full eMMC backup before any write to the printer. Orca is already staged on this laptop, but the first-layer test, bracket, and Frieren remain editable projects until commissioning and their required filament calibrations are accepted."
           }
         ]
       },
@@ -279,6 +279,54 @@
         "content": [
           {
             "type": "text",
+            "text": "Current refinement candidate"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The refinement safely supports Orca's per-filament pressure advance during an admitted print. Values must be finite and between 0 and 0.20. Smooth-time changes, alternate extruders, unknown parameters, values before START_PRINT, and uploaded TUNING_TOWER commands are refused. Startup and every cleanup path reset pressure advance to zero. A paused admitted print may perform only that zero reset, allowing cancellation to finish without allowing paused tuning changes."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The old generic 5 mm stationary-extrusion allowance is gone. A stationary positive move can only return filament that the same print previously retracted. Tiny, capped allowances cover Orca 2.4.2 decimal rounding without creating a usable stationary purge allowance."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Mainsail and KlipperScreen gain a read-only Printer Status action. Its internal macro command is T_STATUS because exact Klipper v0.13 rejects macro names containing digits; the visible human label remains Printer Status. It reports temperatures, homing, plate readiness, commissioning lock, and filament-sensor state without moving or heating anything."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Four editable Orca review projects are staged in Downloads/T300-Orca-Review-20260805: the standard first-layer test, orange camera bracket, Frieren quality candidate, and Frieren easier-support-release candidate. They deliberately contain no final G-code. Orca still needs conservative placeholder values to open and preview a project, but those profiles are visibly CALIBRATION REQUIRED and no pressure-advance, flow, temperature, volumetric-speed, or retraction result is treated as accepted."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Sign-off position"
           }
         ]
@@ -316,7 +364,8 @@
       {
         "type": "orderedList",
         "attrs": {
-          "start": 1
+          "start": 1,
+          "type": null
         },
         "content": [
           {

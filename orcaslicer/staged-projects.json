@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated": "2026-08-05",
+  "artifact_directory": "~/Downloads/T300-Orca-Review-20260805",
+  "final_gcode_generated": false,
+  "projects": [
+    {
+      "file": "T300_FIRST_LAYER_PRINTABLES_60MM_MAINLINE_CALIBRATION_REQUIRED.3mf",
+      "sha256": "62eb9667342f5bea915c1535f856cfb82c3dbe028a9049a58fc4346c2923ff0d",
+      "status": "editable commissioning project",
+      "profile": "T300 0.20mm Calibration - REVIEW ONLY",
+      "filament": "T300 Sovol White PLA - CALIBRATION REQUIRED",
+      "release_gate": "machine commissioning calibrations accepted"
+    },
+    {
+      "file": "T300_CAMERA_MOUNT_V1.2_ORANGE_MAINLINE_CALIBRATION_REQUIRED.3mf",
+      "sha256": "886fa3405e338b0a9fc1a9cfcc1c59bb3cfd8186ace9ccd06d37dd58b2aabaf8",
+      "status": "editable bracket project",
+      "profile": "T300 0.20mm Camera Bracket - REVIEW ONLY",
+      "filament": "T300 ELEGOO PLA Orange - CALIBRATION REQUIRED",
+      "release_gate": "orange PLA calibration accepted and Prepare/Preview reviewed",
+      "advisory_reviews": [
+        "Hull/floor-line risk at Z=1.20 mm: solid extrusion drops from about 411.5 mm to 14.9 mm while about 33.1 mm of outer wall continues. Inspect feature type, flow and layer time before export.",
+        "Resolved Orca 2.4.2 overlap is 25%; compare strength-first defaults with Orca's 10-15% accumulation-aware guidance, but do not change it without owner review."
+      ]
+    },
+    {
+      "file": "T300_FRIEREN_012_QUALITY_MAINLINE_CALIBRATION_REQUIRED.3mf",
+      "sha256": "487bca619e2aab300e21fa92fdfbeabecd43396cfe1d8d9c64ca5ec3cf52f50c",
+      "status": "editable quality project",
+      "profile": "T300 0.12mm Figure Quality - REVIEW ONLY",
+      "filament": "T300 Sovol White PLA - CALIBRATION REQUIRED",
+      "release_gate": "chosen filament calibrated and bracket validation print accepted",
+      "advisory_reviews": [
+        "Low-confidence hull-line review only: inspect unusually broad solid sections and abrupt feature-flow transitions; do not change the organic model automatically."
+      ]
+    },
+    {
+      "file": "T300_FRIEREN_012_EASIER_RELEASE_MAINLINE_CALIBRATION_REQUIRED.3mf",
+      "sha256": "af895694a2c51322c565d7b21c8e3f3ce0b4c17bd3f0e63e509afd3b00b67bf4",
+      "status": "editable support-release comparison project",
+      "profile": "T300 0.12mm Figure Easier Release - REVIEW ONLY",
+      "filament": "T300 Sovol White PLA - CALIBRATION REQUIRED",
+      "release_gate": "chosen filament calibrated, bracket accepted, and support preview compared",
+      "advisory_reviews": [
+        "Low-confidence hull-line review only: inspect unusually broad solid sections and abrupt feature-flow transitions; do not change the organic model automatically."
+      ]
+    }
+  ],
+  "exact_orca_2_4_2_evidence": {
+    "source_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+    "camera_gcode_sha256": "2a313d00c16904bc6a5f0b70bcf527172d2459bdc9adb0529863868f0a1c2b68",
+    "frieren_quality_gcode_sha256": "59c9bf4e5279e7a89f07f8bfa3311773f0c4e0114a3d5deb4a4037e2bc0e252d",
+    "frieren_easier_release_gcode_sha256": "1bf620f85c7afc67ba76dadeae6326cc65a6f9f8862b6ffcdaf41bb94c22ee80",
+    "policy_result": "accepted",
+    "note": "Validation G-code was deleted from the delivery set; only editable projects are staged."
+  }
+}

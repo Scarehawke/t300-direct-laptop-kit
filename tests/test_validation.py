@@ -159,6 +159,22 @@ gcode:
                 any("phrased as an action" in item for item in result["failures"])
             )
 
+    def test_operator_ui_review_rejects_wrong_status_action(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.operator_ui_fixture(Path(directory))
+            screen = root / "etc/t300/klipperscreen/KlipperScreen.conf"
+            screen.write_text(
+                screen.read_text(encoding="utf-8").replace(
+                    '{"script":"T_STATUS"}',
+                    '{"script":"STATUS"}',
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            result = review_operator_ui(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(any("T_STATUS" in item for item in result["failures"]))
+
     def test_operator_ui_review_rejects_raw_touch_controls(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
@@ -256,6 +272,25 @@ gcode:
             result = review_klipper_lifecycle(root)
             self.assertFalse(result["passed"])
             self.assertTrue(any("shuts heaters" in item for item in result["failures"]))
+
+    def test_lifecycle_review_requires_cancel_pressure_advance_reset(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = self.lifecycle_fixture(root)
+            lifecycle = config / "lifecycle.cfg"
+            lifecycle.write_text(
+                lifecycle.read_text(encoding="utf-8").replace(
+                    "  SET_PRESSURE_ADVANCE ADVANCE=0\n  _T_SAFE_PARK Z_MIN=200",
+                    "  _T_SAFE_PARK Z_MIN=200",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            result = review_klipper_lifecycle(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(
+                any("reset pressure advance" in item for item in result["failures"])
+            )
 
     def test_lifecycle_review_requires_clearance_before_xy_park(self):
         with tempfile.TemporaryDirectory() as directory:

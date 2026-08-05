@@ -73,6 +73,25 @@ GerGo's macro. The owner has chosen the purchased GerGo v3 workflow. Never copy
 the included reference `printer.cfg` or reference configuration bundle over the
 printer wholesale; GerGo explicitly labels those files reference-only.
 
+## Hull- and floor-line review
+
+Treat a localized horizontal wall line at a large cross-section transition as
+a model-and-process review item before calling it a printer fault. Risk signals
+include a broad solid floor or deck becoming thin upright walls, a sudden
+sparse-to-solid transition while an outer wall continues, or a large connected
+solid region beside a thin cosmetic wall. Layer time can reveal the transition,
+but it is not by itself the established cause or a reason to smooth layer time.
+
+For every valuable or large model, inspect Orca's sliced Preview by feature
+type, flow and layer time. If the geometry has a plausible hull/floor-line risk,
+warn the owner before final G-code export and present model-specific options.
+Check cooling suitability for the selected material, solid-infill speed and
+pattern, wall order, Precise Wall, and resolved wall-overlap values. Design
+decoupling, overlap reduction, extra cooling and wall-order changes can affect
+strength, overhangs, seams, dimensions or material behavior, so do not apply
+them automatically unless the evidence is unusually direct and the tradeoff is
+negligible. Never hand-edit the mesh or final G-code for this purpose.
+
 ## Validation already completed
 
 - The exact purchased macro was extracted privately and its three macro

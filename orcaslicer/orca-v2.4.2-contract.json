@@ -1,0 +1,34 @@
+{
+  "orcaslicer_version": "2.4.2",
+  "source_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "gcode_flavor": "klipper",
+  "calibration_order": [
+    "temperature",
+    "maximum_volumetric_speed",
+    "pressure_advance",
+    "flow_ratio",
+    "retraction"
+  ],
+  "source_evidence": {
+    "pressure_advance_writer": "src/libslic3r/GCodeWriter.cpp:370",
+    "tower_layer_commands": "src/libslic3r/GCode.cpp:4690",
+    "pressure_advance_generators": "src/libslic3r/calib.cpp:497",
+    "flow_ratio_objects": "src/slic3r/Utils/CalibUtils.cpp:680",
+    "temperature_tower": "src/slic3r/Utils/CalibUtils.cpp:1030",
+    "maximum_volumetric_speed_tower": "src/slic3r/Utils/CalibUtils.cpp:1090",
+    "retraction_tower": "src/slic3r/Utils/CalibUtils.cpp:1230"
+  },
+  "policy_contract": {
+    "temperature": "M104 and M109 remain inside the configured heater ceiling",
+    "maximum_volumetric_speed": "ordinary bounded G0/G1 feed and extrusion moves",
+    "pressure_advance": "SET_PRESSURE_ADVANCE with ADVANCE only, from 0 through 0.20",
+    "flow_ratio": "object print_flow_ratio is baked into bounded moving extrusion",
+    "retraction": "ordinary retract and matched recovery moves"
+  },
+  "deliberately_unsupported": {
+    "adaptive_pressure_advance": "disabled in T300 filament profiles",
+    "runtime_smooth_time": "rejected",
+    "alternate_extruder_pressure_advance": "rejected",
+    "uploaded_tuning_tower": "rejected"
+  }
+}

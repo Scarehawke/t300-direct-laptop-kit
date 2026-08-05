@@ -393,8 +393,6 @@ CALIBRATION_ALLOWLIST = {
         "pid_kp",
         "pid_ki",
         "pid_kd",
-        "pressure_advance",
-        "pressure_advance_smooth_time",
     },
     "heater_bed": {"control", "pid_kp", "pid_ki", "pid_kd"},
     "probe": {"z_offset"},
@@ -415,8 +413,6 @@ CALIBRATION_REQUIRED = {
         "pid_kp",
         "pid_ki",
         "pid_kd",
-        "pressure_advance",
-        "pressure_advance_smooth_time",
     },
     "heater_bed": {"control", "pid_kp", "pid_ki", "pid_kd"},
     "probe": {"z_offset"},
@@ -522,15 +518,6 @@ def validate_calibration(path: Path) -> bytes:
         _calibration_float(parser, section, "pid_kp", 0.0, 10000.0, minimum_exclusive=True)
         _calibration_float(parser, section, "pid_ki", 0.0, 10000.0, minimum_exclusive=True)
         _calibration_float(parser, section, "pid_kd", 0.0, 10000.0)
-    _calibration_float(parser, "extruder", "pressure_advance", 0.0, 1.0)
-    _calibration_float(
-        parser,
-        "extruder",
-        "pressure_advance_smooth_time",
-        0.0,
-        0.2,
-        minimum_exclusive=True,
-    )
     _calibration_float(parser, "probe", "z_offset", 0.1, 5.0)
     for axis in ("x", "y"):
         shaper_type = parser.get("input_shaper", "shaper_type_" + axis).strip()

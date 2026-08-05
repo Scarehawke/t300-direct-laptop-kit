@@ -78,7 +78,10 @@ def safety_fixture():
     safety._plate_ready = False
     safety._plate_state_sequence = 0
     safety._print_home_file = None
-    safety.policy = {"min_extrude_temp_floor": 150.0}
+    safety.policy = {
+        "min_extrude_temp_floor": 150.0,
+        "max_pressure_advance": 0.2,
+    }
     return safety, virtual_sd, extruder
 
 
@@ -224,6 +227,39 @@ class T300SafetyStateTests(unittest.TestCase):
         safety._handle_virtual_sd_reset()
         self.assertTrue(safety._plate_ready)
         self.assertIsNone(safety._print_home_file)
+
+    def test_pressure_advance_requires_active_admitted_print_and_exact_parameters(self):
+        safety, virtual_sd, _extruder = safety_fixture()
+        calls = []
+        safety._original_SET_PRESSURE_ADVANCE = lambda gcmd: calls.append(gcmd)
+
+        with self.assertRaisesRegex(RuntimeError, "active admitted print"):
+            safety.cmd_SET_PRESSURE_ADVANCE(FakeGcmd({"ADVANCE": "0.02"}))
+
+        virtual_sd.current_file = SAFETY_MODULE.ApprovedGCodeFile(
+            io.StringIO(""), "print.gcode"
+        )
+        virtual_sd.active = True
+        for params in (
+            {"ADVANCE": "0.20001"},
+            {"ADVANCE": "-0.01"},
+            {"ADVANCE": "nan"},
+            {"ADVANCE": "0.02", "SMOOTH_TIME": "0.04"},
+            {"ADVANCE": "0.02", "EXTRUDER": "extruder"},
+            {},
+        ):
+            with self.subTest(params=params), self.assertRaises(RuntimeError):
+                safety.cmd_SET_PRESSURE_ADVANCE(FakeGcmd(params))
+
+        for value in ("0", "0.02", "0.2"):
+            safety.cmd_SET_PRESSURE_ADVANCE(FakeGcmd({"ADVANCE": value}))
+        self.assertEqual(len(calls), 3)
+
+        virtual_sd.active = False
+        with self.assertRaisesRegex(RuntimeError, "nonzero pressure advance"):
+            safety.cmd_SET_PRESSURE_ADVANCE(FakeGcmd({"ADVANCE": "0.02"}))
+        safety.cmd_SET_PRESSURE_ADVANCE(FakeGcmd({"ADVANCE": "0"}))
+        self.assertEqual(len(calls), 4)
 
     def test_purge_and_shutdown_invalidate_ready_state(self):
         safety, _virtual_sd, _extruder = safety_fixture()

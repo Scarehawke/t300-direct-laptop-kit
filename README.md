@@ -30,6 +30,15 @@ candidate deliberately provides no automatic eMMC or MCU flashing command;
 those owner-attended operations remain blocked until recovery and hardware
 identity have been proven on the actual screen.
 
+The current v13 refinement adds bounded admitted-print pressure advance,
+retraction-credit accounting, a read-only Printer Status action, portable Orca
+2.4.2 machine/filament/process presets, and editable first-layer, bracket, and
+Frieren review projects. No final print G-code or unverified filament tuning is
+presented as accepted; provisional profile values remain visibly labeled
+`CALIBRATION REQUIRED`. Its stage-bound digital large-print test covers a
+900-layer, 250 x 234 x 270 mm job representing roughly 1.5 kg of deposited PLA
+without using a print-length-dependent rounding limit.
+
 ## What you need
 
 - An Arch/EndeavourOS-style laptop using NetworkManager.

@@ -40,8 +40,6 @@ control: pid
 pid_Kp: 1
 pid_Ki: 1
 pid_Kd: 1
-pressure_advance: 0.02
-pressure_advance_smooth_time: 0.04
 [heater_bed]
 control: pid
 pid_Kp: 1
@@ -270,7 +268,7 @@ class StagingTests(unittest.TestCase):
 
             missing = root / "missing.cfg"
             missing.write_text(
-                VALID_CALIBRATION.replace("pressure_advance: 0.02\n", ""),
+                VALID_CALIBRATION.replace("rotation_distance: 3.5\n", ""),
                 encoding="ascii",
             )
             with self.assertRaisesRegex(StagingError, "missing required"):

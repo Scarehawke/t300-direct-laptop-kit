@@ -339,6 +339,121 @@
             "text": "The full public printer project was committed as 0590c50 Add T300 mainline migration candidate and pushed to GitHub origin/main after rebasing on the upstream t300-link documentation change."
           }
         ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Firmware and Orca refinement candidate"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Added admitted-print-only pressure advance from 0 through 0.20, with strict parameter validation and cleanup resets. A paused admitted print can issue only the zero reset so cancellation still completes. Adaptive pressure advance and uploaded TUNING_TOWER remain disabled."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Removed the generic 5 mm stationary extrusion allowance and replaced it with consumed retraction credit plus tiny, audited Orca numeric-rounding tolerances."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Added the read-only Printer Status action to Mainsail and KlipperScreen. Exact Klipper compatibility required its internal command name to be T_STATUS."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Added portable Orca 2.4.2 machine, filament, and process profiles, including zero-hop default and separate 0.4 mm collision-clearance variants."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Staged editable first-layer, orange bracket, and two Frieren review projects. No final G-code was delivered, and every necessary placeholder filament value remains visibly calibration-required rather than accepted."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Validated the candidate with 324 repository tests, 29 exact Klipper v0.13 cases, 11 vendor Klipper v0.12 cases, exact Orca 2.4.2 normal slices, calibration-command contract tests, and a stage-bound large-format digital print."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Transcribed and researched the hull/floor-line tutorial against OrcaSlicer pull request 8107, Prusa's Benchy investigation, and Orca's setting documentation. Added a warn-first model review rule, flagged the camera bracket's base transition and inherited 25 percent overlap for owner review, and left both bracket and Frieren settings unchanged."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   }

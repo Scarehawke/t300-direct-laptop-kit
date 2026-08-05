@@ -82,7 +82,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Post-rebase repository tests: 303 unit tests passed."
+                    "text": "Current repository test suite: 324 unit tests passed, including exact Orca 2.4.2 calibration-contract tests."
                   }
                 ]
               }
@@ -96,7 +96,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Publishable-tree scan: passed, with 147 files scanned and no private artifacts detected."
+                    "text": "Publishable-tree and secret scans passed with no private GerGo package, credentials, backups, generated G-code, or printer images in the public candidate."
                   }
                 ]
               }
@@ -124,7 +124,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Saved candidate evidence records 25 Klipper v0.13 production cases and 11 vendor 0.12 compatibility cases from the previous harness run."
+                    "text": "Candidate v13 evidence records 29 exact pinned Klipper v0.13 production cases and 11 vendor Klipper 0.12 compatibility cases."
                   }
                 ]
               }
@@ -154,6 +154,63 @@
         "content": [
           {
             "type": "text",
+            "text": "Refinement validation evidence"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The fresh v13 commissioning stage manifest has SHA-256 fcbe23e6031a9066935f8d2c7a4d923962f69ab4f63225fc8b90f58fce504756. The final validation report has SHA-256 d636597368a563f1ed45a0dbb1deb752857e65b4d8f542973c9a2242fd5cf950 and passes all eleven repository, policy, large-print admission, exact Klipper v0.13, vendor Klipper v0.12, UI, lifecycle, host-network, systemd, secret, and staging checks."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The large-format gate admitted a deterministic 900-layer, 250 x 234 x 270 mm digital job representing about 1.5 kg of PLA and 36,000 retract, wipe, and recovery cycles through the exact v13 staged scanner, protected snapshot, and approval-record path. It also rejected repeated stationary-extrusion and microscopic-move allowance-farming attacks. This proves scale-safe policy behavior; it does not simulate real heater, probe, motion, material, or frame physics."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Exact Orca 2.4.2 normal slices were generated for the camera bracket and both Frieren process candidates. All three completed and were accepted by the scanner. Their evidence hashes are 2a313d... for the bracket, 59c9bf... for Frieren quality, and 1bf620... for Frieren easier release. Generated G-code was deliberately excluded from the delivery."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Orca 2.4.2 calibration compatibility is pinned to source commit 8500fcdccaa10b5099ac20d252af3a7c560046f1. Tests admit the expected temperature, maximum-volumetric-speed, pressure-advance, flow-ratio, and retraction forms, while proving unsafe temperature, position, pressure-advance, flow-override, tuning-tower, and unmatched stationary-extrusion variants fail."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "Software evidence is not physical acceptance. No heater, motor, probe, camera, network soak, calibration, or print result has been claimed by these local tests. Those remain attended owner gates after recovery and installation."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
             "text": "Release gates still open"
           }
         ]
@@ -161,7 +218,8 @@
       {
         "type": "orderedList",
         "attrs": {
-          "start": 1
+          "start": 1,
+          "type": null
         },
         "content": [
           {

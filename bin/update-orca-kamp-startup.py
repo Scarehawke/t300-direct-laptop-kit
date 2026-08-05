@@ -32,6 +32,14 @@ RUNTIME_REQUIRED_SETTINGS = {
     "printer_settings_id": RUNTIME_PRINTER_SETTINGS_ID,
     "print_sequence": "by layer",
 }
+RUNTIME_PROJECT_SETTINGS = {
+    "z_hop": "0",
+    "z_hop_types": "Normal Lift",
+    "retract_restart_extra": "0",
+    "retract_restart_extra_toolchange": "0",
+    "filament_retract_restart_extra": "0",
+    "adaptive_pressure_advance": "0",
+}
 LEGACY_FULL_MESH_START_GCODE = (
     "START_PRINT BED_TEMP=[bed_temperature_initial_layer_single] "
     "EXTRUDER_TEMP=[nozzle_temperature_initial_layer] MESH=FULL\n"
@@ -133,6 +141,21 @@ class ProjectError(RuntimeError):
     pass
 
 
+def _set_list_setting(
+    settings: dict[str, object],
+    key: str,
+    value: str,
+    *,
+    fallback_key: str | None = None,
+) -> None:
+    current = settings.get(key)
+    if (not isinstance(current, list) or not current) and fallback_key is not None:
+        current = settings.get(fallback_key)
+    if not isinstance(current, list) or not current:
+        raise ProjectError(f"Orca project has no {key} list")
+    settings[key] = [value] * len(current)
+
+
 def update_project(
     source: Path,
     destination: Path,
@@ -142,6 +165,9 @@ def update_project(
     timelapse_per_layer: bool = False,
     use_printer_retraction: bool = False,
     retract_infill_travels: bool = False,
+    filament_profile_id: str | None = None,
+    process_profile_id: str | None = None,
+    calibration_required: bool = False,
 ) -> tuple[str, str]:
     if source.suffix.lower() != ".3mf" or destination.suffix.lower() != ".3mf":
         raise ProjectError("source and destination must be .3mf files")
@@ -185,6 +211,30 @@ def update_project(
         settings[key] = value
     settings["machine_start_gcode"] = RUNTIME_START_GCODE
     settings["machine_end_gcode"] = RUNTIME_END_GCODE
+    for key, value in RUNTIME_PROJECT_SETTINGS.items():
+        _set_list_setting(
+            settings,
+            key,
+            value,
+            fallback_key=(
+                "retract_restart_extra"
+                if key == "retract_restart_extra_toolchange"
+                else None
+            ),
+        )
+    if filament_profile_id is not None:
+        if not filament_profile_id.strip():
+            raise ProjectError("filament profile id may not be empty")
+        _set_list_setting(settings, "filament_settings_id", filament_profile_id)
+    if process_profile_id is not None:
+        if not process_profile_id.strip():
+            raise ProjectError("process profile id may not be empty")
+        if not isinstance(settings.get("print_settings_id"), str):
+            raise ProjectError("Orca project has no print settings id")
+        settings["print_settings_id"] = process_profile_id
+    if calibration_required:
+        for key in ("enable_pressure_advance", "pressure_advance"):
+            _set_list_setting(settings, key, "0")
     if initial_nozzle_temp is not None:
         old_temp = settings.get("nozzle_temperature_initial_layer")
         if not isinstance(old_temp, list) or not old_temp:
@@ -245,6 +295,25 @@ def update_project(
                     raise ProjectError(
                         f"updated 3MF does not contain required Orca setting: {key}"
                     )
+            for key, expected in RUNTIME_PROJECT_SETTINGS.items():
+                if set(revised.get(key, [])) != {expected}:
+                    raise ProjectError(
+                        f"updated 3MF does not contain safe project setting: {key}"
+                    )
+            if filament_profile_id is not None and set(
+                revised.get("filament_settings_id", [])
+            ) != {filament_profile_id}:
+                raise ProjectError("updated 3MF does not use the requested filament profile")
+            if process_profile_id is not None and revised.get(
+                "print_settings_id"
+            ) != process_profile_id:
+                raise ProjectError("updated 3MF does not use the requested process profile")
+            if calibration_required:
+                for key in ("enable_pressure_advance", "pressure_advance"):
+                    if set(revised.get(key, [])) != {"0"}:
+                        raise ProjectError(
+                            f"updated 3MF does not mark {key} as calibration-required"
+                        )
             if initial_nozzle_temp is not None and set(
                 revised.get("nozzle_temperature_initial_layer", [])
             ) != {str(initial_nozzle_temp)}:
@@ -288,6 +357,13 @@ def main() -> int:
     parser.add_argument("--timelapse-per-layer", action="store_true")
     parser.add_argument("--use-printer-retraction", action="store_true")
     parser.add_argument("--retract-infill-travels", action="store_true")
+    parser.add_argument("--filament-profile-id")
+    parser.add_argument("--process-profile-id")
+    parser.add_argument(
+        "--calibration-required",
+        action="store_true",
+        help="disable pressure advance and clear its provisional value",
+    )
     args = parser.parse_args()
     try:
         source_hash, destination_hash = update_project(
@@ -298,6 +374,9 @@ def main() -> int:
             timelapse_per_layer=args.timelapse_per_layer,
             use_printer_retraction=args.use_printer_retraction,
             retract_infill_travels=args.retract_infill_travels,
+            filament_profile_id=args.filament_profile_id,
+            process_profile_id=args.process_profile_id,
+            calibration_required=args.calibration_required,
         )
     except (OSError, ProjectError, zipfile.BadZipFile) as exc:
         parser.error(str(exc))
@@ -316,6 +395,12 @@ def main() -> int:
         print("changed setting: filament_retraction_length (inherit printer setting)")
     if args.retract_infill_travels:
         print("changed setting: reduce_infill_retraction (disabled)")
+    if args.filament_profile_id:
+        print(f"changed setting: filament_settings_id ({args.filament_profile_id})")
+    if args.process_profile_id:
+        print(f"changed setting: print_settings_id ({args.process_profile_id})")
+    if args.calibration_required:
+        print("changed settings: static/adaptive pressure advance disabled pending calibration")
     print("all embedded model and metadata members otherwise verified unchanged")
     return 0
 

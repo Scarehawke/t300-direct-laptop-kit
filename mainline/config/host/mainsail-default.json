@@ -33,11 +33,19 @@
         "name": "Owner Actions",
         "color": "primary",
         "showInStandby": true,
-        "showInPrinting": false,
+        "showInPrinting": true,
         "showInPause": true,
         "macros": [
           {
             "pos": 1,
+            "name": "T_STATUS",
+            "color": "primary",
+            "showInStandby": true,
+            "showInPrinting": true,
+            "showInPause": true
+          },
+          {
+            "pos": 2,
             "name": "BUILD_PLATE_READY",
             "color": "success",
             "showInStandby": true,
@@ -45,7 +53,7 @@
             "showInPause": false
           },
           {
-            "pos": 2,
+            "pos": 3,
             "name": "HOME_PRINTER",
             "color": "warning",
             "showInStandby": true,
@@ -53,7 +61,7 @@
             "showInPause": false
           },
           {
-            "pos": 3,
+            "pos": 4,
             "name": "LOAD_FILAMENT",
             "color": "group",
             "showInStandby": false,
@@ -61,7 +69,7 @@
             "showInPause": true
           },
           {
-            "pos": 4,
+            "pos": 5,
             "name": "UNLOAD_FILAMENT",
             "color": "group",
             "showInStandby": false,
