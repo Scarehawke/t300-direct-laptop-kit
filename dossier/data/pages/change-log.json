@@ -50,6 +50,27 @@
         ]
       },
       {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Owner-reviewed interface correction"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The first production UI proposal replaced the printer's familiar screen and hid most Mainsail controls. The owner rejected that large simplification. The corrected candidate preserves complete upstream Mainsail and the exact stock Comgrow serial-TFT layout, with a constrained gateway enforcing the reviewed backend behavior."
+          }
+        ]
+      },
+      {
         "type": "paragraph",
         "content": [
           {
@@ -391,7 +412,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Added the read-only Printer Status action to Mainsail and KlipperScreen. Exact Klipper compatibility required its internal command name to be T_STATUS."
+                    "text": "Added the read-only Printer Status action. The current Klipper command is PRINTER_STATUS, which is visible in Mainsail and is the only operator macro shown on the stock touchscreen Macro page."
                   }
                 ]
               }
@@ -521,6 +542,107 @@
                   {
                     "type": "text",
                     "text": "The final offline validation report passed all eleven checks, including the exact v14 stage, both Klipper versions, UI/services, secret scan, and a near-full-build-volume synthetic print."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "attrs": {
+          "level": 2
+        },
+        "content": [
+          {
+            "type": "text",
+            "text": "Stock touchscreen gateway and v21 candidate"
+          }
+        ]
+      },
+      {
+        "type": "bulletList",
+        "content": [
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Discarded the replacement KlipperScreen interface after owner review. The candidate now preserves the exact Comgrow serial-TFT firmware, artwork, navigation, file browser, print screen, manual movement, temperature controls, and persistent Emergency Stop."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Placed the proprietary bridge behind an unprivileged loopback compatibility gateway. The bridge has serial-TFT access but no raw GPIO, shell, updater, configuration-write, unrestricted Moonraker, or service-restart authority. Its first hidden startup FIRMWARE_RESTART is acknowledged without restarting Klipper; later explicit restart buttons retain their advertised behavior."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Audited all 77 known stock controls. Each is classified as preserved, translated, local, constrained, or explicitly refused. The Macro page now shows only read-only Printer Status; Pause, Resume, Stop, and Change Filament remain in their dedicated stock locations."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Hardened homing state: successful X/Y-only homing does not move Z and preserves plate readiness, while any failed home stops in Klipper error and clears plate readiness. Z-only and all-axis touchscreen homing require prior plate confirmation in Mainsail because the stock TFT cannot render the checkbox."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Set production Klipper service crash behavior to Restart=no. A real Klippy process crash therefore remains down for inspection instead of creating an unexplained automatic recovery cycle; ordinary explicit restart commands still work while Klipper is responsive."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Built owner-local commissioning stage v21. It passed 373 repository tests, 34 exact Klipper v0.13 production cases, 11 vendor Klipper v0.12 cases, private maintenance configuration loading, the exact touchscreen contract, policy and secret checks, and the 900-layer near-full-volume digital print. The stage remains commissioning-only until the control-disabled USB boot and attended hardware tests pass."
                   }
                 ]
               }

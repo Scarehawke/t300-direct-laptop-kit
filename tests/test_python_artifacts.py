@@ -188,10 +188,10 @@ class PythonArtifactTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         result = load_artifact_lock(root / "mainline/build/python-artifacts.lock.json")
         self.assertEqual({item["name"] for item in result["environments"]}, {
-            "build", "klipper", "moonraker", "klipperscreen"
+            "build", "klipper", "moonraker"
         })
         self.assertEqual(
-            sum(len(item["artifacts"]) for item in result["environments"]), 63
+            sum(len(item["artifacts"]) for item in result["environments"]), 49
         )
         self.assertEqual(result["bootstrap"]["pip"], "25.1.1")
 

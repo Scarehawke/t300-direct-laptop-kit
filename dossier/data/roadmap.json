@@ -26,7 +26,7 @@
       "id": "recovery-proof",
       "title": "Recovery USB and full stock backup",
       "status": "in-progress",
-      "summary": "Recovery files are locally verified. Next, apply the owner-approved device-tree and recovery-overlay update to the USB, re-audit it, prove three serial-selected USB boots, then capture the full stock eMMC."
+      "summary": "The owner-approved device-tree and recovery-overlay update is installed and re-audited on the recovery USB. Next, prove three serial-selected USB boots, then capture and verify the full stock eMMC."
     },
     {
       "id": "usb-boot-candidate",
@@ -54,6 +54,26 @@
     }
   ],
   "recentChanges": [
+    {
+      "date": "2026-08-06",
+      "summary": "Replaced the discarded KlipperScreen candidate with the exact stock Comgrow serial-TFT layout behind an unprivileged compatibility gateway; all 77 known physical controls now have explicit preserved, constrained, local, translated, or refused behavior."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "Built owner-local commissioning stage v21 and passed 373 repository tests, 34 exact Klipper 0.13 production cases, 11 vendor Klipper 0.12 cases, private maintenance configuration loading, full policy checks, and the near-full-volume digital print."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "Removed duplicate actuator actions from the touchscreen Macro page; only read-only Printer Status remains there, while Pause, Resume, Stop, and Change Filament stay on their dedicated stock controls."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "An intermediate pass restored full KlipperScreen and Mainsail controls after the minimal-UI proposal was rejected; the later v21 design superseded KlipperScreen by preserving the exact stock serial-TFT instead."
+    },
+    {
+      "date": "2026-08-06",
+      "summary": "Applied and verified the explicit Klipad50 device-tree selection and refreshed v3 recovery overlay on the USB, repaired its FAT dirty flag, and cleanly unmounted it for the three-boot proof."
+    },
     {
       "date": "2026-08-06",
       "summary": "Completed live read-only hardware preflight, rejected kexec as the primary recovery route, and pinned owner-operated 1,500,000-baud serial U-Boot USB selection."

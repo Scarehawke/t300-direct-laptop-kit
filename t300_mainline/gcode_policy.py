@@ -88,6 +88,10 @@ class GCodePolicy:
     max_extrude_only_accel: float = 10000.0
     max_instantaneous_corner_velocity: float = 10.0
     max_pressure_advance: float = 0.2
+    max_manual_speed_percent: float = 500.0
+    max_manual_flow_percent: float = 120.0
+    max_live_z_adjust_step: float = 0.05
+    max_live_z_adjust_total: float = 0.25
     filament_diameter: float = 1.75
     x: AxisLimit = AxisLimit(-2.0, 302.0)
     y: AxisLimit = AxisLimit(-6.0, 302.0)
@@ -176,6 +180,10 @@ class GCodePolicy:
             "max_extrude_only_accel",
             "max_instantaneous_corner_velocity",
             "max_pressure_advance",
+            "max_manual_speed_percent",
+            "max_manual_flow_percent",
+            "max_live_z_adjust_step",
+            "max_live_z_adjust_total",
             "filament_diameter",
         )
         for name in numeric_names:
@@ -205,6 +213,14 @@ class GCodePolicy:
             raise PolicyError("minimum cruise-ratio floor must be in [0,1)")
         if not 0 <= self.max_pressure_advance <= 0.2:
             raise PolicyError("pressure-advance ceiling must remain within 0..0.2")
+        if self.max_manual_speed_percent > 500:
+            raise PolicyError("manual speed override must remain within 1..500 percent")
+        if self.max_manual_flow_percent > 120:
+            raise PolicyError("manual flow override must remain within 1..120 percent")
+        if self.max_live_z_adjust_step > 0.05:
+            raise PolicyError("live Z adjustment steps must remain within 0.05 mm")
+        if self.max_live_z_adjust_total > 0.25:
+            raise PolicyError("live Z adjustment must remain within +/-0.25 mm")
         if not 0 < self.hotend_max_power <= 1 or not 0 < self.bed_max_power <= 1:
             raise PolicyError("heater power ceilings must be in (0,1]")
         if self.min_extrude_temp_floor > self.nozzle_temp_max:
@@ -800,9 +816,13 @@ def scan_gcode(path: Path, policy: GCodePolicy, policy_path: Path) -> ScanReport
                 elif command in {"SET_VELOCITY_LIMIT", "SET_TMC_CURRENT", "M204"}:
                     _check_limit_command(command, params, policy)
                 elif command == "SET_PRESSURE_ADVANCE":
-                    if set(params) != {"ADVANCE"}:
+                    if set(params) not in ({"ADVANCE"}, {"EXTRUDER", "ADVANCE"}):
                         raise PolicyError(
-                            "SET_PRESSURE_ADVANCE permits only one ADVANCE parameter"
+                            "SET_PRESSURE_ADVANCE permits ADVANCE and the stock extruder"
+                        )
+                    if params.get("EXTRUDER", "extruder") != "extruder":
+                        raise PolicyError(
+                            "pressure advance may target only the stock extruder"
                         )
                     advance = _number(params, "ADVANCE")
                     if advance is None or not 0 <= advance <= policy.max_pressure_advance:

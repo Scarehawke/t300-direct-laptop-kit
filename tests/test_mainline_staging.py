@@ -155,7 +155,7 @@ class StagingTests(unittest.TestCase):
 
     def test_repository_debian_artifact_lock_is_valid(self):
         lock = load_debian_lock(ROOT / "mainline/build/debian-artifacts.lock.json")
-        self.assertEqual(len(lock["artifacts"]), 353)
+        self.assertEqual(len(lock["artifacts"]), 232)
         self.assertEqual(lock["solver"]["upgrades_from_signed_base"], 7)
         self.assertGreater(lock["solver"]["total_installed_size_kib"], 0)
         self.assertEqual(

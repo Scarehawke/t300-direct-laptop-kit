@@ -20,7 +20,9 @@ interactive updater:
 
 - Armbian 26.5.1 Debian 13 for MKS-Klipad50, kernel 6.18.33.
 - Klipper v0.13.0 at commit `61c0c8d2ef40340781835dd53fb04cc7a454e37a`.
-- Moonraker 0.10.0, Mainsail 2.18.2, KlipperScreen 0.4.7, and Crowsnest 5.0.0.
+- Moonraker 0.10.0, Mainsail 2.18.2, and Crowsnest 5.0.0.
+- The exact Comgrow 1.5.2 serial-TFT firmware and bridge, confined behind an
+  unprivileged compatibility gateway rather than replaced by KlipperScreen.
 - Pinned Mainsail client macros, KAMP park/purge, and Moonraker timelapse.
 
 Every archive, package, wheel, source commit, patch, hash, and license is named
@@ -67,8 +69,10 @@ Rearm Plate** action after fitting the sheet, latching both clips, cleaning the
 surface, removing loose filament, and clearing the motion path. Its prompt has
 one affirmative action: **Cleaned and rearmed**.
 
-That volatile check remains valid across harmless actions and repeated idle
-homing. It is invalidated by every admitted print before heating or motion,
+That volatile check remains valid across harmless actions and successful idle
+homing. A successful X/Y-only home never moves Z and preserves the check; any
+failed home clears it and leaves Klipper in its error state. It is invalidated
+by every admitted print before heating or motion,
 every hotend target at or above extrusion temperature, every commanded
 extrusion or retraction, purge, filament load/unload, cancellation, loaded-print
 error, Klipper shutdown, or restart. The next print or idle Z home then opens or
@@ -154,22 +158,40 @@ command. The always-visible Emergency Stop remains unconfirmed and uses
 Klipper's immediate shutdown endpoint. It is the correct interruption when
 waiting for ordinary Cancel would be unsafe.
 
-### Deliberately small operator interfaces
+### Standard operator interfaces and the stock touchscreen
 
-KlipperScreen replaces its broad default menus with a short touch workflow:
-**Print**, **Clean & Rearm Plate**, **Select Print File**, **Home Printer**,
-**Camera**, and **Notifications**. Raw movement, extrusion, temperature, mesh,
-Z-calibration, current/limit, pin, console, updater, and system controls are not
-placed on the production screen. Job Status retains its familiar Pause, Resume,
-Cancel, and Emergency Stop controls.
+The physical display keeps the exact Comgrow 1.5.2 serial-TFT firmware, visual
+layout, navigation, file browser, movement, temperature, tuning, print, and
+Emergency Stop controls. It is not replaced by a custom KlipperScreen layout.
+The vendor ARM64 bridge runs unprivileged and can talk only to the TFT serial
+port and a loopback compatibility gateway. It has no raw GPIO, shell, updater,
+configuration-write, unrestricted Moonraker, or service-control authority.
 
-Mainsail starts with icons and text, a confirmed ordinary Cancel, an immediate
-Emergency Stop, locked touch sliders, no Upload-and-Print shortcut, and one
-small **Owner Actions** group. Raw toolhead, heater, extruder, machine, console,
-and limit panels are hidden on mobile, tablet, desktop, and widescreen layouts.
-The UI defaults reduce misclicks; they are not the safety boundary. Revealing a
-panel later does not bypass the command guards, immutable limits, or admission
-scanner.
+All 77 known stock controls have an explicit contract. The touchscreen Macro
+page exposes only the read-only **Printer Status** action; Pause, Resume, Stop,
+and Change Filament remain in their dedicated stock locations. Z-only and
+all-axis homing from the touchscreen require **Cleaned and rearmed** to have
+been confirmed in Mainsail first because the stock TFT cannot render that
+checkbox. X/Y-only homing is directly available and does not move Z, but a
+failed sensorless home is not considered harmless and invalidates plate state.
+
+Standalone calibration buttons remain visible in their familiar locations but
+are explicitly refused in production and direct the owner to the separately
+armed maintenance workflow. LED controls are unavailable in the first
+candidate because the exact safe light output has not been validated and the
+bridge is deliberately denied raw host-GPIO access.
+
+Mainsail keeps its standard navigation, dashboard controls, and macro
+panel on mobile, tablet, desktop, and widescreen layouts. It starts with icons
+and text, a confirmed ordinary Cancel, an immediate Emergency Stop, and locked
+touch sliders. The one-click Upload-and-Print shortcut remains hidden because
+an uploaded file must finish admission scanning before it can start; an
+approved file is still selected normally from **G-Code Files** or the stock
+touchscreen's **Print** screen.
+
+Manual controls are part of the production baseline. The UI is not a safety
+boundary: commands remain subject to Klipper's native checks, immutable machine
+limits, the T300 command guards, and the G-code admission scanner.
 
 The web UI is the compiled, checksummed Mainsail `v2.18.2` release artifact. It
 is served from a read-only web root. Development TypeScript source is never used
@@ -197,9 +219,12 @@ purchased archive as a private staging input.
 
 ### Network, camera, and storage failures are secondary
 
-Klipper, Moonraker, Crowsnest, Mainsail, KlipperScreen, the admission scanner,
-Xorg, and the host MCU use separate service accounts and resource limits.
-Klipper has priority; camera, UI, and scanner processes are lower priority.
+Klipper, Moonraker, Crowsnest, Mainsail, the touchscreen bridge and gateway, the
+admission scanner, and the host MCU use separate service accounts and resource
+limits. Klipper has priority; camera, UI, and scanner processes are lower
+priority. The first hidden `FIRMWARE_RESTART` emitted by the vendor bridge at
+startup is acknowledged without restarting Klipper; later explicit restart
+buttons retain their advertised behavior.
 
 Moonraker and Crowsnest listen only on loopback. Nginx is the sole remote
 gateway and accepts only loopback plus the narrow direct-laptop IPv4 network

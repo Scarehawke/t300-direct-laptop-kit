@@ -126,7 +126,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The backed-up printer USB contains the pinned Armbian recovery image and an earlier recovery overlay. Its kernel, initrd, boot scripts, root UUID, and Klipad50 device tree match the lock. It is not yet approved for boot: the older stock U-Boot requires an explicit Klipad50 device-tree line, and the refreshed v3 recovery overlay is still staged on the laptop for an owner-approved USB update."
+                    "text": "The printer USB now contains the pinned Armbian recovery image, explicit Klipad50 device-tree selection, and refreshed v3 recovery overlay. Boot and installed-overlay audits passed, the FAT filesystem was repaired and rechecked cleanly, and the USB was cleanly unmounted. It is ready for the owner-operated three-boot recovery proof; it has not yet been used to write eMMC."
                   }
                 ]
               }
@@ -196,7 +196,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The purchased GerGo macro remains private and is not included in the public repository. Its exact purchased bytes are present only in the ignored owner-local v14 maintenance stage, where the configuration now syntax-loads successfully on pinned Klipper 0.13 without executing movement or heat."
+                    "text": "The purchased GerGo macro remains private and is not included in the public repository. Its exact purchased bytes are present only in the ignored owner-local v21 maintenance stage, where the configuration syntax-loads successfully on pinned Klipper 0.13 without executing movement or heat."
                   }
                 ]
               }
@@ -241,7 +241,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The current audited refinement contains the pressure-advance boundary, scale-safe extrusion accounting, status action, portable Orca profiles, large-format digital test, warn-first hull/floor-line slicing rule, serial recovery helper, locked recovery boot identity, and stricter eMMC target checks."
+                    "text": "The current audited refinement contains the pressure-advance boundary, scale-safe extrusion accounting, status action, portable Orca profiles, large-format digital test, warn-first hull/floor-line slicing rule, serial recovery helper, locked recovery boot identity, stricter eMMC target checks, complete upstream Mainsail controls, and the exact stock serial-touchscreen layout behind a constrained compatibility gateway."
                   }
                 ]
               }
@@ -283,7 +283,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "The v14 stage passed 338 repository tests, 29 production Klipper 0.13 cases, 11 vendor Klipper 0.12 cases, exact private-maintenance configuration loading, secret and service reviews, and a 900-layer near-full-volume digital print admission test. Hardware commissioning evidence is still intentionally absent."
+                    "text": "The v21 stage passed 373 repository tests, 34 production Klipper 0.13 cases, 11 vendor Klipper 0.12 cases, exact private-maintenance configuration loading, exact 77-control touchscreen contract review, secret and service reviews, and a 900-layer near-full-volume digital print admission test. Hardware commissioning evidence is still intentionally absent."
                   }
                 ]
               }

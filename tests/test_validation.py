@@ -75,7 +75,8 @@ gcode:
             "moonraker": root / "etc/t300/moonraker/moonraker.conf",
             "nginx": root / "etc/t300/nginx/nginx.conf",
             "crowsnest": root / "etc/t300/crowsnest/crowsnest.conf",
-            "klipperscreen": root / "etc/t300/klipperscreen/KlipperScreen.conf",
+            "gateway": root / "etc/systemd/system/t300-touchscreen-gateway.service",
+            "bridge": root / "etc/systemd/system/t300-touchscreen-bridge.service",
         }
         for path in destinations.values():
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -92,11 +93,21 @@ gcode:
             encoding="utf-8",
         )
         shutil.copy2(host / "crowsnest.conf", destinations["crowsnest"])
-        shutil.copy2(host / "KlipperScreen.conf", destinations["klipperscreen"])
+        shutil.copy2(
+            ROOT / "mainline/systemd/t300-touchscreen-gateway.service",
+            destinations["gateway"],
+        )
+        shutil.copy2(
+            ROOT / "mainline/systemd/t300-touchscreen-bridge.service",
+            destinations["bridge"],
+        )
         return root
 
     def operator_ui_fixture(self, root: Path) -> Path:
         self.host_fixture(root)
+        contract = root / "etc/t300/touchscreen/button-contract.json"
+        contract.parent.mkdir(parents=True)
+        shutil.copy2(ROOT / "mainline/touchscreen/button-contract.json", contract)
         defaults = root / "etc/t300/mainsail/default.json"
         defaults.parent.mkdir(parents=True)
         shutil.copy2(
@@ -123,7 +134,7 @@ gcode:
             result = review_host_network_boundary(root)
             self.assertTrue(result["passed"], result["failures"])
 
-    def test_current_operator_interfaces_pass_constrained_ui_review(self):
+    def test_current_operator_interfaces_preserve_upstream_ui_with_t300_actions(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
             result = review_operator_ui(root)
@@ -132,50 +143,56 @@ gcode:
     def test_operator_ui_review_rejects_estop_confirmation(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
-            screen = root / "etc/t300/klipperscreen/KlipperScreen.conf"
-            screen.write_text(
-                screen.read_text(encoding="utf-8").replace(
-                    "confirm_estop: False", "confirm_estop: True"
-                ),
-                encoding="utf-8",
-            )
+            defaults = root / "etc/t300/mainsail/default.json"
+            value = json.loads(defaults.read_text(encoding="utf-8"))
+            value["uiSettings"]["confirmOnEmergencyStop"] = True
+            defaults.write_text(json.dumps(value), encoding="utf-8")
             result = review_operator_ui(root)
             self.assertFalse(result["passed"])
-            self.assertTrue(any("confirm_estop" in item for item in result["failures"]))
+            self.assertTrue(any("Emergency Stop" in item for item in result["failures"]))
 
     def test_operator_ui_review_rejects_misleading_plate_label(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
-            screen = root / "etc/t300/klipperscreen/KlipperScreen.conf"
-            screen.write_text(
-                screen.read_text(encoding="utf-8").replace(
-                    "name: Clean & Rearm Plate", "name: Plate Ready"
-                ),
-                encoding="utf-8",
-            )
+            contract = root / "etc/t300/touchscreen/button-contract.json"
+            value = json.loads(contract.read_text(encoding="utf-8"))
+            item = next(item for item in value["controls"] if item["id"] == "move.home.all")
+            item["candidate_action"] = "Home all axes"
+            contract.write_text(json.dumps(value), encoding="utf-8")
             result = review_operator_ui(root)
             self.assertFalse(result["passed"])
             self.assertTrue(
-                any("phrased as an action" in item for item in result["failures"])
+                any("build-plate confirmation" in item for item in result["failures"])
+            )
+
+    def test_operator_ui_review_rejects_any_missing_stock_control(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.operator_ui_fixture(Path(directory))
+            contract = root / "etc/t300/touchscreen/button-contract.json"
+            value = json.loads(contract.read_text(encoding="utf-8"))
+            value["controls"] = [
+                item for item in value["controls"] if item["id"] != "system.sleep"
+            ]
+            contract.write_text(json.dumps(value), encoding="utf-8")
+            result = review_operator_ui(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(
+                any("control inventory" in item for item in result["failures"])
             )
 
     def test_operator_ui_review_rejects_wrong_status_action(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
-            screen = root / "etc/t300/klipperscreen/KlipperScreen.conf"
-            screen.write_text(
-                screen.read_text(encoding="utf-8").replace(
-                    '{"script":"T_STATUS"}',
-                    '{"script":"STATUS"}',
-                    1,
-                ),
-                encoding="utf-8",
-            )
+            contract = root / "etc/t300/touchscreen/button-contract.json"
+            value = json.loads(contract.read_text(encoding="utf-8"))
+            item = next(item for item in value["controls"] if item["id"] == "print.stop")
+            item["disposition"] = "preserved"
+            contract.write_text(json.dumps(value), encoding="utf-8")
             result = review_operator_ui(root)
             self.assertFalse(result["passed"])
-            self.assertTrue(any("T_STATUS" in item for item in result["failures"]))
+            self.assertTrue(any("print.stop" in item for item in result["failures"]))
 
-    def test_operator_ui_review_rejects_raw_touch_controls(self):
+    def test_operator_ui_review_rejects_hidden_manual_controls(self):
         with tempfile.TemporaryDirectory() as directory:
             root = self.operator_ui_fixture(Path(directory))
             defaults = root / "etc/t300/mainsail/default.json"
@@ -185,11 +202,11 @@ gcode:
                 for item in value["dashboard"]["mobileLayout"]
                 if item["name"] == "toolhead-control"
             )
-            panel["visible"] = True
+            panel["visible"] = False
             defaults.write_text(json.dumps(value), encoding="utf-8")
             result = review_operator_ui(root)
             self.assertFalse(result["passed"])
-            self.assertTrue(any("raw controls" in item for item in result["failures"]))
+            self.assertTrue(any("manual controls" in item for item in result["failures"]))
 
     def test_operator_ui_review_rejects_development_mainsail(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -280,8 +297,10 @@ gcode:
             lifecycle = config / "lifecycle.cfg"
             lifecycle.write_text(
                 lifecycle.read_text(encoding="utf-8").replace(
-                    "  SET_PRESSURE_ADVANCE ADVANCE=0\n  _T_SAFE_PARK Z_MIN=200",
+                    "  SET_PRESSURE_ADVANCE ADVANCE=0\n"
+                    "  SET_GCODE_OFFSET Z=0\n"
                     "  _T_SAFE_PARK Z_MIN=200",
+                    "  SET_GCODE_OFFSET Z=0\n  _T_SAFE_PARK Z_MIN=200",
                     1,
                 ),
                 encoding="utf-8",
@@ -291,6 +310,23 @@ gcode:
             self.assertTrue(
                 any("reset pressure advance" in item for item in result["failures"])
             )
+
+    def test_lifecycle_review_requires_cancel_live_z_reset(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = self.lifecycle_fixture(root)
+            lifecycle = config / "lifecycle.cfg"
+            lifecycle.write_text(
+                lifecycle.read_text(encoding="utf-8").replace(
+                    "  SET_GCODE_OFFSET Z=0\n  _T_SAFE_PARK Z_MIN=200",
+                    "  _T_SAFE_PARK Z_MIN=200",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            result = review_klipper_lifecycle(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(any("reset pressure advance" in item for item in result["failures"]))
 
     def test_lifecycle_review_requires_clearance_before_xy_park(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -412,14 +448,14 @@ gcode:
             result = review_systemd_units(root)
             self.assertTrue(result["passed"], result["failures"])
 
-    def test_xorg_cannot_isolate_the_socket_needed_by_klipperscreen(self):
+    def test_touchscreen_bridge_cannot_isolate_the_gateway_loopback(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             destination = root / "etc/systemd/system"
             shutil.copytree(ROOT / "mainline/systemd", destination)
-            xorg = destination / "t300-xorg.service"
-            xorg.write_text(
-                xorg.read_text(encoding="utf-8").replace(
+            bridge = destination / "t300-touchscreen-bridge.service"
+            bridge.write_text(
+                bridge.read_text(encoding="utf-8").replace(
                     "NoNewPrivileges=yes\n",
                     "NoNewPrivileges=yes\nPrivateNetwork=yes\n",
                 ),
@@ -459,7 +495,56 @@ gcode:
             result = review_systemd_units(root)
             self.assertFalse(result["passed"])
             self.assertTrue(
-                any("Unix-socket namespace" in item for item in result["failures"])
+                any("share loopback" in item for item in result["failures"])
+            )
+
+    def test_production_klipper_cannot_restart_after_host_process_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            destination = root / "etc/systemd/system"
+            shutil.copytree(ROOT / "mainline/systemd", destination)
+            klipper = destination / "klipper.service"
+            klipper.write_text(
+                klipper.read_text(encoding="utf-8").replace(
+                    "Restart=no", "Restart=on-failure"
+                ),
+                encoding="utf-8",
+            )
+            serial = "/dev/serial/by-id/usb-Klipper_stm32f401xc_TEST-if00"
+            dropin = (
+                "[Unit]\nConditionPathExists=%s\n\n"
+                "[Service]\nDevicePolicy=closed\nDeviceAllow=%s rw\n"
+                % (serial, serial)
+            )
+            for unit in ("klipper.service", "klipper-maintenance.service"):
+                path = destination / (unit + ".d/10-mcu-device.conf")
+                path.parent.mkdir()
+                path.write_text(dropin, encoding="utf-8")
+            data_mount = (
+                ROOT / "mainline/config/templates/t300-data.mount.in"
+            ).read_text(encoding="utf-8")
+            (destination / r"mnt-t300\x2ddata.mount").write_text(
+                data_mount.replace("@DATA_USB_UUID@", "C66C-ADD5"),
+                encoding="utf-8",
+            )
+            ssh_config = root / "etc/ssh/sshd_config.d/60-t300.conf"
+            ssh_config.parent.mkdir(parents=True)
+            ssh_config.write_text(
+                (ROOT / "mainline/config/templates/sshd-t300.conf.in")
+                .read_text(encoding="utf-8")
+                .replace("@TRUSTED_LAPTOP_CIDR@", "10.42.42.0/24"),
+                encoding="utf-8",
+            )
+            authorized = root / "etc/t300/deploy_authorized_keys"
+            authorized.parent.mkdir(parents=True)
+            authorized.write_text(
+                "# No deployment key was staged; restricted transport cannot be armed.\n",
+                encoding="ascii",
+            )
+            result = review_systemd_units(root)
+            self.assertFalse(result["passed"])
+            self.assertTrue(
+                any("remain stopped" in item for item in result["failures"])
             )
 
     def test_host_service_cannot_pull_in_moonraker(self):
@@ -467,11 +552,11 @@ gcode:
             root = Path(directory)
             destination = root / "etc/systemd/system"
             shutil.copytree(ROOT / "mainline/systemd", destination)
-            screen = destination / "klipperscreen.service"
-            screen.write_text(
-                screen.read_text(encoding="utf-8").replace(
-                    "Requires=t300-xorg.service\n",
-                    "Requires=t300-xorg.service\nWants=moonraker.service\n",
+            gateway = destination / "t300-touchscreen-gateway.service"
+            gateway.write_text(
+                gateway.read_text(encoding="utf-8").replace(
+                    "After=moonraker.service\n",
+                    "After=moonraker.service\nWants=moonraker.service\n",
                 ),
                 encoding="utf-8",
             )

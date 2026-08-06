@@ -1,6 +1,6 @@
 # T300 mainline safety and operator-UI audit
 
-Date: 2026-08-05
+Date: updated 2026-08-06
 
 Status: laptop-side implementation only. Nothing described here has been
 deployed to the T300, written to eMMC, flashed to either MCU, or used to command
@@ -17,10 +17,6 @@ following upstream documentation:
   <https://www.klipper3d.org/API_Server.html>
 - Klipper configuration reference:
   <https://www.klipper3d.org/Config_Reference.html>
-- KlipperScreen configuration and custom menus:
-  <https://klipperscreen.readthedocs.io/en/latest/Configuration/>
-- KlipperScreen prompts and filament macro names:
-  <https://klipperscreen.readthedocs.io/en/latest/macros/>
 - Mainsail dashboard organization:
   <https://docs.mainsail.xyz/features/dashboard-organisation/>
 - Official T300 limits and firmware page:
@@ -72,7 +68,8 @@ make it dirty again.
 | --- | --- |
 | Klipper start or shutdown | Check required |
 | **Cleaned and rearmed** confirmation | Ready |
-| Idle X/Y home or repeated full home | Ready |
+| Successful idle X/Y home or repeated full home | Ready |
+| Any failed X, Y, or Z home | Check required; Klipper remains in error |
 | Bed-only heating, file browsing, camera use | Unchanged |
 | Admitted print startup reservation | Check required |
 | Hotend target at extrusion temperature | Check required |
@@ -84,19 +81,25 @@ The extra marks conservative cases dirty, including an E parameter that results
 in no physical extrusion. A false request to clean is safer than retaining a
 false ready state.
 
-### High: broad default touchscreen controls created misclick paths
+### Resolved owner review: preserve the exact stock touchscreen
 
-KlipperScreen's defaults expose movement, heaters, extrusion, mesh, Z offset,
-limits, pins, console, updates, and host controls. Those are useful during
-maintenance but inappropriate on a small production screen.
+The initial audit proposed replacing the physical display with a simplified
+KlipperScreen interface. Owner review correctly identified that this removed
+useful daily controls and did not resemble the familiar T300 screen.
 
-Disposition: `use_default_menu: False` and an exact menu allowlist. The idle
-screen exposes only the print workflow, human-checked homing, camera, and
-notifications. The print menu exposes only camera and notifications; the
-standard Job Status page owns Pause, Resume, Cancel, and Emergency Stop. The
-screen action says **Clean & Rearm Plate**, while the prompt's affirmative
-button says **Cleaned and rearmed**, so a static icon is not mistaken for a
-live readiness indicator.
+Final disposition: preserve the exact Comgrow 1.5.2 serial-TFT firmware,
+artwork, navigation, file browser, movement, temperature, tuning, print, and
+Emergency Stop controls. The vendor bridge is confined behind an unprivileged
+loopback compatibility gateway. It has no raw GPIO, shell, updater,
+configuration-write, unrestricted Moonraker, or service-control authority.
+
+All 77 known physical controls have an exact contract. The Macro page contains
+only read-only **Printer Status**; Pause, Resume, Stop, and Change Filament stay
+in their dedicated stock locations. **Home Z** and **Home all** require the
+plate to be confirmed in Mainsail first because the TFT cannot display the
+checkbox. **Home XY** never moves Z and preserves readiness after success, but
+any failed home invalidates readiness and leaves Klipper in error. Backend
+limits and guards, not missing UI controls, remain the safety boundary.
 
 ### High: ordinary cancellation is not immediate
 
@@ -111,14 +114,37 @@ Emergency Stop, not repeated Cancel clicks, is the immediate response during an
 unsafe home, probe, or temperature wait. Error cleanup turns heaters off before
 optional parking.
 
-### Medium: KlipperScreen filament buttons require exact macro names
+### Medium: touchscreen filament buttons require exact translation
 
-KlipperScreen calls `LOAD_FILAMENT` and `UNLOAD_FILAMENT`; private T300-prefixed
-names would not be used by its built-in integration.
+The stock bridge uses vendor command forms that do not directly match the
+production lifecycle macros.
 
-Disposition: the production macros now use the exact upstream names. Both
-require an already paused print, Klipper's hot-extrusion state, and a bounded
-length. Both invalidate build-plate readiness before moving filament.
+Disposition: the gateway translates them to the production `LOAD_FILAMENT` and
+`UNLOAD_FILAMENT` commands. Both require an attended idle or paused state,
+Klipper's hot-extrusion state, and bounded movement. Both invalidate
+build-plate readiness before moving filament.
+
+### High: the vendor bridge restarted Klipper during screen startup
+
+Serial tracing found that the bridge emits a hidden `FIRMWARE_RESTART` while it
+initializes. That was part of the tightly coupled stock appliance boot sequence
+but would create an unexplained Klipper restart when the display and printer
+services are independently supervised.
+
+Disposition: only the first hidden startup request is acknowledged without
+execution. Later explicit **Restart** and **Firmware restart** controls retain
+their advertised behavior. A display crash or restart therefore cannot restart
+Klipper behind the operator's back.
+
+### High: automatic Klipper crash restart hid the failure boundary
+
+An automatic service restart after a real Klippy process crash could create a
+new process while the operator is still diagnosing a safety-significant fault.
+
+Disposition: production `klipper.service` uses `Restart=no`. MCU watchdogs and
+heater shutdown remain independent. Explicit Klipper restart controls still
+work while Klippy is alive; a process crash remains down for inspection and an
+owner-operated restart or power cycle.
 
 ### Medium: Mainsail defaults could encourage unsafe shortcuts
 
@@ -126,15 +152,17 @@ Upload-and-Print combines admission, selection, and start into one asynchronous
 UI action. Generic dashboards also place motion and heater sliders near normal
 monitoring controls.
 
-Disposition: Upload-and-Print is hidden. Mobile, tablet, desktop, and widescreen
-defaults show only Webcam and **Owner Actions**. Emergency Stop is immediate;
-ordinary Cancel asks for confirmation; touch sliders are locked; Machine,
-Console, Heightmap, and raw control panels are hidden. The same exact defaults
-are installed as a root-owned Mainsail theme seed.
+Disposition: only Upload-and-Print is hidden, because starting before the
+asynchronous admission result would create a scanner race. Mobile, tablet,
+desktop, and widescreen defaults preserve Mainsail's normal toolhead,
+temperature, extrusion, macro, machine, console, camera, file, heightmap, and
+G-code views. Emergency Stop is immediate; ordinary Cancel asks for
+confirmation; touch sliders are locked. The exact defaults are installed as a
+root-owned Mainsail theme seed.
 
-Mainsail settings are convenience controls, not access control. A user can
-customize their browser layout later. The Klipper extra and G-code admission
-policy remain authoritative if a panel is revealed.
+Mainsail settings are convenience controls, not access control. The Klipper
+extra and G-code admission policy remain authoritative for commands issued by
+visible panels.
 
 ## Preserved hardware safeguards
 
@@ -180,7 +208,8 @@ policy remain authoritative if a panel is revealed.
 - Test dirty/ready transitions, repeated idle home, paused print, wrong file,
   failed home, cancellation, error, restart, hotend heat, extrusion, purge,
   load, and unload.
-- Verify every viewport's dashboard allowlist and the exact custom screen menu.
+- Verify every Mainsail viewport and all 77 entries in the exact stock
+  touchscreen button contract.
 - Boot from recovery USB with printer control disabled and test touch targets,
   prompts, camera, storage, network, and restart behavior.
 - Commission sensors, probe/endstops, fans, one low-speed axis at a time,

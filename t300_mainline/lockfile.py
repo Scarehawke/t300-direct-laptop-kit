@@ -275,7 +275,7 @@ def validate_lock(lock: dict[str, Any]) -> None:
             raise LockfileError(f"debian_artifacts.{key} must be a safe relative path")
     for key in ("sha256", "root_policy_sha256"):
         _require_sha(debian_artifacts.get(key), f"debian_artifacts.{key}")
-    if debian_artifacts.get("artifact_count") != 353:
+    if debian_artifacts.get("artifact_count") != 232:
         raise LockfileError("debian_artifacts.artifact_count must match the reviewed closure")
     expected_debian_target = {
         "distribution": lock.get("target", {}).get("distribution"),

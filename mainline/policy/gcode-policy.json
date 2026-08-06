@@ -32,6 +32,10 @@
   "max_extrude_only_accel": 10000.0,
   "max_instantaneous_corner_velocity": 10.0,
   "max_pressure_advance": 0.2,
+  "max_manual_speed_percent": 500.0,
+  "max_manual_flow_percent": 120.0,
+  "max_live_z_adjust_step": 0.05,
+  "max_live_z_adjust_total": 0.25,
   "filament_diameter": 1.75,
   "x": {
     "minimum": -2.0,

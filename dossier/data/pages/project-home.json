@@ -55,7 +55,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains the v14 commissioning-locked mainline candidate, recovery tooling, safety policy, portable Orca 2.4.2 profiles, editable review projects, and validation tests."
+            "text": "The printer has not been migrated yet. The physical T300 is still on the restorable Comgrow/Sovol 1.5.2 image with patched Klipper 0.12.0. The repository now contains the v21 commissioning-locked mainline candidate, recovery tooling, safety policy, portable Orca 2.4.2 profiles, editable review projects, and validation tests."
           }
         ]
       },
@@ -91,7 +91,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "A pinned mainline stack was prepared around Klipper v0.13.0, Moonraker, Mainsail, KlipperScreen, Crowsnest, KAMP line purge, and a bounded timelapse service."
+                    "text": "A pinned mainline stack was prepared around Klipper v0.13.0, Moonraker, Mainsail, Crowsnest, KAMP line purge, and a bounded timelapse service. The physical display keeps Comgrow's exact serial-TFT layout and artwork, while an unprivileged compatibility gateway translates its requests into the reviewed mainline command set."
                   }
                 ]
               }
@@ -306,7 +306,16 @@
         "content": [
           {
             "type": "text",
-            "text": "Mainsail and KlipperScreen gain a read-only Printer Status action. Its internal macro command is T_STATUS because exact Klipper v0.13 rejects macro names containing digits; the visible human label remains Printer Status. It reports temperatures, homing, plate readiness, commissioning lock, and filament-sensor state without moving or heating anything."
+            "text": "Mainsail and the stock touchscreen Macro page expose one read-only Printer Status action. Its Klipper command is PRINTER_STATUS. It reports temperatures, homing, plate readiness, commissioning lock, and filament-sensor state without moving or heating anything. Pause, Resume, Stop, and Change Filament stay on their familiar dedicated touchscreen controls instead of being duplicated on the Macro page."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The physical touchscreen audit covers all 77 known stock controls. X/Y-only homing does not move Z and preserves a ready plate confirmation after success, but any failed home stops in Klipper error and invalidates that confirmation. Z-only and all-axis homing from the touchscreen require the plate to have been confirmed in Mainsail first because the stock TFT cannot render the required checkbox."
           }
         ]
       },

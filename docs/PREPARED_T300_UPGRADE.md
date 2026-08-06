@@ -225,7 +225,7 @@ Use the owner's normal printer SSH login in Kitty to download, without editing:
 
 - `/home/mks/plr.sh` and `/home/mks/clear_plr.sh`;
 - the live vendor `bed_mesh.py` and its Klipper Git/version information;
-- the KlipperScreen configuration and T300 button/action mapping;
+- the stock serial-TFT bridge configuration and T300 button/action mapping;
 - any service or script referenced by the recovery configuration.
 
 Hash the downloaded files and keep them outside the public Git repository.

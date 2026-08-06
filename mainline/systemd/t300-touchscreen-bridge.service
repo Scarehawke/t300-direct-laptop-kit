@@ -1,0 +1,58 @@
+[Unit]
+Description=T300 official serial-touchscreen bridge
+After=t300-touchscreen-gateway.service
+Wants=t300-touchscreen-gateway.service
+ConditionPathExists=/etc/t300/commissioning/host-validated
+ConditionFileIsExecutable=/opt/t300/private/touchscreen/zhongchuang_klipper
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=t300-touchscreen
+Group=t300-touchscreen
+SupplementaryGroups=dialout t300-gcode
+RuntimeDirectory=t300/touchscreen-bridge
+RuntimeDirectoryMode=0750
+WorkingDirectory=/run/t300/touchscreen-bridge
+Environment=PATH=/opt/t300/venvs/moonraker/bin:/usr/bin:/bin
+Environment=LD_LIBRARY_PATH=/opt/t300/private/touchscreen/lib
+ExecCondition=+/opt/t300/venvs/control/bin/python /opt/t300/control/bin/t300-candidate.py check-service-gate host
+ExecStartPre=/usr/bin/mkdir -p /run/t300/touchscreen-bridge/ram
+ExecStart=/opt/t300/private/touchscreen/zhongchuang_klipper localhost
+Restart=on-failure
+RestartSec=3
+MemoryMax=256M
+CPUWeight=50
+IOWeight=50
+TasksMax=64
+LimitNOFILE=256
+LimitFSIZE=16777216
+OOMScoreAdjust=300
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=tmpfs
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX AF_INET
+IPAddressDeny=any
+IPAddressAllow=localhost
+BindReadOnlyPaths=/var/lib/t300/moonraker-data/gcodes:/home/mks/gcode_files/sda1
+BindReadOnlyPaths=-/mnt/t300-data/timelapse/videos:/home/mks/timelapse
+BindReadOnlyPaths=/opt/t300/private/touchscreen/gene5.py:/home/mks/Desktop/myfile/zhongchuang/gene5.py
+BindReadOnlyPaths=/etc/t300/touchscreen/data-usb-present:/dev/sda
+ReadOnlyPaths=/etc/t300 /opt/t300/private/touchscreen
+ReadWritePaths=/run/t300/touchscreen-bridge /var/log/t300/touchscreen
+DevicePolicy=closed
+DeviceAllow=/dev/ttyS1 rw
+SystemCallFilter=~@mount @reboot
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

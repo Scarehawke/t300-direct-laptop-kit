@@ -358,7 +358,7 @@ def validate_artifact_lock(lock: dict[str, Any]) -> None:
     environments = lock.get("environments")
     if not isinstance(environments, list) or not environments:
         raise PythonArtifactError("Python artifact environments must be a non-empty list")
-    expected_names = {"build", "klipper", "moonraker", "klipperscreen"}
+    expected_names = {"build", "klipper", "moonraker"}
     names = {item.get("name") for item in environments if isinstance(item, dict)}
     if names != expected_names or len(environments) != len(expected_names):
         raise PythonArtifactError("Python artifact environments do not match the runtime set")

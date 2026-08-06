@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "source": {
+    "bridge_sha256": "f6895da83aa078656c3af6d1f29d0d4a6a45f94303cb55403d662f8bda7f3c10",
+    "firmware": "Comgrow T300 1.5.2",
+    "method": "owner-official firmware extraction, serial-TFT trace, static bridge review, and official manual cross-check"
+  },
+  "candidate_architecture": {
+    "physical_ui": "unchanged Comgrow serial TFT firmware and layout",
+    "bridge_boundary": "unprivileged vendor bridge talks only to the serial TFT and the loopback compatibility gateway",
+    "moonraker_boundary": "Mainsail talks directly to loopback-only Moonraker; the physical bridge talks through the compatibility gateway",
+    "principle": "a display or bridge failure must not restart Klipper, alter safety limits, or interrupt an active print"
+  },
+  "dispositions": {
+    "preserved": "The candidate performs the action advertised by the stock control.",
+    "translated": "The advertised action is preserved through a named compatibility macro or object alias.",
+    "local": "The TFT or bridge handles this control without a printer command.",
+    "explicitly_refused": "The candidate reports that the action is unavailable; it must never report false success.",
+    "constrained": "The action remains available inside a disclosed safety boundary."
+  },
+  "controls": [
+    {"id":"nav.home","page":"navigation","label":"Home","stock_action":"Open the home/movement page","candidate_action":"Open the same stock page","disposition":"local"},
+    {"id":"nav.control","page":"navigation","label":"Control","stock_action":"Open the temperature and device-control page","candidate_action":"Open the same stock page","disposition":"local"},
+    {"id":"nav.print","page":"navigation","label":"Print","stock_action":"Open the local and USB file browser","candidate_action":"Open the same stock page; only admitted G-code is printable","disposition":"constrained"},
+    {"id":"nav.settings","page":"navigation","label":"Settings","stock_action":"Open system settings","candidate_action":"Open the same stock page","disposition":"local"},
+
+    {"id":"bottom.emergency_stop","page":"persistent bottom bar","label":"Emergency stop","stock_action":"Immediately request Klipper emergency stop","candidate_action":"Immediately forward the standard Moonraker emergency-stop request without a confirmation dialog","disposition":"preserved"},
+    {"id":"bottom.macros","page":"persistent bottom bar","label":"Macros","stock_action":"Open and run configured macros","candidate_action":"Open the stock page with only the read-only Printer Status action; Pause, Resume, Stop, and Change Filament remain on their dedicated stock controls, while internal, arbitrary, and maintenance-only macros are hidden and refused in production","disposition":"constrained"},
+    {"id":"bottom.home","page":"persistent bottom bar","label":"Home","stock_action":"Return to the main page","candidate_action":"Return to the same stock main page","disposition":"local"},
+    {"id":"bottom.back","page":"persistent bottom bar","label":"Back","stock_action":"Return to the previous page","candidate_action":"Return to the previous stock page without changing printer state","disposition":"local"},
+
+    {"id":"top.wifi","page":"top bar","label":"Wi-Fi","stock_action":"Show the current network IP","candidate_action":"Show network status without granting the legacy bridge authority to reconfigure NetworkManager; networking is validated during the control-disabled USB boot","disposition":"constrained"},
+    {"id":"top.nozzle","page":"top bar","label":"Nozzle temperature","stock_action":"Show and edit nozzle target","candidate_action":"Show and edit the target within Klipper's immutable heater ceiling","disposition":"constrained"},
+    {"id":"top.bed","page":"top bar","label":"Bed temperature","stock_action":"Show and edit bed target","candidate_action":"Show and edit the target within Klipper's immutable heater ceiling","disposition":"constrained"},
+    {"id":"top.led","page":"top bar","label":"LED","stock_action":"Toggle the printer light","candidate_action":"Leave unavailable in the initial candidate because the stock configuration has no Klipper light output and the legacy bridge is denied raw host-GPIO access; a later exact-pin helper requires separate hardware validation","disposition":"explicitly_refused"},
+
+    {"id":"move.step.1","page":"movement","label":"1 mm","stock_action":"Select 1 mm jog distance","candidate_action":"Select 1 mm jog distance","disposition":"local"},
+    {"id":"move.step.5","page":"movement","label":"5 mm","stock_action":"Select 5 mm jog distance","candidate_action":"Select 5 mm jog distance","disposition":"local"},
+    {"id":"move.step.10","page":"movement","label":"10 mm","stock_action":"Select 10 mm jog distance","candidate_action":"Select 10 mm jog distance","disposition":"local"},
+    {"id":"move.step.50","page":"movement","label":"50 mm","stock_action":"Select 50 mm jog distance","candidate_action":"Select 50 mm jog distance","disposition":"local"},
+    {"id":"move.x.minus","page":"movement","label":"X-","stock_action":"Jog X by the selected negative distance","candidate_action":"Jog X by that distance at the stock speed; Klipper homing and axis limits remain authoritative","disposition":"preserved"},
+    {"id":"move.x.plus","page":"movement","label":"X+","stock_action":"Jog X by the selected positive distance","candidate_action":"Jog X by that distance at the stock speed; Klipper homing and axis limits remain authoritative","disposition":"preserved"},
+    {"id":"move.y.minus","page":"movement","label":"Y-","stock_action":"Jog Y by the selected negative distance","candidate_action":"Jog Y by that distance at the stock speed; Klipper homing and axis limits remain authoritative","disposition":"preserved"},
+    {"id":"move.y.plus","page":"movement","label":"Y+","stock_action":"Jog Y by the selected positive distance","candidate_action":"Jog Y by that distance at the stock speed; Klipper homing and axis limits remain authoritative","disposition":"preserved"},
+    {"id":"move.z.minus","page":"movement","label":"Z-","stock_action":"Jog Z by the selected negative distance","candidate_action":"Jog Z only after Z is homed and inside the configured axis limit","disposition":"constrained"},
+    {"id":"move.z.plus","page":"movement","label":"Z+","stock_action":"Jog Z by the selected positive distance","candidate_action":"Jog Z only after Z is homed and inside the configured axis limit","disposition":"constrained"},
+    {"id":"move.home.xy","page":"movement","label":"Home XY","stock_action":"Home X and then Y","candidate_action":"Home X and then Y without consuming the build-plate confirmation after success; any homing failure stops with Klipper's error and invalidates that confirmation","disposition":"preserved"},
+    {"id":"move.home.z","page":"movement","label":"Home Z","stock_action":"Home Z","candidate_action":"Home Z only while the cleaned-and-rearmed build-plate state is ready in Mainsail; the stock TFT cannot render the required checkbox","disposition":"constrained"},
+    {"id":"move.home.all","page":"movement","label":"Home all","stock_action":"Home X, Y, and Z","candidate_action":"Home all axes only while the cleaned-and-rearmed build-plate state is ready in Mainsail; the stock TFT cannot render the required checkbox","disposition":"constrained"},
+    {"id":"move.unlock","page":"movement","label":"Unlock motors","stock_action":"Disable steppers","candidate_action":"Disable steppers only while no print is loaded or paused; mark the plate confirmation stale","disposition":"constrained"},
+
+    {"id":"temperature.nozzle","page":"temperature","label":"Nozzle target","stock_action":"Set a custom nozzle target","candidate_action":"Set the target within the immutable heater ceiling","disposition":"constrained"},
+    {"id":"temperature.bed","page":"temperature","label":"Bed target","stock_action":"Set a custom bed target","candidate_action":"Set the target within the immutable heater ceiling","disposition":"constrained"},
+    {"id":"temperature.pla","page":"temperature","label":"PLA","stock_action":"Set nozzle to 210 C and bed to 60 C","candidate_action":"Set nozzle to 210 C and bed to 60 C","disposition":"preserved"},
+    {"id":"temperature.abs","page":"temperature","label":"ABS","stock_action":"Set nozzle to 260 C and bed to 80 C","candidate_action":"Set nozzle to 260 C and bed to 80 C, inside hardware ceilings","disposition":"preserved"},
+    {"id":"temperature.cooldown","page":"temperature","label":"Cooldown","stock_action":"Set nozzle and bed targets to 0 C","candidate_action":"Set nozzle and bed targets to 0 C","disposition":"preserved"},
+    {"id":"temperature.extrude","page":"temperature","label":"Extrude","stock_action":"Extrude 5 mm at 5 mm/s when hot","candidate_action":"Use the bounded attended touchscreen extrusion macro when hot and idle or paused; mark the plate stale","disposition":"translated"},
+    {"id":"temperature.retract","page":"temperature","label":"Retract","stock_action":"Retract 5 mm at 5 mm/s when hot","candidate_action":"Use the bounded attended touchscreen retraction macro when hot and idle or paused; mark the plate stale","disposition":"translated"},
+
+    {"id":"control.led","page":"control","label":"LED","stock_action":"Toggle the printer light","candidate_action":"Leave unavailable in the initial candidate because the stock configuration has no Klipper light output and the legacy bridge is denied raw host-GPIO access; a later exact-pin helper requires separate hardware validation","disposition":"explicitly_refused"},
+    {"id":"control.sound","page":"control","label":"Click sound","stock_action":"Toggle TFT click sound","candidate_action":"Keep this TFT-local setting","disposition":"local"},
+    {"id":"control.fan","page":"control","label":"Model fan","stock_action":"Toggle the part-cooling fan","candidate_action":"Set the standard Klipper part-cooling fan","disposition":"translated"},
+    {"id":"control.filament","page":"control","label":"Automatic filament change","stock_action":"Heat to 250 C, disable the runout sensor, and enter the stock load/unload workflow","candidate_action":"Preserve the visible 250 C target inside the heater ceiling and use bounded attended filament motion, but keep runout protection enabled throughout","disposition":"constrained"},
+
+    {"id":"files.local","page":"files","label":"Local files","stock_action":"Browse local G-code","candidate_action":"Browse the read-only G-code view; selecting a visible file still requires admission before Klipper will print it","disposition":"constrained"},
+    {"id":"files.usb","page":"files","label":"USB files","stock_action":"Browse USB G-code","candidate_action":"Browse the mounted data USB through the stock page; visible means present, while the unchanged admission result decides whether printing is allowed","disposition":"constrained"},
+    {"id":"files.delete","page":"files","label":"Delete G-code","stock_action":"Delete the selected G-code directly","candidate_action":"Explicitly refuse the legacy direct-delete path because the stock bridge receives a read-only view; delete through Mainsail instead","disposition":"explicitly_refused"},
+    {"id":"files.timelapse","page":"files","label":"Timelapse files","stock_action":"Browse timelapse files","candidate_action":"Browse verified renders stored on the mounted data USB; camera or storage failure cannot affect Klipper","disposition":"translated"},
+    {"id":"files.timelapse_export","page":"files","label":"Export timelapse","stock_action":"Move a timelapse into the USB G-code directory","candidate_action":"Explicitly refuse the legacy direct move; verified renders already live on the data USB and remain accessible through Mainsail or the mounted drive","disposition":"explicitly_refused"},
+    {"id":"files.timelapse_delete","page":"files","label":"Delete timelapse","stock_action":"Delete the selected render directly","candidate_action":"Explicitly refuse the legacy direct-delete path; delete through Mainsail or the laptop after the render is reviewed","disposition":"explicitly_refused"},
+
+    {"id":"level.z_tilt","page":"level","label":"Z tilt calibration","stock_action":"Run the vendor Z-tilt workflow","candidate_action":"Refuse in production and direct the owner to the separately armed maintenance session containing the purchased GerGo workflow","disposition":"explicitly_refused"},
+    {"id":"level.z_offset","page":"level","label":"Z calibration","stock_action":"Heat to 150 C and start PROBE_CALIBRATE","candidate_action":"Refuse in production and direct the owner to the separately armed maintenance session","disposition":"explicitly_refused"},
+    {"id":"level.mesh","page":"level","label":"Bed mesh","stock_action":"Run the vendor heated-bed mesh macro","candidate_action":"Refuse the standalone production action; admitted prints create the reviewed temperature-matched full mesh","disposition":"explicitly_refused"},
+
+    {"id":"print.temperature","page":"active print","label":"Temperatures","stock_action":"Edit print temperature targets","candidate_action":"Permit reductions and targets inside immutable heater ceilings","disposition":"constrained"},
+    {"id":"print.led","page":"active print","label":"LED","stock_action":"Toggle the printer light","candidate_action":"Leave unavailable in the initial candidate because the stock configuration has no Klipper light output and the legacy bridge is denied raw host-GPIO access; a later exact-pin helper requires separate hardware validation","disposition":"explicitly_refused"},
+    {"id":"print.pause","page":"active print","label":"Pause","stock_action":"Pause the active print","candidate_action":"Call the pinned Mainsail PAUSE macro once","disposition":"translated"},
+    {"id":"print.resume","page":"active print","label":"Resume","stock_action":"Resume a paused print","candidate_action":"Call the pinned Mainsail RESUME macro after its normal safety checks","disposition":"translated"},
+    {"id":"print.stop","page":"active print","label":"Stop","stock_action":"Open a confirmation page and cancel after confirmation","candidate_action":"Keep the confirmation page, then call CANCEL_PRINT exactly once; obsolete power-loss shell cleanup is safely acknowledged but not executed","disposition":"translated"},
+    {"id":"print.tune","page":"active print","label":"Tune","stock_action":"Open live Z, flow, speed, filament, and fan controls","candidate_action":"Open the same stock page; each adjustment remains independently bounded","disposition":"constrained"},
+    {"id":"print.details","page":"active print","label":"Details","stock_action":"Show address and print details","candidate_action":"Show the same status using translated Klipper object names","disposition":"translated"},
+    {"id":"print.power_loss_resume","page":"power-loss prompt","label":"Continue interrupted print","stock_action":"Run the vendor power-loss recovery workflow","candidate_action":"Explicitly refuse because the candidate intentionally removes the vendor workflow that bypasses normal homing and position trust","disposition":"explicitly_refused"},
+
+    {"id":"stop.confirm","page":"stop confirmation","label":"Confirm stop","stock_action":"Stop the current print","candidate_action":"Cancel exactly once through the reviewed CANCEL_PRINT lifecycle","disposition":"translated"},
+    {"id":"stop.back","page":"stop confirmation","label":"Back","stock_action":"Return without stopping","candidate_action":"Return without changing printer state","disposition":"local"},
+
+    {"id":"tune.z.step.005","page":"print tuning","label":"0.05 mm Z step","stock_action":"Select a 0.05 mm live-Z step","candidate_action":"Select the maximum accepted live-Z step","disposition":"preserved"},
+    {"id":"tune.z.step.01","page":"print tuning","label":"0.1 mm Z step","stock_action":"Select a 0.1 mm live-Z step","candidate_action":"Selection remains visible, but applying it is explicitly refused because it exceeds the 0.05 mm per-action safety limit","disposition":"constrained"},
+    {"id":"tune.z.step.05","page":"print tuning","label":"0.5 mm Z step","stock_action":"Select a 0.5 mm live-Z step","candidate_action":"Selection remains visible, but applying it is explicitly refused because a downward step can strike the bed","disposition":"constrained"},
+    {"id":"tune.z.plus","page":"print tuning","label":"Z+","stock_action":"Raise live Z by the selected step","candidate_action":"Apply only during an active admitted print, with all axes homed, at no more than 0.05 mm per press and 0.25 mm total","disposition":"constrained"},
+    {"id":"tune.z.minus","page":"print tuning","label":"Z-","stock_action":"Lower live Z by the selected step","candidate_action":"Apply only during an active admitted print, with all axes homed, at no more than 0.05 mm per press and 0.25 mm total","disposition":"constrained"},
+    {"id":"tune.flow","page":"print tuning","label":"Flow 80-120%","stock_action":"Adjust extrusion factor between 80% and 120%","candidate_action":"Preserve the stock 80-120% range for manual use; uploaded G-code remains fixed at 100%","disposition":"constrained"},
+    {"id":"tune.speed","page":"print tuning","label":"Speed 10-500%","stock_action":"Adjust speed factor between 10% and 500%","candidate_action":"Preserve the stock 10-500% range; immutable Klipper velocity and acceleration ceilings remain authoritative","disposition":"constrained"},
+    {"id":"tune.filament","page":"print tuning","label":"Change filament","stock_action":"Run M600 and enter the stock filament page","candidate_action":"Run the reviewed M600 workflow only while printing or paused","disposition":"translated"},
+    {"id":"tune.fan","page":"print tuning","label":"Fan","stock_action":"Adjust the part-cooling fan","candidate_action":"Adjust the standard Klipper part-cooling fan","disposition":"translated"},
+
+    {"id":"zcal.test.plus","page":"Z calibration","label":"Move away","stock_action":"Run TESTZ with the selected positive step","candidate_action":"Available only in the separately armed maintenance session","disposition":"explicitly_refused"},
+    {"id":"zcal.test.minus","page":"Z calibration","label":"Move closer","stock_action":"Run TESTZ with the selected negative step","candidate_action":"Available only in the separately armed maintenance session","disposition":"explicitly_refused"},
+    {"id":"zcal.abort","page":"Z calibration","label":"Abort","stock_action":"Abort probe calibration","candidate_action":"Available only in the separately armed maintenance session","disposition":"explicitly_refused"},
+    {"id":"zcal.accept","page":"Z calibration","label":"Accept","stock_action":"Accept probe calibration and save configuration","candidate_action":"Available only in the separately armed maintenance session; production cannot write safety configuration","disposition":"explicitly_refused"},
+
+    {"id":"system.brightness","page":"system","label":"Brightness","stock_action":"Adjust TFT brightness","candidate_action":"Keep the TFT-local setting","disposition":"local"},
+    {"id":"system.sleep","page":"system","label":"Sleep","stock_action":"Adjust TFT sleep behavior","candidate_action":"Keep the TFT-local setting","disposition":"local"},
+    {"id":"system.language","page":"system","label":"Language","stock_action":"Select the TFT language","candidate_action":"Keep the TFT-local setting","disposition":"local"},
+    {"id":"system.factory_reset","page":"system","label":"Factory reset","stock_action":"Overwrite configuration and reboot the stock appliance","candidate_action":"Explicitly refuse; recovery and rollback require the laptop's reviewed image workflow","disposition":"explicitly_refused"},
+    {"id":"system.version","page":"system","label":"Version","stock_action":"Show firmware information","candidate_action":"Show bridge/TFT information; authoritative candidate versions remain in the Dossier and lock file","disposition":"translated"},
+    {"id":"system.vendor_update","page":"system","label":"USB update","stock_action":"Install the vendor package and reboot","candidate_action":"Explicitly refuse; stable updates require a reviewed laptop deployment","disposition":"explicitly_refused"},
+
+    {"id":"error.restart","page":"error recovery","label":"Restart","stock_action":"Restart Klipper after an error","candidate_action":"Preserve the explicit user-requested Klipper restart; it shuts down any active print state as advertised","disposition":"preserved"},
+    {"id":"error.firmware_restart","page":"error recovery","label":"Firmware restart","stock_action":"Restart Klipper and reconnect the MCU after an error","candidate_action":"Preserve an explicit post-startup firmware restart; only the bridge's first hidden startup request is acknowledged without execution","disposition":"preserved"}
+  ]
+}

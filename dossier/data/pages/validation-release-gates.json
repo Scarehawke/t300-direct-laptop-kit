@@ -13,7 +13,7 @@
     "release",
     "rollback"
   ],
-  "updated": "2026-08-05",
+  "updated": "2026-08-06",
   "embeddable": false,
   "dashboard": {
     "readFirst": false,
@@ -82,7 +82,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Current repository test suite: 324 unit tests passed, including exact Orca 2.4.2 calibration-contract tests."
+                    "text": "Current repository test suite: 373 tests passed, including exact Orca 2.4.2 calibration-contract tests and stock-touchscreen gateway policy tests."
                   }
                 ]
               }
@@ -124,7 +124,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Candidate v13 evidence records 29 exact pinned Klipper v0.13 production cases and 11 vendor Klipper 0.12 compatibility cases."
+                    "text": "Candidate v21 evidence records 34 exact pinned Klipper v0.13 production cases and 11 vendor Klipper 0.12 compatibility cases."
                   }
                 ]
               }
@@ -163,7 +163,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The fresh v13 commissioning stage manifest has SHA-256 fcbe23e6031a9066935f8d2c7a4d923962f69ab4f63225fc8b90f58fce504756. The final validation report has SHA-256 d636597368a563f1ed45a0dbb1deb752857e65b4d8f542973c9a2242fd5cf950 and passes all eleven repository, policy, large-print admission, exact Klipper v0.13, vendor Klipper v0.12, UI, lifecycle, host-network, systemd, secret, and staging checks."
+            "text": "The fresh v21 commissioning stage manifest has SHA-256 d7ba0d7e9564610f5847a3b2f38e2a30a5c64c8e523373f41d05dd8e566bf30f. The final validation report has SHA-256 0ac6f187b670ac739fb0634f09298539b7213b4ee1b2e3753960693444767b0a and passes all eleven repository, policy, large-print admission, exact Klipper v0.13, vendor Klipper v0.12, UI, lifecycle, host-network, systemd, secret, and staging checks."
           }
         ]
       },
@@ -172,7 +172,16 @@
         "content": [
           {
             "type": "text",
-            "text": "The large-format gate admitted a deterministic 900-layer, 250 x 234 x 270 mm digital job representing about 1.5 kg of PLA and 36,000 retract, wipe, and recovery cycles through the exact v13 staged scanner, protected snapshot, and approval-record path. It also rejected repeated stationary-extrusion and microscopic-move allowance-farming attacks. This proves scale-safe policy behavior; it does not simulate real heater, probe, motion, material, or frame physics."
+            "text": "The large-format gate admitted a deterministic 900-layer, 250 x 234 x 270 mm digital job representing about 1.5 kg of PLA and 36,000 retract, wipe, and recovery cycles through the exact v21 staged scanner, protected snapshot, and approval-record path. It also rejected repeated stationary-extrusion and microscopic-move allowance-farming attacks. This proves scale-safe policy behavior; it does not simulate real heater, probe, motion, material, or frame physics."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": "The physical-screen gate now checks an exact set of 77 known stock controls. It verifies the stock layout is preserved, duplicate actuator macros are absent from the Macro page, hidden startup FIRMWARE_RESTART is intercepted, explicit restarts remain available, X/Y-only homing never requests Z, any failed home invalidates plate readiness, and Z/all homing requires prior Mainsail plate confirmation."
           }
         ]
       },

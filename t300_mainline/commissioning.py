@@ -34,10 +34,10 @@ DATA_MOUNT_UNIT = r"mnt-t300\x2ddata.mount"
 GCODE_BIND_MOUNT_UNIT = r"var-lib-t300-moonraker\x2ddata-gcodes.mount"
 STORAGE_UNITS = (DATA_MOUNT_UNIT, GCODE_BIND_MOUNT_UNIT)
 HOST_UNITS = (
-    "t300-xorg.service",
     "crowsnest.service",
     "mainsail.service",
-    "klipperscreen.service",
+    "t300-touchscreen-gateway.service",
+    "t300-touchscreen-bridge.service",
 )
 PRODUCTION_UNITS = (
     "t300-admission.service",
@@ -643,6 +643,15 @@ class CandidateController:
             self._run_systemctl("start", GCODE_BIND_MOUNT_UNIT)
             if not self._unit_active(GCODE_BIND_MOUNT_UNIT):
                 raise CommissioningError("G-code bind mount did not become active")
+            # The stock bridge runs in a private mount namespace. Refresh it
+            # here, while printer control is guaranteed off, so its read-only
+            # USB and timelapse views include the newly commissioned mounts.
+            if self._unit_active("t300-touchscreen-bridge.service"):
+                self._run_systemctl("try-restart", "t300-touchscreen-bridge.service")
+                if not self._unit_active("t300-touchscreen-bridge.service"):
+                    raise CommissioningError(
+                        "touchscreen bridge did not recover after storage commissioning"
+                    )
         except BaseException:
             self._run_systemctl("disable", "--now", GCODE_BIND_MOUNT_UNIT, check=False)
             self._run_systemctl("disable", "--now", DATA_MOUNT_UNIT, check=False)

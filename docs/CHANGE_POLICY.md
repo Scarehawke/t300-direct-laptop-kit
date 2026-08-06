@@ -13,7 +13,8 @@ installed or used only when all of these conditions are met:
    vendor firmware 1.5.2. Advice for another Sovol model or generic Klipper is
    context, not approval.
 3. Compatibility and ownership conflicts with the vendor macros, GerGo macro,
-   Klipper 0.12.0, KlipperScreen, and stock hardware have been checked.
+   Klipper 0.12.0, the stock serial-TFT bridge, and stock hardware have been
+   checked.
 4. The exact source and revision are recorded, and the owner receives a simple
    explanation of the benefit, risk, and rollback.
 5. The owner explicitly approves the live change before upload or restart.

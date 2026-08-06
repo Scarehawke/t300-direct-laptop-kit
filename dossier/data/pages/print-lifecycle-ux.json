@@ -13,7 +13,7 @@
     "ui",
     "timelapse",
     "mainsail",
-    "klipperscreen"
+    "touchscreen"
   ],
   "updated": "2026-08-05",
   "embeddable": false,
@@ -78,7 +78,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Both Mainsail and KlipperScreen show a plainly labeled Printer Status action. It is safe to open while idle or printing because it only reads state. It shows actual and target nozzle and bed temperatures, homed axes, whether the plate is clean and rearmed, whether commissioning is still locked, and whether the filament sensor reports filament. The only prompt button is Close."
+            "text": "Mainsail and the stock touchscreen Macro page show one plainly labeled Printer Status action. It is safe to open while idle or printing because it only reads state. It shows actual and target nozzle and bed temperatures, homed axes, whether the plate is clean and rearmed, whether commissioning is still locked, and whether the filament sensor reports filament."
           }
         ]
       },
@@ -87,7 +87,7 @@
         "content": [
           {
             "type": "text",
-            "text": "The internal command is T_STATUS rather than T300_STATUS because exact Klipper v0.13 rejects macro names containing digits. The human-facing label does not expose that implementation detail during normal use."
+            "text": "The Klipper command is PRINTER_STATUS. The touchscreen Macro page does not repeat Pause, Resume, Stop, or Change Filament because those actions already have dedicated stock controls."
           }
         ]
       },
@@ -438,7 +438,7 @@
         "content": [
           {
             "type": "text",
-            "text": "KlipperScreen and Mainsail are simplified around the normal user workflow: build-plate check, file selection, attended homing, print monitoring, camera, and notifications. Raw movement, heaters, extrusion, shell-like console use, machine panels, and upload-and-print shortcuts are hidden by default as mistake reduction. The real safety boundary remains the policy layer, not UI hiding."
+            "text": "Mainsail preserves its complete upstream operator interface. The physical screen preserves the exact Comgrow serial-TFT layout, artwork, navigation, and familiar manual controls instead of substituting a new KlipperScreen design. A constrained compatibility gateway translates touchscreen requests and refuses actions that the production safety model cannot honestly perform. The real safety boundary remains the backend policy and Klipper, not UI hiding."
           }
         ]
       },
@@ -450,7 +450,7 @@
           "status": "resolved",
           "title": "unhide",
           "instruction": "hidden by default is fine but are they easy to unhide? I still would like to have easy access to advanced controls",
-          "resolution": "Answered in Advanced controls access: Mainsail advanced panels are easy to reveal through normal UI customization; KlipperScreen production menus stay deliberately narrow and require a reviewed config change or maintenance mode.",
+          "resolution": "Superseded by owner review on 2026-08-06: Mainsail preserves its standard manual and advanced controls, while the printer preserves the exact stock serial-TFT layout. Backend policy remains the safety boundary.",
           "createdAt": "2026-08-05T09:55:05.345Z",
           "updatedAt": "2026-08-05T10:12:00.000Z"
         }
@@ -472,7 +472,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Hidden by default means mistake-reduction, not owner lockout. The design is different on Mainsail and on the small KlipperScreen because the risk of a stray tap is different."
+            "text": "Owner review rejected the earlier replacement-style minimal interface. Production now keeps complete upstream Mainsail and the familiar stock physical touchscreen, while Mainsail handles the plate checkbox and backend limits handle the meaningful risks."
           }
         ]
       },
@@ -487,7 +487,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Mainsail: advanced pages and panels are hidden in the seeded defaults, but they are normal Mainsail navigation and dashboard settings. The owner can reveal Console, Machine, Heightmap, G-code Viewer, temperature, toolhead, extruder, and other panels through Mainsail layout/navigation customization on the laptop or tablet."
+                    "text": "Mainsail: Console, Machine, Heightmap, G-code Viewer, temperature, toolhead, extruder, camera, files, macros, and other standard panels are visible in the seeded defaults."
                   }
                 ]
               }
@@ -501,7 +501,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Mainsail macros are not globally hidden; hiddenMacros is empty. The default visible group is only Owner Actions so the normal screen stays calm, but this is not the safety boundary."
+                    "text": "Mainsail keeps its standard macro panel. Internal helper and maintenance-only macros remain hidden from casual use, while reviewed operator actions remain accessible."
                   }
                 ]
               }
@@ -515,7 +515,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "KlipperScreen: production uses an exact small menu allowlist. Advanced movement, temperature, console, mesh, updater, pins, and system panels are not meant to be one-tap-unhidden on the printer touchscreen. Adding them should be a reviewed config change or done in the separate maintenance configuration."
+                    "text": "Physical touchscreen: production uses the exact stock serial-TFT pages and controls. The compatibility contract accounts for all 77 known controls. The Macro page shows only Printer Status because Pause, Resume, Stop, and Change Filament already exist in dedicated stock locations."
                   }
                 ]
               }
@@ -529,7 +529,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Revealing an advanced Mainsail panel does not bypass the scanner, t300_safety extra, hard limits, forbidden-command list, or Klipper heater/endstop/probe safeguards. It only makes allowed controls visible."
+                    "text": "Using an advanced control does not bypass the scanner, t300_safety extra, hard limits, forbidden-command list, or Klipper heater/endstop/probe safeguards. It only requests an action that the backend still validates. Z-only and all-axis homing on the physical screen require the plate confirmation to have been set in Mainsail because the stock TFT cannot display that checkbox."
                   }
                 ]
               }
@@ -543,7 +543,35 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Recommended operating pattern: keep the printer touchscreen simple for printing and emergency use; use Mainsail on a larger device when you intentionally want advanced diagnostics."
+                    "text": "Home XY is directly available and never moves Z. A successful X/Y home preserves plate readiness; any failed X, Y, or Z home stops with Klipper's error and clears plate readiness because position can no longer be trusted. A failed sensorless X/Y home is not considered harmless even though it cannot strike the build plate."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Standalone calibration buttons are refused in production and belong to the separately armed maintenance session. The printer-light buttons are unavailable in the initial candidate because the exact safe output pin has not been validated and the vendor bridge is denied raw GPIO access."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "listItem",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "Recommended operating pattern: use the familiar printer touchscreen for routine controls and Emergency Stop; use Mainsail on a larger device for the plate confirmation, file admission, calibration preparation, and advanced diagnostics."
                   }
                 ]
               }

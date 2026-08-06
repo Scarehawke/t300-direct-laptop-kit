@@ -9,7 +9,6 @@ import tempfile
 import unittest
 from unittest import mock
 
-from t300_mainline.display_auth import DisplayAuthError, create_authority
 from t300_mainline.lockfile import sha256_file
 from t300_mainline.provision import (
     BUILD_WORKSPACE_BYTES,
@@ -84,7 +83,7 @@ class ProvisionTests(unittest.TestCase):
             stage, digest = make_stage(Path(directory))
             value = verify_stage(stage, digest)
             self.assertEqual(value["manifest_sha256"], digest)
-            self.assertEqual(len(value["debian"]["artifacts"]), 353)
+            self.assertEqual(len(value["debian"]["artifacts"]), 232)
 
     def test_stage_tamper_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -226,6 +225,7 @@ class ProvisionTests(unittest.TestCase):
             "general": {},
             "navigation": {},
             "uiSettings": {},
+            "view": {},
             "macros": {},
             "dashboard": {},
         }
@@ -256,8 +256,10 @@ class ProvisionTests(unittest.TestCase):
         ), self.assertRaisesRegex(ProvisionError, "reviewed UI sections"):
             _install_mainsail_defaults()
 
-    def test_every_printer_facing_unit_includes_klipperscreen(self):
-        self.assertIn("klipperscreen.service", T300_UNITS)
+    def test_every_printer_facing_unit_includes_stock_touchscreen_services(self):
+        self.assertIn("t300-touchscreen-gateway.service", T300_UNITS)
+        self.assertIn("t300-touchscreen-bridge.service", T300_UNITS)
+        self.assertNotIn("klipperscreen.service", T300_UNITS)
         self.assertIn(r"var-lib-t300-moonraker\x2ddata-gcodes.mount", T300_UNITS)
 
     def test_effective_sshd_policy_is_checked_for_the_staged_source_network(self):
@@ -309,37 +311,6 @@ class ProvisionTests(unittest.TestCase):
             with mock.patch("t300_mainline.provision._run", return_value=completed):
                 with self.assertRaisesRegex(ProvisionError, "effective restricted SSH"):
                     _validate_effective_sshd(config)
-
-    def test_display_cookie_is_atomically_published(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            authority = root / "Xauthority"
-            xauth = root / "xauth"
-            xauth.write_bytes(b"binary")
-            xauth.chmod(0o755)
-            real_stat = Path.stat
-
-            def root_owned(path, *args, **kwargs):
-                result = real_stat(path, *args, **kwargs)
-                if path in (root, xauth):
-                    values = list(result)
-                    # os.stat_result stores uid at index 4.
-                    values[4] = 0
-                    return os.stat_result(values)
-                return result
-
-            completed = mock.Mock(returncode=0, stderr=b"")
-            with mock.patch.object(Path, "stat", autospec=True, side_effect=root_owned), mock.patch(
-                "t300_mainline.display_auth.subprocess.run", return_value=completed
-            ):
-                self.assertEqual(create_authority(authority, xauth), authority)
-            self.assertTrue(authority.is_file())
-            self.assertEqual(stat.S_IMODE(authority.stat().st_mode), 0o640)
-
-    def test_display_cookie_rejects_other_display(self):
-        with self.assertRaisesRegex(DisplayAuthError, "fixed at :0"):
-            create_authority(Path("/tmp/Xauthority"), Path("/bin/false"), ":1")
-
 
 if __name__ == "__main__":
     unittest.main()

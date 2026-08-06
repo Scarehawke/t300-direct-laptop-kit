@@ -61,13 +61,6 @@ def main() -> int:
                 source / "moonraker/scripts/moonraker-requirements.txt",
                 "/opt/t300/src/moonraker/scripts/moonraker-requirements.txt",
             ),
-            lock_environment(
-                "klipperscreen",
-                reports / "klipperscreen.json",
-                wheels / "klipperscreen",
-                source / "klipperscreen/scripts/KlipperScreen-requirements.txt",
-                "/opt/t300/src/klipperscreen/scripts/KlipperScreen-requirements.txt",
-            ),
         ]
         lock = create_lock(environments, args.resolved_on)
         args.output.parent.mkdir(parents=True, exist_ok=True)

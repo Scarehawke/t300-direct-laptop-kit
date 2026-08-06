@@ -473,24 +473,36 @@ def main(argv: list[str] | None = None) -> int:
             )
             cases = {
                 "smoke.test": "STATUS\n",
-                "operator-status.test": "T_STATUS\n",
+                "operator-status.test": "PRINTER_STATUS\n",
                 "reject-unarmed-home.test": "SHOULD_FAIL\n\nG28\n",
                 "reject-velocity.test": "SHOULD_FAIL\n\nSET_VELOCITY_LIMIT VELOCITY=601\n",
                 "reject-accel.test": "SHOULD_FAIL\n\nM204 S12001\n",
                 "reject-current.test": "SHOULD_FAIL\n\nSET_TMC_CURRENT STEPPER=stepper_x CURRENT=1.2\n",
                 "reject-debug.test": "SHOULD_FAIL\n\nSET_TMC_FIELD STEPPER=stepper_x FIELD=toff VALUE=0\n",
-                "reject-motor-release.test": "SHOULD_FAIL\n\nM18\n",
+                "accept-motor-release.test": "M18\n",
                 "reject-config-write.test": "SHOULD_FAIL\n\nSAVE_CONFIG\n",
                 "reject-manual-probe.test": "SHOULD_FAIL\n\nMANUAL_PROBE\n",
                 "reject-direct-probe.test": "SHOULD_FAIL\n\nPROBE\n",
-                "reject-raw-heater.test": "SHOULD_FAIL\n\nSET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\n",
+                "accept-heater-off.test": (
+                    "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0\n"
+                ),
+                "reject-heater-over-limit.test": (
+                    "SHOULD_FAIL\n\n"
+                    "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=301\n"
+                ),
+                "accept-filament-sensor-toggle.test": (
+                    "SET_FILAMENT_SENSOR SENSOR=filament_runout ENABLE=0\n"
+                    "SET_FILAMENT_SENSOR SENSOR=filament_runout ENABLE=1\n"
+                ),
                 "reject-coordinate-reset.test": "SHOULD_FAIL\n\nG92 Z=100\n",
                 "reject-runtime-offset.test": "SHOULD_FAIL\n\nSET_GCODE_OFFSET Z_ADJUST=-1 MOVE=1\n",
                 "reject-rotation-distance.test": (
                     "SHOULD_FAIL\n\nSET_EXTRUDER_ROTATION_DISTANCE EXTRUDER=extruder DISTANCE=1\n"
                 ),
-                "reject-speed-factor.test": "SHOULD_FAIL\n\nM220 S101\n",
-                "reject-flow-factor.test": "SHOULD_FAIL\n\nM221 S101\n",
+                "accept-manual-speed-factor.test": "M220 S500\n",
+                "accept-manual-flow-factor.test": "M221 S120\n",
+                "reject-manual-speed-factor.test": "SHOULD_FAIL\n\nM220 S500.01\n",
+                "reject-manual-flow-factor.test": "SHOULD_FAIL\n\nM221 S120.01\n",
                 "reject-kamp-variable.test": (
                     "SHOULD_FAIL\n\n"
                     "SET_GCODE_VARIABLE MACRO=_KAMP_Settings "
@@ -510,9 +522,17 @@ def main(argv: list[str] | None = None) -> int:
                 cases["reject-bootstrap-arm.test"] = (
                     "SHOULD_FAIL\n\nT_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
                 )
+                cases["reject-bootstrap-heater.test"] = (
+                    "SHOULD_FAIL\n\n"
+                    "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\n"
+                )
             else:
                 cases["accept-release-arm.test"] = (
                     "T_CONFIRM_STEEL_SHEET CONFIRM=YES\n"
+                )
+                cases["accept-release-heater.test"] = (
+                    "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=200\n"
+                    "SET_HEATER_TEMPERATURE HEATER=extruder TARGET=0\n"
                 )
             fixtures: list[Path] = []
             for name, commands in cases.items():
@@ -644,8 +664,11 @@ def main(argv: list[str] | None = None) -> int:
                 "reject-pressure-smooth.gcode": (
                     "SET_PRESSURE_ADVANCE ADVANCE=0.02 SMOOTH_TIME=0.04\n"
                 ),
-                "reject-pressure-extruder.gcode": (
+                "accept-pressure-stock-extruder.gcode": (
                     "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder\n"
+                ),
+                "reject-pressure-alternate-extruder.gcode": (
+                    "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder1\n"
                 ),
             }
             for relative, content in snapshot_sources.items():

@@ -14,7 +14,8 @@ the filament can be kept straight without changing spool slack between readings.
 
 ## First measurement
 
-1. From KlipperScreen or Mainsail, set the nozzle to `215 C` and wait for it.
+1. From the stock touchscreen or Mainsail, set the nozzle to `215 C` and wait
+   for it.
 2. In the console, run:
 
    ```gcode

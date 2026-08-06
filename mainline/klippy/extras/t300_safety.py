@@ -113,10 +113,8 @@ class T300Safety(object):
             "SET_KINEMATIC_POSITION",
             "SET_TMC_FIELD",
             "SET_PIN",
-            "SET_HEATER_TEMPERATURE",
             "RUN_SHELL_COMMAND",
             "MANUAL_STEPPER",
-            "SET_GCODE_OFFSET",
             "Z_OFFSET_APPLY_PROBE",
             "Z_OFFSET_APPLY_ENDSTOP",
             "STEPPER_BUZZ",
@@ -132,13 +130,9 @@ class T300Safety(object):
             "INIT_TMC",
             "SET_IDLE_TIMEOUT",
             "SET_STEPPER_ENABLE",
-            "SET_FILAMENT_SENSOR",
             "BED_MESH_OFFSET",
-            "BED_MESH_PROFILE",
             "TUNING_TOWER",
             "SAVE_CONFIG",
-            "M18",
-            "M84",
             "MANUAL_PROBE",
             "PROBE",
             "PROBE_ACCURACY",
@@ -168,6 +162,16 @@ class T300Safety(object):
         self._wrap_required("G92", self.cmd_G92)
         self._wrap_required("M104", self.cmd_M104)
         self._wrap_required("M109", self.cmd_M109)
+        self._wrap_required(
+            "SET_HEATER_TEMPERATURE", self.cmd_SET_HEATER_TEMPERATURE
+        )
+        self._wrap_required(
+            "SET_FILAMENT_SENSOR", self.cmd_SET_FILAMENT_SENSOR
+        )
+        self._wrap_required("M18", self.cmd_M18)
+        self._wrap_required("M84", self.cmd_M84)
+        self._wrap_required("SET_GCODE_OFFSET", self.cmd_SET_GCODE_OFFSET)
+        self._wrap_required("BED_MESH_PROFILE", self.cmd_BED_MESH_PROFILE)
         self._wrap_required(
             "SET_VELOCITY_LIMIT", self.cmd_SET_VELOCITY_LIMIT
         )
@@ -201,7 +205,6 @@ class T300Safety(object):
                 "M109",
                 "M140",
                 "M190",
-                "M24",
                 "BED_MESH_CALIBRATE",
             ):
                 self._lock_command(command)
@@ -224,6 +227,9 @@ class T300Safety(object):
                 "%s is disabled by the T300 production safety policy" % (name,)
             )
 
+        # Keep a positive rejection handler even when the optional upstream
+        # command is absent. Unknown commands are only logged by Klipper, while
+        # this policy requires maintenance-only interfaces to fail closed.
         self.gcode.register_command(command, reject)
 
     def _lock_command(self, command):
@@ -335,6 +341,10 @@ class T300Safety(object):
             "max_extrude_only_accel",
             "max_instantaneous_corner_velocity",
             "max_pressure_advance",
+            "max_manual_speed_percent",
+            "max_manual_flow_percent",
+            "max_live_z_adjust_step",
+            "max_live_z_adjust_total",
         )
         for key in required_numbers:
             value = policy.get(key)
@@ -387,6 +397,22 @@ class T300Safety(object):
         if not 0.0 <= policy["max_pressure_advance"] <= 0.2:
             raise self.printer.config_error(
                 "T300 safety policy pressure-advance ceiling exceeds 0.2"
+            )
+        if policy["max_manual_speed_percent"] > 500.0:
+            raise self.printer.config_error(
+                "T300 safety policy manual speed override exceeds 500 percent"
+            )
+        if policy["max_manual_flow_percent"] > 120.0:
+            raise self.printer.config_error(
+                "T300 safety policy manual flow override exceeds 120 percent"
+            )
+        if policy["max_live_z_adjust_step"] > 0.05:
+            raise self.printer.config_error(
+                "T300 safety policy live Z step exceeds 0.05 mm"
+            )
+        if policy["max_live_z_adjust_total"] > 0.25:
+            raise self.printer.config_error(
+                "T300 safety policy live Z range exceeds 0.25 mm"
             )
         currents = policy.get("tmc_current_max")
         if not isinstance(currents, dict) or set(currents) != STOCK_TMC_STEPPERS:
@@ -674,7 +700,7 @@ class T300Safety(object):
     def cmd_G28(self, gcmd):
         if self.commissioning_lock:
             raise gcmd.error("G28 is disabled by the T300 commissioning lock")
-        params = gcmd.get_command_parameters()
+        params = self._command_parameters(gcmd)
         current = self.virtual_sd.current_file
         if current is not None:
             valid_print_home = (
@@ -696,10 +722,17 @@ class T300Safety(object):
             raise gcmd.error(
                 "build plate check required before Z homing; use Home Printer"
             )
-        return self._original_G28(gcmd)
+        try:
+            return self._original_G28(gcmd)
+        except Exception:
+            # A successful idle X/Y home does not dirty a cleaned plate. Any
+            # failed home, however, may indicate an obstruction, endstop,
+            # motion, or plate-position problem and requires inspection.
+            self._mark_build_plate_dirty()
+            raise
 
     def _mark_if_extrusion_move(self, gcmd):
-        if "E" in gcmd.get_command_parameters():
+        if "E" in self._command_parameters(gcmd):
             self._mark_build_plate_dirty()
 
     def cmd_G0(self, gcmd):
@@ -735,6 +768,121 @@ class T300Safety(object):
         self._mark_if_hotend_target(gcmd)
         return self._original_M109(gcmd)
 
+    def cmd_SET_HEATER_TEMPERATURE(self, gcmd):
+        params = self._command_parameters(gcmd)
+        if set(params) != {"HEATER", "TARGET"}:
+            raise gcmd.error(
+                "SET_HEATER_TEMPERATURE requires exactly HEATER and TARGET"
+            )
+        heater = gcmd.get("HEATER", "").strip()
+        ceilings = {
+            "extruder": self.policy["nozzle_temp_max"],
+            "heater_bed": self.policy["bed_temp_max"],
+        }
+        ceiling = ceilings.get(heater)
+        if ceiling is None:
+            raise gcmd.error("only the stock extruder and heater_bed may be controlled")
+        target = self._finite_parameter(gcmd, "TARGET")
+        if target is None or target < 0.0 or target > ceiling:
+            raise gcmd.error(
+                "%s target must be between 0 and %.6g C" % (heater, ceiling)
+            )
+        if self.commissioning_lock and target > 0.0:
+            raise gcmd.error(
+                "heater targets are disabled by the T300 commissioning lock"
+            )
+        if heater == "extruder" and target >= self.policy["min_extrude_temp_floor"]:
+            self._mark_build_plate_dirty()
+        return self._original_SET_HEATER_TEMPERATURE(gcmd)
+
+    def cmd_SET_FILAMENT_SENSOR(self, gcmd):
+        params = self._command_parameters(gcmd)
+        if set(params) != {"SENSOR", "ENABLE"}:
+            raise gcmd.error(
+                "SET_FILAMENT_SENSOR requires exactly SENSOR and ENABLE"
+            )
+        if gcmd.get("SENSOR", "").strip() != "filament_runout":
+            raise gcmd.error("only the stock filament_runout sensor may be changed")
+        enabled = gcmd.get_int("ENABLE", None)
+        if enabled not in (0, 1):
+            raise gcmd.error("filament sensor ENABLE must be 0 or 1")
+        return self._original_SET_FILAMENT_SENSOR(gcmd)
+
+    def _disable_motors(self, gcmd, command):
+        if self._command_parameters(gcmd):
+            raise gcmd.error("%s does not accept parameters in production" % command)
+        if self._has_loaded_print():
+            raise gcmd.error("motors cannot be released while a print is loaded or paused")
+        self._mark_build_plate_dirty()
+        self._clear_print_home_reservation()
+        return getattr(self, "_original_" + command)(gcmd)
+
+    def cmd_M18(self, gcmd):
+        return self._disable_motors(gcmd, "M18")
+
+    def cmd_M84(self, gcmd):
+        return self._disable_motors(gcmd, "M84")
+
+    def _all_axes_homed(self):
+        toolhead = self.printer.lookup_object("toolhead")
+        homed = toolhead.get_status(self.reactor.monotonic()).get("homed_axes", "")
+        return set(homed) == set("xyz")
+
+    def cmd_SET_GCODE_OFFSET(self, gcmd):
+        params = self._command_parameters(gcmd)
+        allowed = ({"Z"}, {"Z", "MOVE"}, {"Z_ADJUST", "MOVE"})
+        if set(params) not in allowed:
+            raise gcmd.error(
+                "production permits only a Z reset or bounded live Z adjustment"
+            )
+        move = gcmd.get_int("MOVE", 0)
+        if move not in (0, 1):
+            raise gcmd.error("SET_GCODE_OFFSET MOVE must be 0 or 1")
+        if "Z" in params:
+            target = self._finite_parameter(gcmd, "Z")
+            if target != 0.0:
+                raise gcmd.error("production permits only resetting Z offset to zero")
+            if move and not self._all_axes_homed():
+                raise gcmd.error("moving Z-offset reset requires all axes to be homed")
+            return self._original_SET_GCODE_OFFSET(gcmd)
+
+        adjustment = self._finite_parameter(gcmd, "Z_ADJUST")
+        if adjustment is None or abs(adjustment) > self.policy["max_live_z_adjust_step"]:
+            raise gcmd.error(
+                "live Z adjustment must be no more than %.6g mm per action"
+                % self.policy["max_live_z_adjust_step"]
+            )
+        current = self.virtual_sd.current_file
+        if (
+            current is None
+            or not isinstance(current, ApprovedGCodeFile)
+            or not self.virtual_sd.is_active()
+            or self.virtual_sd.is_cmd_from_sd()
+        ):
+            raise gcmd.error(
+                "live Z adjustment requires an active admitted print and an operator action"
+            )
+        if move != 1 or not self._all_axes_homed():
+            raise gcmd.error("live Z adjustment requires MOVE=1 and all axes homed")
+        gcode_move = self.printer.lookup_object("gcode_move")
+        current_offset = gcode_move.get_status(
+            self.reactor.monotonic()
+        )["homing_origin"][2]
+        target = current_offset + adjustment
+        if abs(target) > self.policy["max_live_z_adjust_total"] + 1.0e-9:
+            raise gcmd.error(
+                "live Z adjustment would exceed the +/-%.6g mm production range"
+                % self.policy["max_live_z_adjust_total"]
+            )
+        return self._original_SET_GCODE_OFFSET(gcmd)
+
+    def cmd_BED_MESH_PROFILE(self, gcmd):
+        if self._has_loaded_print():
+            raise gcmd.error(
+                "bed-mesh profiles may be managed only while no print is loaded"
+            )
+        return self._original_BED_MESH_PROFILE(gcmd)
+
     def cmd_LINE_PURGE(self, gcmd):
         self._mark_build_plate_dirty()
         return self._original_LINE_PURGE(gcmd)
@@ -745,7 +893,7 @@ class T300Safety(object):
         return self._original_CANCEL_PRINT(gcmd)
 
     def cmd_G92(self, gcmd):
-        params = gcmd.get_command_parameters()
+        params = self._command_parameters(gcmd)
         if set(params) != {"E"}:
             raise gcmd.error(
                 "T300 production permits G92 only for the slicer's E-axis reset"
@@ -815,6 +963,23 @@ class T300Safety(object):
         return self._original_SET_GCODE_VARIABLE(gcmd)
 
     @staticmethod
+    def _command_parameters(gcmd):
+        params = dict(gcmd.get_command_parameters())
+        get_command = getattr(gcmd, "get_command", None)
+        command = get_command().upper() if callable(get_command) else ""
+        if (
+            len(command) > 1
+            and command[0] in "GM"
+            and command[1:].isdigit()
+            and params.get(command[0]) == command[1:]
+        ):
+            # Klipper's legacy G/M parser includes the command number itself
+            # in the parameter dictionary (for example G28 yields G=28).
+            # It is parser metadata, not an operator-supplied parameter.
+            params.pop(command[0])
+        return params
+
+    @staticmethod
     def _finite_parameter(gcmd, name):
         value = gcmd.get_float(name, None)
         if value is not None and not math.isfinite(value):
@@ -868,22 +1033,34 @@ class T300Safety(object):
 
     def cmd_M220(self, gcmd):
         percentage = self._finite_parameter(gcmd, "S")
-        if percentage is not None and percentage > 100.0:
-            raise gcmd.error("M220 may reduce, but may not raise, print speed")
+        ceiling = (
+            100.0
+            if self.virtual_sd.is_cmd_from_sd()
+            else self.policy["max_manual_speed_percent"]
+        )
+        if percentage is not None and (percentage <= 0.0 or percentage > ceiling):
+            raise gcmd.error("M220 must be greater than 0 and at most %.6g" % ceiling)
         return self._original_M220(gcmd)
 
     def cmd_M221(self, gcmd):
         percentage = self._finite_parameter(gcmd, "S")
-        if percentage is not None and percentage > 100.0:
-            raise gcmd.error("M221 may reduce, but may not raise, extrusion flow")
+        ceiling = (
+            100.0
+            if self.virtual_sd.is_cmd_from_sd()
+            else self.policy["max_manual_flow_percent"]
+        )
+        if percentage is not None and (percentage <= 0.0 or percentage > ceiling):
+            raise gcmd.error("M221 must be greater than 0 and at most %.6g" % ceiling)
         return self._original_M221(gcmd)
 
     def cmd_SET_PRESSURE_ADVANCE(self, gcmd):
-        params = gcmd.get_command_parameters()
-        if set(params) != {"ADVANCE"}:
+        params = self._command_parameters(gcmd)
+        if set(params) not in ({"ADVANCE"}, {"EXTRUDER", "ADVANCE"}):
             raise gcmd.error(
-                "production SET_PRESSURE_ADVANCE permits only ADVANCE"
+                "production SET_PRESSURE_ADVANCE permits ADVANCE and the stock extruder"
             )
+        if "EXTRUDER" in params and gcmd.get("EXTRUDER", "").strip() != "extruder":
+            raise gcmd.error("pressure advance may target only the stock extruder")
         advance = self._finite_parameter(gcmd, "ADVANCE")
         if (
             advance is None

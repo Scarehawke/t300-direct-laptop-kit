@@ -75,15 +75,6 @@
       "license": "GPL-3.0-only"
     },
     {
-      "name": "klipperscreen",
-      "version": "v0.4.7",
-      "repository": "https://github.com/KlipperScreen/KlipperScreen.git",
-      "commit": "c5fcc279518e78af90071ee2bf46bf36c007fc16",
-      "archive_url": "https://codeload.github.com/KlipperScreen/KlipperScreen/tar.gz/c5fcc279518e78af90071ee2bf46bf36c007fc16",
-      "archive_sha256": "02cc4fd1f6ce8432193d861e0a1cf8daa8be4e252ce499b92addf434e6e8a9fa",
-      "license": "GPL-3.0-only"
-    },
-    {
       "name": "crowsnest",
       "version": "v5.0.0",
       "repository": "https://github.com/mainsail-crew/crowsnest.git",
@@ -181,7 +172,7 @@
   },
   "python_artifacts": {
     "path": "mainline/build/python-artifacts.lock.json",
-    "sha256": "f1b5991b54366dfd4bac5cd711fa84836033b3f5b5a0ef5c45e057c97ce5d3f2",
+    "sha256": "e3901139abf3f049949c3b12dc34132da3b1f6713b730884073ade4168b49bf8",
     "target": {
       "python": "3.13.5",
       "abi": "cp313",
@@ -190,10 +181,10 @@
   },
   "debian_artifacts": {
     "path": "mainline/build/debian-artifacts.lock.json",
-    "sha256": "fdcd235dd631c3763c5bea11e99a4c190c44f8a3a1de4be0026c2814ef64c674",
+    "sha256": "2ba3bdd0dfef777cf60bdf469203a7826a84d854d2edb93bde6d383618b6da7c",
     "root_policy_path": "mainline/build/debian-root-packages.json",
-    "root_policy_sha256": "d617a154689318b29128e0369400e2743feeb55f959c693e1443216ff4368082",
-    "artifact_count": 353,
+    "root_policy_sha256": "853c8aad166f32e4e998b7c30a198c4c6df0de28f7377ee0a022ef286946d898",
+    "artifact_count": 232,
     "target": {
       "distribution": "Debian 13 Trixie",
       "architecture": "arm64"

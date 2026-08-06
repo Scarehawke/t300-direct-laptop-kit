@@ -1,0 +1,47 @@
+[Unit]
+Description=T300 stock-touchscreen compatibility gateway
+After=moonraker.service
+ConditionPathExists=/etc/t300/commissioning/host-validated
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=t300-touchscreen
+Group=t300-touchscreen
+RuntimeDirectory=t300/touchscreen-gateway
+RuntimeDirectoryMode=0750
+Environment=PYTHONPATH=/opt/t300/control
+ExecCondition=+/opt/t300/venvs/control/bin/python /opt/t300/control/bin/t300-candidate.py check-service-gate host
+ExecStart=/opt/t300/venvs/moonraker/bin/python -m t300_mainline.touchscreen_gateway --listen-host 127.0.0.1 --listen-port 7125 --upstream-host 127.0.0.1 --upstream-port 7126
+Restart=on-failure
+RestartSec=3
+MemoryMax=128M
+CPUWeight=20
+IOWeight=20
+TasksMax=32
+LimitNOFILE=256
+LimitFSIZE=16777216
+OOMScoreAdjust=400
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX AF_INET
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallFilter=~@mount @reboot
+ReadOnlyPaths=/etc/t300 /opt/t300/control
+ReadWritePaths=/run/t300/touchscreen-gateway /var/log/t300/touchscreen
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

@@ -29,6 +29,10 @@ from .private_config import (
     PrivateConfigError,
     load_purchased_gergo,
 )
+from .private_touchscreen import (
+    PrivateTouchscreenError,
+    load_touchscreen_runtime,
+)
 from .transfer import TransferError, validate_public_key
 
 
@@ -705,6 +709,7 @@ def stage_rootfs(
     data_usb_uuid: str = "C66C-ADD5",
     gergo_source: Path | None = None,
     deploy_public_key: Path | None = None,
+    touchscreen_runtime: Path | None = None,
 ) -> Path:
     repo_root = repo_root.resolve(strict=True)
     lock_path = lock_path.resolve(strict=True)
@@ -727,6 +732,12 @@ def stage_rootfs(
         try:
             gergo_macro = load_purchased_gergo(gergo_source)
         except PrivateConfigError as exc:
+            raise StagingError(str(exc)) from exc
+    touchscreen_files = None
+    if touchscreen_runtime is not None:
+        try:
+            touchscreen_files = load_touchscreen_runtime(touchscreen_runtime)
+        except PrivateTouchscreenError as exc:
             raise StagingError(str(exc)) from exc
     deploy_key = None
     if deploy_public_key is not None:
@@ -813,6 +824,14 @@ def stage_rootfs(
             private_macro.write_bytes(gergo_macro)
             private_macro.chmod(0o600)
 
+        if touchscreen_files is not None:
+            touchscreen_root = temporary / "opt/t300/private/touchscreen"
+            for name, value in touchscreen_files.items():
+                destination = touchscreen_root / name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(value)
+                destination.chmod(0o500 if name == "zhongchuang_klipper" else 0o400)
+
         vendor = config_root / "vendor"
         (vendor / "mainsail").mkdir(parents=True)
         mainsail_source = sources["mainsail-config"] / "client.cfg"
@@ -844,6 +863,12 @@ def stage_rootfs(
         )
 
         shutil.copy2(repo_root / "mainline/policy/gcode-policy.json", temporary / "etc/t300/gcode-policy.json")
+        touchscreen_config = temporary / "etc/t300/touchscreen"
+        touchscreen_config.mkdir(parents=True)
+        shutil.copy2(
+            repo_root / "mainline/touchscreen/button-contract.json",
+            touchscreen_config / "button-contract.json",
+        )
         _copy_tree(repo_root / "mainline/systemd", temporary / "etc/systemd/system")
         for unit in ("klipper.service", "klipper-maintenance.service"):
             _render(
@@ -868,18 +893,10 @@ def stage_rootfs(
             temporary / "etc/t300/nginx/nginx.conf",
             {"TRUSTED_LAPTOP_CIDR": str(network)},
         )
-        for name in (
-            "crowsnest.conf",
-            "KlipperScreen.conf",
-            "xorg.conf",
-        ):
+        for name in ("crowsnest.conf",):
             source = repo_root / "mainline/config/host" / name
             if name.startswith("crowsnest"):
                 destination_dir = "crowsnest"
-            elif name.startswith("KlipperScreen"):
-                destination_dir = "klipperscreen"
-            else:
-                destination_dir = "xorg"
             destination = temporary / "etc/t300" / destination_dir / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, destination)
@@ -933,6 +950,7 @@ def stage_rootfs(
             "calibration": "measured" if calibration_ready else "commissioning-watermark",
             "stage_kind": "source-and-configuration-overlay",
             "private_gergo_present": gergo_macro is not None,
+            "private_touchscreen_present": touchscreen_files is not None,
             "deploy_transport_present": deploy_key is not None,
             "deploy_public_key_fingerprint": (
                 deploy_key["fingerprint"] if deploy_key is not None else None

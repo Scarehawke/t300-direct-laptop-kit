@@ -1,38 +1,6 @@
 {
   "artifacts": [
     {
-      "architecture": "all",
-      "component": "main",
-      "filename": "adwaita-icon-theme_48.1-1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 13448,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "adwaita-icon-theme",
-      "sha256": "f60b0577aee314d43d6908ca7f0b8f07dc48e2bb766e7e25035330817e0e827c",
-      "size": 504356,
-      "source_package": "adwaita-icon-theme",
-      "url": "https://deb.debian.org/debian/pool/main/a/adwaita-icon-theme/adwaita-icon-theme_48.1-1_all.deb",
-      "version": "48.1-1"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "at-spi2-common_2.56.2-1+deb13u1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1348,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "at-spi2-common",
-      "sha256": "a86824c3f70c8ba4fb8243603208529692c066d9def2f61875cc03414b294bae",
-      "size": 170764,
-      "source_package": "at-spi2-core",
-      "url": "https://deb.debian.org/debian/pool/main/a/at-spi2-core/at-spi2-common_2.56.2-1%2bdeb13u1_all.deb",
-      "version": "2.56.2-1+deb13u1"
-    },
-    {
       "architecture": "arm64",
       "component": "main",
       "filename": "binutils-arm-none-eabi_2.44-3+23+b2_arm64.deb",
@@ -79,38 +47,6 @@
       "source_package": "curl",
       "url": "https://deb.debian.org/debian/pool/main/c/curl/curl_8.14.1-2%2bdeb13u4_arm64.deb",
       "version": "8.14.1-2+deb13u4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "dconf-gsettings-backend_0.40.0-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 145,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "dconf-gsettings-backend",
-      "sha256": "6ba9fcaa892934c9cfc601aeca15cfbac9751cb1377c541b1b0e098ab587a31d",
-      "size": 27284,
-      "source_package": "dconf",
-      "url": "https://deb.debian.org/debian/pool/main/d/dconf/dconf-gsettings-backend_0.40.0-5_arm64.deb",
-      "version": "0.40.0-5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "dconf-service_0.40.0-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 153,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "dconf-service",
-      "sha256": "da9d81b0cd090e3933367a9be7562f13edebc9fd06f6f631c9e41fbc0a082fc3",
-      "size": 30928,
-      "source_package": "dconf",
-      "url": "https://deb.debian.org/debian/pool/main/d/dconf/dconf-service_0.40.0-5_arm64.deb",
-      "version": "0.40.0-5"
     },
     {
       "architecture": "arm64",
@@ -211,182 +147,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "gir1.2-atk-1.0_2.56.2-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 102,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-atk-1.0",
-      "sha256": "25945bcfa39ffada9fe4e5c5318ce518d92e5ce91c8960804dcd7cad1bbe0a41",
-      "size": 25992,
-      "source_package": "at-spi2-core",
-      "url": "https://deb.debian.org/debian/pool/main/a/at-spi2-core/gir1.2-atk-1.0_2.56.2-1%2bdeb13u1_arm64.deb",
-      "version": "2.56.2-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-freedesktop_1.84.0-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 233,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-freedesktop",
-      "sha256": "ce62f215747c79e018a4e3a21ad2d1d08351423a48b7b4b6a5070794da5c1e78",
-      "size": 60504,
-      "source_package": "gobject-introspection",
-      "url": "https://deb.debian.org/debian/pool/main/g/gobject-introspection/gir1.2-freedesktop_1.84.0-1_arm64.deb",
-      "version": "1.84.0-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-gdkpixbuf-2.0_2.42.12+dfsg-4+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 44,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-gdkpixbuf-2.0",
-      "sha256": "5f7c9ad03d4eb2b2e1d4c5ce750da4bbb0d5b9bb8246dd02d727dc462f4a269b",
-      "size": 14488,
-      "source_package": "gdk-pixbuf",
-      "url": "https://deb.debian.org/debian/pool/main/g/gdk-pixbuf/gir1.2-gdkpixbuf-2.0_2.42.12%2bdfsg-4%2bdeb13u1_arm64.deb",
-      "version": "2.42.12+dfsg-4+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-glib-2.0_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 777,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-glib-2.0",
-      "sha256": "c948bcee5f2cc9311059c808b3e236f62a5ba0bc71d1027324f64d673a4bbdcf",
-      "size": 199432,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/gir1.2-glib-2.0_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-gtk-3.0_3.24.49-3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 992,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-gtk-3.0",
-      "sha256": "33527b14bc2c4311ec3254f955c200949939dd0cbf327adf36f484e84ac9b039",
-      "size": 223804,
-      "source_package": "gtk+3.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/gtk%2b3.0/gir1.2-gtk-3.0_3.24.49-3_arm64.deb",
-      "version": "3.24.49-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-harfbuzz-0.0_10.2.0-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 190,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-harfbuzz-0.0",
-      "sha256": "5bf79978538c18db08c947bf7662823c2040863260aa3622818022a7bc50be19",
-      "size": 42140,
-      "source_package": "harfbuzz",
-      "url": "https://deb.debian.org/debian/pool/main/h/harfbuzz/gir1.2-harfbuzz-0.0_10.2.0-1%2bdeb13u1_arm64.deb",
-      "version": "10.2.0-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gir1.2-pango-1.0_1.56.3-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 136,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gir1.2-pango-1.0",
-      "sha256": "3d682289d516906da0b4f0dc8eb8100ebf5ce482b8d02a1e89c4490d6deb5608",
-      "size": 39092,
-      "source_package": "pango1.0",
-      "url": "https://deb.debian.org/debian/pool/main/p/pango1.0/gir1.2-pango-1.0_1.56.3-1_arm64.deb",
-      "version": "1.56.3-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "girepository-tools_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 444,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "girepository-tools",
-      "sha256": "bd197a47174ec6b8588ace15e1e1fb67d97229b21982a8e9320cb1263d3d601e",
-      "size": 139768,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/girepository-tools_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "gtk-update-icon-cache_4.18.6+ds-2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 141,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "gtk-update-icon-cache",
-      "sha256": "d9e2b540055509d2159d07acadb179a6c7edc4d20d8228188fa095bcb1bc7e14",
-      "size": 52260,
-      "source_package": "gtk4",
-      "url": "https://deb.debian.org/debian/pool/main/g/gtk4/gtk-update-icon-cache_4.18.6%2bds-2_arm64.deb",
-      "version": "4.18.6+ds-2"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "hicolor-icon-theme_0.18-2_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 780,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "hicolor-icon-theme",
-      "sha256": "d91fef83a186d3fc9fff293bfd7da4f684f736d15459d258a5a0d251168c1a35",
-      "size": 11832,
-      "source_package": "hicolor-icon-theme",
-      "url": "https://deb.debian.org/debian/pool/main/h/hicolor-icon-theme/hicolor-icon-theme_0.18-2_all.deb",
-      "version": "0.18-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libabsl20240722_20240722.0-4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 6512,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libabsl20240722",
-      "sha256": "eb6648c73cd69c577a2bc18c8d66d44de897c0207a734ffdb55f91945404d0ac",
-      "size": 452500,
-      "source_package": "abseil",
-      "url": "https://deb.debian.org/debian/pool/main/a/abseil/libabsl20240722_20240722.0-4_arm64.deb",
-      "version": "20240722.0-4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libaom3_3.12.1-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -399,22 +159,6 @@
       "source_package": "aom",
       "url": "https://deb.debian.org/debian/pool/main/a/aom/libaom3_3.12.1-1_arm64.deb",
       "version": "3.12.1-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libarchive13t64_3.7.4-4+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 902,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libarchive13t64",
-      "sha256": "9dc7897bc1c83b03a69c581018010fbd9723ce199b99433639343d8b3a5bcf81",
-      "size": 324064,
-      "source_package": "libarchive",
-      "url": "https://deb.debian.org/debian/pool/main/liba/libarchive/libarchive13t64_3.7.4-4%2bdeb13u1_arm64.deb",
-      "version": "3.7.4-4+deb13u1"
     },
     {
       "architecture": "arm64",
@@ -447,102 +191,6 @@
       "source_package": "libasyncns",
       "url": "https://deb.debian.org/debian/pool/main/liba/libasyncns/libasyncns0_0.8-6%2bb5_arm64.deb",
       "version": "0.8-6+b5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libatk-bridge2.0-0t64_2.56.2-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 300,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libatk-bridge2.0-0t64",
-      "sha256": "78908a4392e2c3ad7dfd696be2881e837aaa4fdc2162c8f257215b2b353fabf7",
-      "size": 64964,
-      "source_package": "at-spi2-core",
-      "url": "https://deb.debian.org/debian/pool/main/a/at-spi2-core/libatk-bridge2.0-0t64_2.56.2-1%2bdeb13u1_arm64.deb",
-      "version": "2.56.2-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libatk1.0-0t64_2.56.2-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 239,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libatk1.0-0t64",
-      "sha256": "b8b5039a490c735fc888f6551bfa2f12d69f54af4ed6a9d4a4f7532f81b1500d",
-      "size": 50240,
-      "source_package": "at-spi2-core",
-      "url": "https://deb.debian.org/debian/pool/main/a/at-spi2-core/libatk1.0-0t64_2.56.2-1%2bdeb13u1_arm64.deb",
-      "version": "2.56.2-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libatspi2.0-0t64_2.56.2-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 291,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libatspi2.0-0t64",
-      "sha256": "f1e6a76b7bb8c5a93330f8e90a7f3b73cfa33e75eb389bf2f29c485a02e87473",
-      "size": 76280,
-      "source_package": "at-spi2-core",
-      "url": "https://deb.debian.org/debian/pool/main/a/at-spi2-core/libatspi2.0-0t64_2.56.2-1%2bdeb13u1_arm64.deb",
-      "version": "2.56.2-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libavahi-client3_0.8-16_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 175,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libavahi-client3",
-      "sha256": "aad7c1a4f0e8b9131881ebdd61150bb9e15f11534aafe4877e61fefc266f1586",
-      "size": 46740,
-      "source_package": "avahi",
-      "url": "https://deb.debian.org/debian/pool/main/a/avahi/libavahi-client3_0.8-16_arm64.deb",
-      "version": "0.8-16"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libavahi-common-data_0.8-16_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 760,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libavahi-common-data",
-      "sha256": "75d80488f931f6cc577aaf366b1a17099bd4d0c179dfd33d014f564094255da9",
-      "size": 112288,
-      "source_package": "avahi",
-      "url": "https://deb.debian.org/debian/pool/main/a/avahi/libavahi-common-data_0.8-16_arm64.deb",
-      "version": "0.8-16"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libavahi-common3_0.8-16_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 112,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libavahi-common3",
-      "sha256": "495d3502dbaed9e71c54cd0030fd135d62140b7c780620cc14a0a8a615adda14",
-      "size": 43340,
-      "source_package": "avahi",
-      "url": "https://deb.debian.org/debian/pool/main/a/avahi/libavahi-common3_0.8-16_arm64.deb",
-      "version": "0.8-16"
     },
     {
       "architecture": "arm64",
@@ -659,22 +307,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libblkid-dev_2.41-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1076,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libblkid-dev",
-      "sha256": "c520c08ecf46be258ab60cefd0b3eb127d1d2949c2b2427517bf5de0329e7876",
-      "size": 211336,
-      "source_package": "util-linux",
-      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/libblkid-dev_2.41-5_arm64.deb",
-      "version": "2.41-5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libbluetooth3_5.82-1.1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -703,22 +335,6 @@
       "source_package": "libbluray",
       "url": "https://deb.debian.org/debian/pool/main/libb/libbluray/libbluray2_1.3.4-1%2bb2_arm64.deb",
       "version": "1:1.3.4-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libbrotli-dev_1.1.0-2+b7_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 929,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libbrotli-dev",
-      "sha256": "6c1fb26205d7241406511b0b3e9b05d87d25c2288ac4dcc9d5d2ab3af5bd9116",
-      "size": 307912,
-      "source_package": "brotli",
-      "url": "https://deb.debian.org/debian/pool/main/b/brotli/libbrotli-dev_1.1.0-2%2bb7_arm64.deb",
-      "version": "1.1.0-2+b7"
     },
     {
       "architecture": "arm64",
@@ -755,22 +371,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libbz2-dev_1.0.8-6_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 101,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libbz2-dev",
-      "sha256": "580ca6907c86073e275241fc25448bd7867938d0c326cc3975a9ea84f8a7ba0f",
-      "size": 31880,
-      "source_package": "bzip2",
-      "url": "https://deb.debian.org/debian/pool/main/b/bzip2/libbz2-dev_1.0.8-6_arm64.deb",
-      "version": "1.0.8-6"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libcairo-gobject2_1.18.4-1+b1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -787,22 +387,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libcairo-script-interpreter2_1.18.4-1+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 241,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libcairo-script-interpreter2",
-      "sha256": "fc18434e2f046c14a08e86175e23976c5046edb27f82fb1b66be50457bad54b0",
-      "size": 57372,
-      "source_package": "cairo",
-      "url": "https://deb.debian.org/debian/pool/main/c/cairo/libcairo-script-interpreter2_1.18.4-1%2bb1_arm64.deb",
-      "version": "1.18.4-1+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libcairo2_1.18.4-1+b1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -814,22 +398,6 @@
       "size": 483084,
       "source_package": "cairo",
       "url": "https://deb.debian.org/debian/pool/main/c/cairo/libcairo2_1.18.4-1%2bb1_arm64.deb",
-      "version": "1.18.4-1+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libcairo2-dev_1.18.4-1+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 235,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libcairo2-dev",
-      "sha256": "d20b8c6a96d9c8df192c6c44218466951c5d95f9587af845c699582c94fd79a2",
-      "size": 43392,
-      "source_package": "cairo",
-      "url": "https://deb.debian.org/debian/pool/main/c/cairo/libcairo2-dev_1.18.4-1%2bb1_arm64.deb",
       "version": "1.18.4-1+b1"
     },
     {
@@ -915,22 +483,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libcloudproviders0_0.3.6-2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 152,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libcloudproviders0",
-      "sha256": "ee5b472cdf4c7d40ef0ff5b120d9d1407ace49dc3fbf61f8a88edf5c802d1466",
-      "size": 27368,
-      "source_package": "libcloudproviders",
-      "url": "https://deb.debian.org/debian/pool/main/libc/libcloudproviders/libcloudproviders0_0.3.6-2_arm64.deb",
-      "version": "0.3.6-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libcodec2-1.2_1.2.0-3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -943,38 +495,6 @@
       "source_package": "codec2",
       "url": "https://deb.debian.org/debian/pool/main/c/codec2/libcodec2-1.2_1.2.0-3_arm64.deb",
       "version": "1.2.0-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libcolord2_1.4.7-3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 717,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libcolord2",
-      "sha256": "409ea712ced2cdaed5775ff2179a1f414fb5de79f645c305bbea8f9b40e727dc",
-      "size": 129596,
-      "source_package": "colord",
-      "url": "https://deb.debian.org/debian/pool/main/c/colord/libcolord2_1.4.7-3_arm64.deb",
-      "version": "1.4.7-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libcups2t64_2.4.10-3+deb13u2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 764,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libcups2t64",
-      "sha256": "7ab4a1f78863f9f4c9fab7e56633e84932c94fb835c8f9e83062988be53e5b5d",
-      "size": 235728,
-      "source_package": "cups",
-      "url": "https://deb.debian.org/debian/pool/main/c/cups/libcups2t64_2.4.10-3%2bdeb13u2_arm64.deb",
-      "version": "2.4.10-3+deb13u2"
     },
     {
       "architecture": "arm64",
@@ -1059,22 +579,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libdconf1_0.40.0-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 164,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libdconf1",
-      "sha256": "ff0a3e38b2fb4b96f209a3ae75714cb14e0df14a26a1aded11f5afb87d0eaef9",
-      "size": 40416,
-      "source_package": "dconf",
-      "url": "https://deb.debian.org/debian/pool/main/d/dconf/libdconf1_0.40.0-5_arm64.deb",
-      "version": "0.40.0-5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libdecor-0-0_0.2.2-2_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -1103,22 +607,6 @@
       "source_package": "libdeflate",
       "url": "https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate0_1.23-2_arm64.deb",
       "version": "1.23-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libdisplay-info2_0.2.0-2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 295,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libdisplay-info2",
-      "sha256": "9719d01a5eaef520f41ee576af111c8f4c59246a8861178504d066b86d2ba7c9",
-      "size": 75536,
-      "source_package": "libdisplay-info",
-      "url": "https://deb.debian.org/debian/pool/main/libd/libdisplay-info/libdisplay-info2_0.2.0-2_arm64.deb",
-      "version": "0.2.0-2"
     },
     {
       "architecture": "arm64",
@@ -1199,86 +687,6 @@
       "source_package": "libdvdread",
       "url": "https://deb.debian.org/debian/pool/main/libd/libdvdread/libdvdread8t64_6.1.3-2_arm64.deb",
       "version": "6.1.3-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libebur128-1_1.2.6-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 84,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libebur128-1",
-      "sha256": "3b7ac8f30620590a710e6c8877bb28aad295e253a87a173f05f852a953be3326",
-      "size": 14636,
-      "source_package": "libebur128",
-      "url": "https://deb.debian.org/debian/pool/main/libe/libebur128/libebur128-1_1.2.6-1%2bb2_arm64.deb",
-      "version": "1.2.6-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libegl-mesa0_25.0.7-2+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 438,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libegl-mesa0",
-      "sha256": "e344e0c87657d91ebfcb059bee3a3c87ba05871e2918079c3f9393665d4472af",
-      "size": 120960,
-      "source_package": "mesa",
-      "url": "https://deb.debian.org/debian/pool/main/m/mesa/libegl-mesa0_25.0.7-2%2bdeb13u1_arm64.deb",
-      "version": "25.0.7-2+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libegl1_1.7.0-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 160,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libegl1",
-      "sha256": "b663ad1777df7ed8e320f897bbf678c2baef67f5458fe4a43195ac9b444c7afb",
-      "size": 33952,
-      "source_package": "libglvnd",
-      "url": "https://deb.debian.org/debian/pool/main/libg/libglvnd/libegl1_1.7.0-1%2bb2_arm64.deb",
-      "version": "1.7.0-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libepoxy0_1.5.10-2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1519,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libepoxy0",
-      "sha256": "905fbc7fb73bd620a10c1c02118bb760d42826a7212bfddadcda9d10d5a23d81",
-      "size": 200416,
-      "source_package": "libepoxy",
-      "url": "https://deb.debian.org/debian/pool/main/libe/libepoxy/libepoxy0_1.5.10-2_arm64.deb",
-      "version": "1.5.10-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libevdev2_1.13.4+dfsg-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 154,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libevdev2",
-      "sha256": "abdb9ca2f0a27d88ec16b480f346d1d6c183c59e3d071734ba8d8b9794aacfc6",
-      "size": 30356,
-      "source_package": "libevdev",
-      "url": "https://deb.debian.org/debian/pool/main/libe/libevdev/libevdev2_1.13.4%2bdfsg-1_arm64.deb",
-      "version": "1.13.4+dfsg-1"
     },
     {
       "architecture": "arm64",
@@ -1475,22 +883,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libfontconfig-dev_2.15.0-2.3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 872,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libfontconfig-dev",
-      "sha256": "900c6ec77004811e24ca5e014f663e910802ee505c3c29dbd93a8c8325085af8",
-      "size": 411704,
-      "source_package": "fontconfig",
-      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig-dev_2.15.0-2.3_arm64.deb",
-      "version": "2.15.0-2.3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libfontconfig1_2.15.0-2.3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -1503,38 +895,6 @@
       "source_package": "fontconfig",
       "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.15.0-2.3_arm64.deb",
       "version": "2.15.0-2.3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libfontenc1_1%3a1.1.8-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 95,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libfontenc1",
-      "sha256": "f78823e2d6f77708ed8adf72b5af721a46adabbc282243368063d77f2fd7ca4b",
-      "size": 22528,
-      "source_package": "libfontenc",
-      "url": "https://deb.debian.org/debian/pool/main/libf/libfontenc/libfontenc1_1.1.8-1%2bb2_arm64.deb",
-      "version": "1:1.1.8-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libfreetype-dev_2.13.3+dfsg-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 2157,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libfreetype-dev",
-      "sha256": "967117e243f1ac18cb822db246ff6c4f482fd272e89ea8b3b7760871ca74b3fe",
-      "size": 599544,
-      "source_package": "freetype",
-      "url": "https://deb.debian.org/debian/pool/main/f/freetype/libfreetype-dev_2.13.3%2bdfsg-1%2bdeb13u1_arm64.deb",
-      "version": "2.13.3+dfsg-1+deb13u1"
     },
     {
       "architecture": "arm64",
@@ -1635,70 +995,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libgio-2.0-dev_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 11715,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgio-2.0-dev",
-      "sha256": "a1c9f8f81aa7ec75501ddefe3ed8fcf3835154810662ce216bc517dd9ea3f44d",
-      "size": 1708844,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libgio-2.0-dev_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libgio-2.0-dev-bin_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 801,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgio-2.0-dev-bin",
-      "sha256": "e592f6e203bc85a40a89c204b1395dbe865b4d92f3a9a8b4e8c2485c7933c4ec",
-      "size": 166012,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libgio-2.0-dev-bin_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libgirepository-2.0-0_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 371,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgirepository-2.0-0",
-      "sha256": "43bf2bd7e888ecd3f0227a3ecff5f1d1a3915db5e38a0199bab514e7a1760e01",
-      "size": 134640,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libgirepository-2.0-0_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libgirepository-2.0-dev_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1058,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgirepository-2.0-dev",
-      "sha256": "7faced33158938b3b5373edbbf1d6545a133fe92198cd2da5b395a61afdc9ea7",
-      "size": 209700,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libgirepository-2.0-dev_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libgl1_1.7.0-1+b2_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -1727,70 +1023,6 @@
       "source_package": "mesa",
       "url": "https://deb.debian.org/debian/pool/main/m/mesa/libgl1-mesa-dri_25.0.7-2%2bdeb13u1_arm64.deb",
       "version": "25.0.7-2+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libglib2.0-bin_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 541,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libglib2.0-bin",
-      "sha256": "8bb0a5f9315828a10dc2f69778f7e9d0ab854dd1b826ed13bfc9b34acadd240b",
-      "size": 127100,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libglib2.0-bin_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "libglib2.0-data_2.84.4-3~deb13u3_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 9831,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libglib2.0-data",
-      "sha256": "bb9c50614316ccb8533d65f2f995e25d1275e0d83dcd2b675c2b6da8d620e55b",
-      "size": 1286720,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libglib2.0-data_2.84.4-3%7edeb13u3_all.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libglib2.0-dev_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 105,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libglib2.0-dev",
-      "sha256": "913883aa6452ddcfff3fd401459e1eb5f66353a0d30e50d16b1d3db87c4d9a1a",
-      "size": 56364,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libglib2.0-dev_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libglib2.0-dev-bin_2.84.4-3~deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 101,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libglib2.0-dev-bin",
-      "sha256": "ef8978233501cd152d6007f88bf7f14fd563ca4e38a2b18634b63d17b4983f56",
-      "size": 55552,
-      "source_package": "glib2.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/libglib2.0-dev-bin_2.84.4-3%7edeb13u3_arm64.deb",
-      "version": "2.84.4-3~deb13u3"
     },
     {
       "architecture": "arm64",
@@ -1891,70 +1123,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libgtk-3-0t64_3.24.49-3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 11248,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgtk-3-0t64",
-      "sha256": "84f5dfbeadf9fc8c1e12f18a2010b1cce45481aba5c3db427d98d6601d95ec82",
-      "size": 2564512,
-      "source_package": "gtk+3.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/gtk%2b3.0/libgtk-3-0t64_3.24.49-3_arm64.deb",
-      "version": "3.24.49-3"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "libgtk-3-common_3.24.49-3_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 30916,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgtk-3-common",
-      "sha256": "9161bd6b9933384073ac5bacd6a3bb1e2998877a605411d73041fb0b7fadd605",
-      "size": 4908188,
-      "source_package": "gtk+3.0",
-      "url": "https://deb.debian.org/debian/pool/main/g/gtk%2b3.0/libgtk-3-common_3.24.49-3_all.deb",
-      "version": "3.24.49-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libgudev-1.0-0_238-6_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 84,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libgudev-1.0-0",
-      "sha256": "f0fec02f1bbc0803c9d044413609d3cd0fde24bfe6a5141a38aabfa86c292b21",
-      "size": 13720,
-      "source_package": "libgudev",
-      "url": "https://deb.debian.org/debian/pool/main/libg/libgudev/libgudev-1.0-0_238-6_arm64.deb",
-      "version": "238-6"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libharfbuzz-gobject0_10.2.0-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 179,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libharfbuzz-gobject0",
-      "sha256": "2c7546cb9d672b5f222e008bdf1d437b9159f0e1aa263042d2fb9d496d0e2522",
-      "size": 32124,
-      "source_package": "harfbuzz",
-      "url": "https://deb.debian.org/debian/pool/main/h/harfbuzz/libharfbuzz-gobject0_10.2.0-1%2bdeb13u1_arm64.deb",
-      "version": "10.2.0-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libharfbuzz0b_10.2.0-1+deb13u1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -1987,38 +1155,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libice-dev_2%3a1.1.1-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 255,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libice-dev",
-      "sha256": "7d57fcbf177949500ded4ff95e0ebe5610503438eafc7124c9f9a40d04578e7f",
-      "size": 73016,
-      "source_package": "libice",
-      "url": "https://deb.debian.org/debian/pool/main/libi/libice/libice-dev_1.1.1-1_arm64.deb",
-      "version": "2:1.1.1-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libice6_2%3a1.1.1-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 170,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libice6",
-      "sha256": "048874f2296660a5e925844635f4d050cb054e7d3459cb15b4c30afb113fbecb",
-      "size": 62148,
-      "source_package": "libice",
-      "url": "https://deb.debian.org/debian/pool/main/libi/libice/libice6_1.1.1-1_arm64.deb",
-      "version": "2:1.1.1-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libiec61883-0_1.2.0-7_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -2031,38 +1167,6 @@
       "source_package": "libiec61883",
       "url": "https://deb.debian.org/debian/pool/main/libi/libiec61883/libiec61883-0_1.2.0-7_arm64.deb",
       "version": "1.2.0-7"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libinput-bin_1.28.1-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 309,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libinput-bin",
-      "sha256": "9da373d042dd8e0c45e34a5a0dc361cb386fd5ff4f066b7b3e64e1ea66de0835",
-      "size": 26788,
-      "source_package": "libinput",
-      "url": "https://deb.debian.org/debian/pool/main/libi/libinput/libinput-bin_1.28.1-1%2bdeb13u1_arm64.deb",
-      "version": "1.28.1-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libinput10_1.28.1-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 427,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libinput10",
-      "sha256": "a2acd04f3b1e9e91d22a26b63650087a179b6b3dbaddadc92d89edfbb2075ae1",
-      "size": 129616,
-      "source_package": "libinput",
-      "url": "https://deb.debian.org/debian/pool/main/libi/libinput/libinput10_1.28.1-1%2bdeb13u1_arm64.deb",
-      "version": "1.28.1-1+deb13u1"
     },
     {
       "architecture": "arm64",
@@ -2275,22 +1379,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "liblua5.2-0_5.2.4-3+b3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 537,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "liblua5.2-0",
-      "sha256": "eb8dff049d96df4e5c76899b4592e03376297ee2dc39b7477c3c4cf7b3071e4c",
-      "size": 106120,
-      "source_package": "lua5.2",
-      "url": "https://deb.debian.org/debian/pool/main/l/lua5.2/liblua5.2-0_5.2.4-3%2bb3_arm64.deb",
-      "version": "5.2.4-3+b3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libmbedcrypto16_3.6.5-0.1~deb13u1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -2339,22 +1427,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libmount-dev_2.41-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 98,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libmount-dev",
-      "sha256": "c5d3d4548df3d365d7dd8464f9fb0ddbc949e88911c1a894a8401be22f9c2062",
-      "size": 30520,
-      "source_package": "util-linux",
-      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/libmount-dev_2.41-5_arm64.deb",
-      "version": "2.41-5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libmp3lame0_3.100-6+b3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -2383,54 +1455,6 @@
       "source_package": "mpg123",
       "url": "https://deb.debian.org/debian/pool/main/m/mpg123/libmpg123-0t64_1.32.10-1%2bdeb13u1_arm64.deb",
       "version": "1.32.10-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libmpv2_0.40.0-3+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 2987,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libmpv2",
-      "sha256": "eb7301cd903f8ce47979b84f2e9cf0f83e02853a52e5b419a857fbeaf274304b",
-      "size": 924796,
-      "source_package": "mpv",
-      "url": "https://deb.debian.org/debian/pool/main/m/mpv/libmpv2_0.40.0-3%2bdeb13u1_arm64.deb",
-      "version": "0.40.0-3+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libmtdev1t64_1.1.7-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 100,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libmtdev1t64",
-      "sha256": "3433f77a9f96d0dc537e870db734a4dbb50528836782c86709845736e8897b47",
-      "size": 22456,
-      "source_package": "mtdev",
-      "url": "https://deb.debian.org/debian/pool/main/m/mtdev/libmtdev1t64_1.1.7-1_arm64.deb",
-      "version": "1.1.7-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libmujs3_1.3.6-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 409,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libmujs3",
-      "sha256": "6fcdcc09fe2882cf2f67e545cb6c27f20ba0b4c1fa4202084b334f11ee4f0a06",
-      "size": 110392,
-      "source_package": "mujs",
-      "url": "https://deb.debian.org/debian/pool/main/m/mujs/libmujs3_1.3.6-1_arm64.deb",
-      "version": "1.3.6-1"
     },
     {
       "architecture": "arm64",
@@ -2707,102 +1731,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libpangoxft-1.0-0_1.56.3-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 106,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpangoxft-1.0-0",
-      "sha256": "61c62a40d2eb68c21bfd4209cb189d505692f1d3432ccbf526056dca6cce3230",
-      "size": 27108,
-      "source_package": "pango1.0",
-      "url": "https://deb.debian.org/debian/pool/main/p/pango1.0/libpangoxft-1.0-0_1.56.3-1_arm64.deb",
-      "version": "1.56.3-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpciaccess0_0.17-3+b3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 121,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpciaccess0",
-      "sha256": "2d22631116e5eb4f2e49e6b1ec2933c68d72e4e54c07cf7a17b82f8073db40b2",
-      "size": 51192,
-      "source_package": "libpciaccess",
-      "url": "https://deb.debian.org/debian/pool/main/libp/libpciaccess/libpciaccess0_0.17-3%2bb3_arm64.deb",
-      "version": "0.17-3+b3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpcre2-16-0_10.46-1~deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 657,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpcre2-16-0",
-      "sha256": "c1935859e4fdac3306ee577f98dbcee8aec50b8e2ff0892ca2f0fa05ee5f9008",
-      "size": 246860,
-      "source_package": "pcre2",
-      "url": "https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-16-0_10.46-1%7edeb13u1_arm64.deb",
-      "version": "10.46-1~deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpcre2-32-0_10.46-1~deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 657,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpcre2-32-0",
-      "sha256": "8dd0bda429e5ddd25d73865d944a2f3f4f04a2605acaecee73d1fe5630b22c7f",
-      "size": 237848,
-      "source_package": "pcre2",
-      "url": "https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-32-0_10.46-1%7edeb13u1_arm64.deb",
-      "version": "10.46-1~deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpcre2-dev_10.46-1~deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 2467,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpcre2-dev",
-      "sha256": "cf70657d734060bad45def0c67208e2afb1e165a5640d53b3bfe2264a3ada932",
-      "size": 750500,
-      "source_package": "pcre2",
-      "url": "https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-dev_10.46-1%7edeb13u1_arm64.deb",
-      "version": "10.46-1~deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpcre2-posix3_10.46-1~deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 142,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpcre2-posix3",
-      "sha256": "6cec057b7490c87332f619286d76a349b3394c1a932b24732f7f1d3d8342acd3",
-      "size": 64080,
-      "source_package": "pcre2",
-      "url": "https://deb.debian.org/debian/pool/main/p/pcre2/libpcre2-posix3_10.46-1%7edeb13u1_arm64.deb",
-      "version": "10.46-1~deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libpgm-5.3-0t64_5.3.128~dfsg-2.1+b1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -2819,22 +1747,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libpipewire-0.3-0t64_1.4.2-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1017,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpipewire-0.3-0t64",
-      "sha256": "f25ab475f09ab5ec952f13a2d6b7a870dd5eb8c7806664baf8be9bdee3ae995b",
-      "size": 260312,
-      "source_package": "pipewire",
-      "url": "https://deb.debian.org/debian/pool/main/p/pipewire/libpipewire-0.3-0t64_1.4.2-1_arm64.deb",
-      "version": "1.4.2-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libpixman-1-0_0.44.0-3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -2846,22 +1758,6 @@
       "size": 168440,
       "source_package": "pixman",
       "url": "https://deb.debian.org/debian/pool/main/p/pixman/libpixman-1-0_0.44.0-3_arm64.deb",
-      "version": "0.44.0-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpixman-1-dev_0.44.0-3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 67,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpixman-1-dev",
-      "sha256": "a67bac90c818ed9865178dca7261a5c907c660ef8cf3106137965e9c3b69c6b4",
-      "size": 11376,
-      "source_package": "pixman",
-      "url": "https://deb.debian.org/debian/pool/main/p/pixman/libpixman-1-dev_0.44.0-3_arm64.deb",
       "version": "0.44.0-3"
     },
     {
@@ -2895,22 +1791,6 @@
       "source_package": "libplacebo",
       "url": "https://deb.debian.org/debian/pool/main/libp/libplacebo/libplacebo349_7.349.0-3_arm64.deb",
       "version": "7.349.0-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libpng-dev_1.6.48-1+deb13u5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1053,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libpng-dev",
-      "sha256": "a212fde02b2930302edcc959eaa2079bb459def3a92741cc09f6f55c250b8ca0",
-      "size": 360892,
-      "source_package": "libpng1.6",
-      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng-dev_1.6.48-1%2bdeb13u5_arm64.deb",
-      "version": "1.6.48-1+deb13u5"
     },
     {
       "architecture": "arm64",
@@ -3139,22 +2019,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "librsvg2-common_2.60.0+dfsg-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 432,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "librsvg2-common",
-      "sha256": "01fe097badb95a87703d1525fdabdea54ae1bedd62571f739447818adb5db4b1",
-      "size": 139024,
-      "source_package": "librsvg",
-      "url": "https://deb.debian.org/debian/pool/main/libr/librsvg/librsvg2-common_2.60.0%2bdfsg-1_arm64.deb",
-      "version": "2.60.0+dfsg-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "librubberband2_3.3.0+dfsg-2+b3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -3183,22 +2047,6 @@
       "source_package": "libsdl2",
       "url": "https://deb.debian.org/debian/pool/main/libs/libsdl2/libsdl2-2.0-0_2.32.4%2bdfsg-1_arm64.deb",
       "version": "2.32.4+dfsg-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libselinux1-dev_3.8.1-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 812,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libselinux1-dev",
-      "sha256": "32b994441e6a445365fd99711e9c2c25aaa492a3ff9729ba3b881fe4e8901ef4",
-      "size": 171664,
-      "source_package": "libselinux",
-      "url": "https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux1-dev_3.8.1-1_arm64.deb",
-      "version": "3.8.1-1"
     },
     {
       "architecture": "all",
@@ -3231,22 +2079,6 @@
       "source_package": "lm-sensors",
       "url": "https://deb.debian.org/debian/pool/main/l/lm-sensors/libsensors5_3.6.2-2_arm64.deb",
       "version": "1:3.6.2-2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libsepol-dev_3.8.1-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1917,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsepol-dev",
-      "sha256": "83c6a0333dd9eb04db23a98817a8df09e4c5d2a88c012f900dc809f63c8ad6b8",
-      "size": 355868,
-      "source_package": "libsepol",
-      "url": "https://deb.debian.org/debian/pool/main/libs/libsepol/libsepol-dev_3.8.1-1_arm64.deb",
-      "version": "3.8.1-1"
     },
     {
       "architecture": "arm64",
@@ -3299,54 +2131,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libsixel1_1.10.5-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 473,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsixel1",
-      "sha256": "82c359a489e534e2cb6c55321c1b8d7a4ee522dd5e9fc3ee9812f191c5b51e63",
-      "size": 101832,
-      "source_package": "libsixel",
-      "url": "https://deb.debian.org/debian/pool/main/libs/libsixel/libsixel1_1.10.5-1_arm64.deb",
-      "version": "1.10.5-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libsm-dev_2%3a1.2.6-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 114,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsm-dev",
-      "sha256": "c0e18f50e25e158a949a66651a85912c74513dc534b2aa6d7c34fdd7e0667ca4",
-      "size": 40200,
-      "source_package": "libsm",
-      "url": "https://deb.debian.org/debian/pool/main/libs/libsm/libsm-dev_1.2.6-1_arm64.deb",
-      "version": "2:1.2.6-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libsm6_2%3a1.2.6-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 102,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsm6",
-      "sha256": "4906619bbec923da6808cb7e4e817a7667d13cd43bc7d98c77702a03bb103f42",
-      "size": 36364,
-      "source_package": "libsm",
-      "url": "https://deb.debian.org/debian/pool/main/libs/libsm/libsm6_1.2.6-1_arm64.deb",
-      "version": "2:1.2.6-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libsnappy1v5_1.2.2-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -3375,22 +2159,6 @@
       "source_package": "libsndfile",
       "url": "https://deb.debian.org/debian/pool/main/libs/libsndfile/libsndfile1_1.2.2-2%2bdeb13u1_arm64.deb",
       "version": "1.2.2-2+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libsndio7.0_1.10.0-0.1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 88,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsndio7.0",
-      "sha256": "a3cff916145efe7473c67c44b0bbde94989551b47cacfda203d878d0e2c3d2a5",
-      "size": 26236,
-      "source_package": "sndio",
-      "url": "https://deb.debian.org/debian/pool/main/s/sndio/libsndio7.0_1.10.0-0.1_arm64.deb",
-      "version": "1.10.0-0.1"
     },
     {
       "architecture": "arm64",
@@ -3439,22 +2207,6 @@
       "source_package": "libsoxr",
       "url": "https://deb.debian.org/debian/pool/main/libs/libsoxr/libsoxr0_0.1.3-4%2bb2_arm64.deb",
       "version": "0.1.3-4+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libspa-0.2-modules_1.4.2-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 4671,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libspa-0.2-modules",
-      "sha256": "b13c1955882ea689f9135bf45c020a364d3cba2d2ed69251827b5c6abd41d4b7",
-      "size": 895964,
-      "source_package": "pipewire",
-      "url": "https://deb.debian.org/debian/pool/main/p/pipewire/libspa-0.2-modules_1.4.2-1_arm64.deb",
-      "version": "1.4.2-1"
     },
     {
       "architecture": "arm64",
@@ -3583,22 +2335,6 @@
       "source_package": "ffmpeg",
       "url": "https://deb.debian.org/debian/pool/main/f/ffmpeg/libswscale8_7.1.5-0%2bdeb13u1_arm64.deb",
       "version": "7:7.1.5-0+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libsysprof-capture-4-dev_48.0-2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 302,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libsysprof-capture-4-dev",
-      "sha256": "73f30f2a5ff7b378f8d47f1a3e1fcfac74043a4612bf0661c3ea4b96e6e27f98",
-      "size": 49588,
-      "source_package": "sysprof",
-      "url": "https://deb.debian.org/debian/pool/main/s/sysprof/libsysprof-capture-4-dev_48.0-2_arm64.deb",
-      "version": "48.0-2"
     },
     {
       "architecture": "arm64",
@@ -3747,22 +2483,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libunwind8_1.8.1-0.1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 352,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libunwind8",
-      "sha256": "bcf2d49ba4226aa321816ddbbfb3f3dde09594b814bd7afa81191a2d583bae95",
-      "size": 55240,
-      "source_package": "libunwind",
-      "url": "https://deb.debian.org/debian/pool/main/libu/libunwind/libunwind8_1.8.1-0.1_arm64.deb",
-      "version": "1.8.1-0.1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libv4l-0t64_1.30.1-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -3822,22 +2542,6 @@
       "size": 18544,
       "source_package": "libva",
       "url": "https://deb.debian.org/debian/pool/main/libv/libva/libva-drm2_2.22.0-3_arm64.deb",
-      "version": "2.22.0-3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libva-wayland2_2.22.0-3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 97,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libva-wayland2",
-      "sha256": "23766ef1b3cdf5147a373c567a952a2bfacd37356a0fa0070f3588fdcb0859ba",
-      "size": 21908,
-      "source_package": "libva",
-      "url": "https://deb.debian.org/debian/pool/main/libv/libva/libva-wayland2_2.22.0-3_arm64.deb",
       "version": "2.22.0-3"
     },
     {
@@ -3985,38 +2689,6 @@
       "version": "1.4.309.0-1"
     },
     {
-      "architecture": "all",
-      "component": "main",
-      "filename": "libwacom-common_2.14.0-1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1736,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libwacom-common",
-      "sha256": "214956bd9b26600c4d5ac0d60c1685be6ef650644e36b712620c56fccd4d4f58",
-      "size": 102748,
-      "source_package": "libwacom",
-      "url": "https://deb.debian.org/debian/pool/main/libw/libwacom/libwacom-common_2.14.0-1_all.deb",
-      "version": "2.14.0-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libwacom9_2.14.0-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 87,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libwacom9",
-      "sha256": "8fb8419c43fcc166f996c30cc262fcc86457bdd6f82656dad8619c88dc00b013",
-      "size": 24192,
-      "source_package": "libwacom",
-      "url": "https://deb.debian.org/debian/pool/main/libw/libwacom/libwacom9_2.14.0-1_arm64.deb",
-      "version": "2.14.0-1"
-    },
-    {
       "architecture": "arm64",
       "component": "main",
       "filename": "libwayland-client0_1.23.1-3_arm64.deb",
@@ -4115,22 +2787,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libwebrtc-audio-processing-1-3_1.3-3+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1048,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libwebrtc-audio-processing-1-3",
-      "sha256": "b3222b13cac750380a6f6800aace801fbc0587ab1fa23a4aa2ce307ed0391ae2",
-      "size": 340320,
-      "source_package": "webrtc-audio-processing",
-      "url": "https://deb.debian.org/debian/pool/main/w/webrtc-audio-processing/libwebrtc-audio-processing-1-3_1.3-3%2bb1_arm64.deb",
-      "version": "1.3-3+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libx11-6_2%3a1.8.12-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4158,22 +2814,6 @@
       "size": 343072,
       "source_package": "libx11",
       "url": "https://deb.debian.org/debian/pool/main/libx/libx11/libx11-data_1.8.12-1_all.deb",
-      "version": "2:1.8.12-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libx11-dev_2%3a1.8.12-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 2803,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libx11-dev",
-      "sha256": "147ce590c806ed92d26fa8eaf74f2021043afcb2a828bfc72c4bca2d15df4131",
-      "size": 883116,
-      "source_package": "libx11",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libx11/libx11-dev_1.8.12-1_arm64.deb",
       "version": "2:1.8.12-1"
     },
     {
@@ -4227,22 +2867,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxau-dev_1%3a1.0.11-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 67,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxau-dev",
-      "sha256": "23888468fec6be4391ea25e2029dfa977582e3923c3d7c9e4296ca622a78995e",
-      "size": 23908,
-      "source_package": "libxau",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau-dev_1.0.11-1_arm64.deb",
-      "version": "1:1.0.11-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxau6_1%3a1.0.11-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4255,22 +2879,6 @@
       "source_package": "libxau",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau6_1.0.11-1_arm64.deb",
       "version": "1:1.0.11-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxaw7_2%3a1.0.16-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 545,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxaw7",
-      "sha256": "93a4df735b3986c3688bb24fe05add09eba807fca2d885ab280e48d093699337",
-      "size": 194860,
-      "source_package": "libxaw",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxaw/libxaw7_1.0.16-1_arm64.deb",
-      "version": "2:1.0.16-1"
     },
     {
       "architecture": "arm64",
@@ -4355,22 +2963,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxcb-render0-dev_1.17.0-2+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 288,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxcb-render0-dev",
-      "sha256": "6b6851e5ab3faea76e00aadba44735b3130c2aeed832048561f504e3f0742255",
-      "size": 118604,
-      "source_package": "libxcb",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb-render0-dev_1.17.0-2%2bb1_arm64.deb",
-      "version": "1.17.0-2+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxcb-shape0_1.17.0-2+b1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4398,22 +2990,6 @@
       "size": 105480,
       "source_package": "libxcb",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb-shm0_1.17.0-2%2bb1_arm64.deb",
-      "version": "1.17.0-2+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxcb-shm0-dev_1.17.0-2+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 154,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxcb-shm0-dev",
-      "sha256": "dd6a8c531714063b0f9ec5c231d3dd9d4f7444f9e4ad6124abc56291ee4493d8",
-      "size": 108140,
-      "source_package": "libxcb",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb-shm0-dev_1.17.0-2%2bb1_arm64.deb",
       "version": "1.17.0-2+b1"
     },
     {
@@ -4467,38 +3043,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxcb1-dev_1.17.0-2+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 815,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxcb1-dev",
-      "sha256": "0a9a765046310884153ccf124c9dde25766274d6ce3edb1cb908a156d9613488",
-      "size": 181752,
-      "source_package": "libxcb",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb1-dev_1.17.0-2%2bb1_arm64.deb",
-      "version": "1.17.0-2+b1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxcomposite1_1%3a0.4.6-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 92,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxcomposite1",
-      "sha256": "0fa60d7733d6354c94cea0b0b8e772a2e317db7040dee4ac84df5d844918a79c",
-      "size": 16440,
-      "source_package": "libxcomposite",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxcomposite/libxcomposite1_0.4.6-1_arm64.deb",
-      "version": "1:0.4.6-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxcursor1_1%3a1.2.3-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4515,54 +3059,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxcvt0_0.1.3-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 82,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxcvt0",
-      "sha256": "cae0bcff9cfaedcc2877dd62f852ede573141ac03ad5198b7a074628e8616020",
-      "size": 5496,
-      "source_package": "libxcvt",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxcvt/libxcvt0_0.1.3-1_arm64.deb",
-      "version": "0.1.3-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxdamage1_1%3a1.1.6-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 91,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxdamage1",
-      "sha256": "7803f925e0940b720594f47bab4bc55bea1bdf6f2a3216442c78e53a77f4e19a",
-      "size": 15640,
-      "source_package": "libxdamage",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxdamage/libxdamage1_1.1.6-1%2bb2_arm64.deb",
-      "version": "1:1.1.6-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxdmcp-dev_1%3a1.1.5-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 87,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxdmcp-dev",
-      "sha256": "77962fd08ba0f4aca39060b9e19a4cfb726f678a45c9ba6cf33079a006bcad1e",
-      "size": 44180,
-      "source_package": "libxdmcp",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp-dev_1.1.5-1_arm64.deb",
-      "version": "1:1.1.5-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxdmcp6_1%3a1.1.5-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4575,22 +3071,6 @@
       "source_package": "libxdmcp",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp6_1.1.5-1_arm64.deb",
       "version": "1:1.1.5-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxext-dev_2%3a1.3.4-1+b3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 342,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxext-dev",
-      "sha256": "8e4334abc63d18cb9074aa4571c8fa4aa43fced729fa9c2137179864bb4dd0f9",
-      "size": 104692,
-      "source_package": "libxext",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxext/libxext-dev_1.3.4-1%2bb3_arm64.deb",
-      "version": "2:1.3.4-1+b3"
     },
     {
       "architecture": "arm64",
@@ -4627,38 +3107,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxfont2_1%3a2.0.6-1+deb13u1_arm64.deb",
-      "indexes": [
-        "security.debian.org:trixie-security:main:arm64"
-      ],
-      "installed_size_kib": 263,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxfont2",
-      "sha256": "bd15438e61e968518e26f5f4a2523329f16e066652395db915d8b941bf71b5ba",
-      "size": 124836,
-      "source_package": "libxfont",
-      "url": "https://security.debian.org/debian-security/pool/updates/main/libx/libxfont/libxfont2_2.0.6-1%2bdeb13u1_arm64.deb",
-      "version": "1:2.0.6-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxft2_2.3.6-1+b4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 159,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxft2",
-      "sha256": "c8053babb508229092aa98e80d9efb58eb157fe92781476edf5be2e21891c368",
-      "size": 51588,
-      "source_package": "xft",
-      "url": "https://deb.debian.org/debian/pool/main/x/xft/libxft2_2.3.6-1%2bb4_arm64.deb",
-      "version": "2.3.6-1+b4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxi6_2%3a1.8.2-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4671,22 +3119,6 @@
       "source_package": "libxi",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxi/libxi6_1.8.2-1_arm64.deb",
       "version": "2:1.8.2-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxinerama1_2%3a1.1.4-3+b4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 94,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxinerama1",
-      "sha256": "780e97f2d0a3f399eeecd616bbadeb5e4417875f271994dc4eaee7bbf9a2239e",
-      "size": 16028,
-      "source_package": "libxinerama",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxinerama/libxinerama1_1.1.4-3%2bb4_arm64.deb",
-      "version": "2:1.1.4-3+b4"
     },
     {
       "architecture": "arm64",
@@ -4707,22 +3139,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxkbfile1_1%3a1.1.0-1+b4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 223,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxkbfile1",
-      "sha256": "b63a122db743b338f65c9d50a15185aa1595f74cdcd42d70e61b48dcf6fd10ce",
-      "size": 72440,
-      "source_package": "libxkbfile",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxkbfile/libxkbfile1_1.1.0-1%2bb4_arm64.deb",
-      "version": "1:1.1.0-1+b4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxml2_2.12.7+dfsg+really2.9.14-2.1+deb13u3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4739,70 +3155,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "libxmu6_2%3a1.1.3-3+b4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 163,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxmu6",
-      "sha256": "5b43d4b7bd1df59a58503f7a4dfa3eb1e3833d2db0ab8c273a251e7be34a6fe7",
-      "size": 55748,
-      "source_package": "libxmu",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxmu/libxmu6_1.1.3-3%2bb4_arm64.deb",
-      "version": "2:1.1.3-3+b4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxmuu1_2%3a1.1.3-3+b4_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 97,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxmuu1",
-      "sha256": "522cb4c2029ce7718dc7f00b53a1c303ab98580a37244ccb2d177999a5b9e4af",
-      "size": 21996,
-      "source_package": "libxmu",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxmu/libxmuu1_1.1.3-3%2bb4_arm64.deb",
-      "version": "2:1.1.3-3+b4"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxpm4_1%3a3.5.17-1+deb13u1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 105,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxpm4",
-      "sha256": "7af00645e130ee865951795dee7b504e82f59e871ec1c6e255904edcb8ed266f",
-      "size": 52884,
-      "source_package": "libxpm",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxpm/libxpm4_3.5.17-1%2bdeb13u1_arm64.deb",
-      "version": "1:3.5.17-1+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxpresent1_1.0.1-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 86,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxpresent1",
-      "sha256": "225987bd06f4af14de7af260ca63d3d92393840f3a2cc4b61f45578fa2de2396",
-      "size": 9992,
-      "source_package": "libxpresent",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxpresent/libxpresent1_1.0.1-1%2bb2_arm64.deb",
-      "version": "1.0.1-1+b2"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "libxrandr2_2%3a1.5.4-1+b3_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -4815,22 +3167,6 @@
       "source_package": "libxrandr",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxrandr/libxrandr2_1.5.4-1%2bb3_arm64.deb",
       "version": "2:1.5.4-1+b3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxrender-dev_1%3a0.9.12-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 133,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxrender-dev",
-      "sha256": "dc1434f847bb727248d6ef219acd814c0b3fe0f846bf7db08320c18e34d09adb",
-      "size": 38780,
-      "source_package": "libxrender",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender-dev_0.9.12-1_arm64.deb",
-      "version": "1:0.9.12-1"
     },
     {
       "architecture": "arm64",
@@ -4879,22 +3215,6 @@
       "source_package": "libxss",
       "url": "https://deb.debian.org/debian/pool/main/libx/libxss/libxss1_1.2.3-1%2bb3_arm64.deb",
       "version": "1:1.2.3-1+b3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "libxt6t64_1%3a1.2.1-1.2+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 529,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "libxt6t64",
-      "sha256": "5890026a20d10d0e3c031b93d0b831d398b38f66f15f351035c802beaa6d726a",
-      "size": 173304,
-      "source_package": "libxt",
-      "url": "https://deb.debian.org/debian/pool/main/libx/libxt/libxt6t64_1.2.1-1.2%2bb2_arm64.deb",
-      "version": "1:1.2.1-1.2+b2"
     },
     {
       "architecture": "arm64",
@@ -5057,22 +3377,6 @@
       "version": "25.0.7-2+deb13u1"
     },
     {
-      "architecture": "all",
-      "component": "main",
-      "filename": "native-architecture_0.2.6_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 8,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "native-architecture",
-      "sha256": "cb065efb2dd0ad8de45ace298bdb959e4d66478ca8599312bde4fa543d8b7532",
-      "size": 2264,
-      "source_package": "architecture-properties",
-      "url": "https://deb.debian.org/debian/pool/main/a/architecture-properties/native-architecture_0.2.6_all.deb",
-      "version": "0.2.6"
-    },
-    {
       "architecture": "arm64",
       "component": "main",
       "filename": "network-manager_1.52.1-1_arm64.deb",
@@ -5135,22 +3439,6 @@
       "source_package": "nginx",
       "url": "https://deb.debian.org/debian/pool/main/n/nginx/nginx-light_1.26.3-3%2bdeb13u7_all.deb",
       "version": "1.26.3-3+deb13u7"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "ninja-build_1.12.1-1+b1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 438,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "ninja-build",
-      "sha256": "4afc3194ca4d4f051893f169daa48ba9eac769d76f3f13839e5ad0a9688b5fe6",
-      "size": 130056,
-      "source_package": "ninja-build",
-      "url": "https://deb.debian.org/debian/pool/main/n/ninja-build/ninja-build_1.12.1-1%2bb1_arm64.deb",
-      "version": "1.12.1-1+b1"
     },
     {
       "architecture": "arm64",
@@ -5247,22 +3535,6 @@
       "source_package": "python-iniparse",
       "url": "https://deb.debian.org/debian/pool/main/p/python-iniparse/python3-iniparse_0.5.1-1%2bdeb13u1_all.deb",
       "version": "0.5.1-1+deb13u1"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "python3-packaging_25.0-1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 257,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "python3-packaging",
-      "sha256": "d70c8469f6e9c6105e1ebcd3ebdc963f11dadbeddd89d2d1a2a3cb1c97d2ecbc",
-      "size": 56568,
-      "source_package": "python-packaging",
-      "url": "https://deb.debian.org/debian/pool/main/p/python-packaging/python3-packaging_25.0-1_all.deb",
-      "version": "25.0-1"
     },
     {
       "architecture": "all",
@@ -5395,22 +3667,6 @@
     {
       "architecture": "arm64",
       "component": "main",
-      "filename": "uuid-dev_2.41-5_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 138,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "uuid-dev",
-      "sha256": "142f2c809a9c239b94a1a09dccc02a49cc4b20990da687b60f849cda84dd580a",
-      "size": 49472,
-      "source_package": "util-linux",
-      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/uuid-dev_2.41-5_arm64.deb",
-      "version": "2.41-5"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
       "filename": "v4l-utils_1.30.1-1_arm64.deb",
       "indexes": [
         "deb.debian.org:trixie:main:arm64"
@@ -5439,198 +3695,6 @@
       "source_package": "xorg",
       "url": "https://deb.debian.org/debian/pool/main/x/xorg/x11-common_7.7%2b24%2bdeb13u1_all.deb",
       "version": "1:7.7+24+deb13u1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "x11-xkb-utils_7.7+9_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 776,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "x11-xkb-utils",
-      "sha256": "10ed52feb9520bddc6ecaa77fafb47e961b5f6310c539848ca478b31fe110cac",
-      "size": 149276,
-      "source_package": "x11-xkb-utils",
-      "url": "https://deb.debian.org/debian/pool/main/x/x11-xkb-utils/x11-xkb-utils_7.7%2b9_arm64.deb",
-      "version": "7.7+9"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "x11-xserver-utils_7.7+11_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1189,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "x11-xserver-utils",
-      "sha256": "c9ef2bd9f9d0d84d832a99de00680a6afbd12c063c12989716bc5ce6ff247755",
-      "size": 156400,
-      "source_package": "x11-xserver-utils",
-      "url": "https://deb.debian.org/debian/pool/main/x/x11-xserver-utils/x11-xserver-utils_7.7%2b11_arm64.deb",
-      "version": "7.7+11"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "x11proto-dev_2024.1-1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 1704,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "x11proto-dev",
-      "sha256": "6a6764500eb8171d3cd6d793c09902974f8ea87bd20c68d9eac5f1eeaf3fc407",
-      "size": 602628,
-      "source_package": "xorgproto",
-      "url": "https://deb.debian.org/debian/pool/main/x/xorgproto/x11proto-dev_2024.1-1_all.deb",
-      "version": "2024.1-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xauth_1%3a1.1.2-1.1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 97,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xauth",
-      "sha256": "fc77882c3eac0e2dd933ffea1b561e9202a41a229f30909637205b7f66fc7ed9",
-      "size": 35428,
-      "source_package": "xauth",
-      "url": "https://deb.debian.org/debian/pool/main/x/xauth/xauth_1.1.2-1.1_arm64.deb",
-      "version": "1:1.1.2-1.1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xinput_1.6.4-1+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 111,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xinput",
-      "sha256": "0e3191d88c407888c85f5ce51dbb7102dc77564041f48da27d1e635c7874f6ac",
-      "size": 51776,
-      "source_package": "xinput",
-      "url": "https://deb.debian.org/debian/pool/main/x/xinput/xinput_1.6.4-1%2bb2_arm64.deb",
-      "version": "1.6.4-1+b2"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "xorg-sgml-doctools_1%3a1.11-1.1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 89,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xorg-sgml-doctools",
-      "sha256": "168345058319094e475a87ace66f5fb6ae802109650ea8434d672117982b5d0a",
-      "size": 22064,
-      "source_package": "xorg-sgml-doctools",
-      "url": "https://deb.debian.org/debian/pool/main/x/xorg-sgml-doctools/xorg-sgml-doctools_1.11-1.1_all.deb",
-      "version": "1:1.11-1.1"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "xserver-common_2%3a21.1.16-1.3+deb13u3_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 2470,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xserver-common",
-      "sha256": "dc1d37303c103b23c40cd1ea694c5c6561e0e8dc1734a73c7a0ae0ef080e7fcc",
-      "size": 2410088,
-      "source_package": "xorg-server",
-      "url": "https://deb.debian.org/debian/pool/main/x/xorg-server/xserver-common_21.1.16-1.3%2bdeb13u3_all.deb",
-      "version": "2:21.1.16-1.3+deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xserver-xorg-core_2%3a21.1.16-1.3+deb13u3_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 6693,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xserver-xorg-core",
-      "sha256": "3c63611f239fd201c72b615f3d49248f5131d7f818f572b6efaec8142387d189",
-      "size": 3640148,
-      "source_package": "xorg-server",
-      "url": "https://deb.debian.org/debian/pool/main/x/xorg-server/xserver-xorg-core_21.1.16-1.3%2bdeb13u3_arm64.deb",
-      "version": "2:21.1.16-1.3+deb13u3"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xserver-xorg-input-evdev_1%3a2.11.0-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 180,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xserver-xorg-input-evdev",
-      "sha256": "eb01f57fe4a63fe9350185087ccef62df35a0b01dabcf00fa9db7f2a78011be8",
-      "size": 114232,
-      "source_package": "xserver-xorg-input-evdev",
-      "url": "https://deb.debian.org/debian/pool/main/x/xserver-xorg-input-evdev/xserver-xorg-input-evdev_2.11.0-1_arm64.deb",
-      "version": "1:2.11.0-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xserver-xorg-input-libinput_1.5.0-1_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 190,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xserver-xorg-input-libinput",
-      "sha256": "c6b817eb8e3ad66f1157ce6425161c720a8b590fead53d0ba5f13bbb1f03e5e4",
-      "size": 66192,
-      "source_package": "xserver-xorg-input-libinput",
-      "url": "https://deb.debian.org/debian/pool/main/x/xserver-xorg-input-libinput/xserver-xorg-input-libinput_1.5.0-1_arm64.deb",
-      "version": "1.5.0-1"
-    },
-    {
-      "architecture": "arm64",
-      "component": "main",
-      "filename": "xserver-xorg-video-fbdev_1%3a0.5.0-2+b2_arm64.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 99,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xserver-xorg-video-fbdev",
-      "sha256": "29c425cdb9559b6330d873437e21fa8c494915e9bf05e0ccbb3890b1955a1bba",
-      "size": 22960,
-      "source_package": "xserver-xorg-video-fbdev",
-      "url": "https://deb.debian.org/debian/pool/main/x/xserver-xorg-video-fbdev/xserver-xorg-video-fbdev_0.5.0-2%2bb2_arm64.deb",
-      "version": "1:0.5.0-2+b2"
-    },
-    {
-      "architecture": "all",
-      "component": "main",
-      "filename": "xtrans-dev_1.4.0-1_all.deb",
-      "indexes": [
-        "deb.debian.org:trixie:main:arm64"
-      ],
-      "installed_size_kib": 330,
-      "license_policy": "Debian main (DFSG); package copyright file retained",
-      "package": "xtrans-dev",
-      "sha256": "9ce1af9464faee0c679348dd11cdf63934c12e734a64e0903692b0cb5af38e06",
-      "size": 98740,
-      "source_package": "xtrans",
-      "url": "https://deb.debian.org/debian/pool/main/x/xtrans/xtrans-dev_1.4.0-1_all.deb",
-      "version": "1.4.0-1"
     },
     {
       "architecture": "arm64",
@@ -5697,8 +3761,8 @@
       "verified_by": "APT 3.0.3 using the signed base image Debian keyring"
     }
   ],
-  "resolved_on": "2026-08-04",
-  "root_policy_sha256": "d617a154689318b29128e0369400e2743feeb55f959c693e1443216ff4368082",
+  "resolved_on": "2026-08-06",
+  "root_policy_sha256": "853c8aad166f32e4e998b7c30a198c4c6df0de28f7377ee0a022ef286946d898",
   "roots": [
     {
       "disposition": "already-in-signed-base",
@@ -5717,13 +3781,8 @@
     },
     {
       "disposition": "install-or-upgrade",
-      "name": "ninja-build",
-      "purpose": "Run the Meson builds required by locked PyCairo and PyGObject sources."
-    },
-    {
-      "disposition": "install-or-upgrade",
       "name": "python3-venv",
-      "purpose": "Create isolated Klipper, Moonraker, and KlipperScreen environments."
+      "purpose": "Create isolated Klipper and Moonraker environments."
     },
     {
       "disposition": "install-or-upgrade",
@@ -5762,38 +3821,13 @@
     },
     {
       "disposition": "install-or-upgrade",
-      "name": "libgirepository-2.0-dev",
-      "purpose": "Build the locked PyGObject binding used by KlipperScreen."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "libcairo2-dev",
-      "purpose": "Build the locked PyCairo binding used by KlipperScreen."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "gir1.2-gtk-3.0",
-      "purpose": "Provide the GTK 3 touchscreen interface used by KlipperScreen."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "librsvg2-common",
-      "purpose": "Render KlipperScreen vector icons."
-    },
-    {
-      "disposition": "install-or-upgrade",
       "name": "libopenjp2-7",
-      "purpose": "Decode images used by Moonraker and KlipperScreen."
+      "purpose": "Decode image formats used by Moonraker."
     },
     {
       "disposition": "install-or-upgrade",
       "name": "libsodium23",
       "purpose": "Provide Moonraker's authenticated-cryptography runtime."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "libmpv2",
-      "purpose": "Provide KlipperScreen media playback support."
     },
     {
       "disposition": "install-or-upgrade",
@@ -5813,51 +3847,21 @@
     {
       "disposition": "install-or-upgrade",
       "name": "network-manager",
-      "purpose": "Provide the KlipperScreen network panel and managed Wi-Fi."
+      "purpose": "Provide managed Ethernet and Wi-Fi networking."
     },
     {
       "disposition": "install-or-upgrade",
       "name": "nginx-light",
       "purpose": "Serve the pinned Mainsail files and proxy only local Moonraker and camera endpoints."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "xauth",
-      "purpose": "Authenticate the unprivileged KlipperScreen client to the local-only X server."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "xinput",
-      "purpose": "Inspect and validate touchscreen input."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "x11-xserver-utils",
-      "purpose": "Provide display power and X11 diagnostic controls."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "xserver-xorg-input-evdev",
-      "purpose": "Support the Klipad touchscreen input device."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "xserver-xorg-input-libinput",
-      "purpose": "Support modern touchscreen input handling."
-    },
-    {
-      "disposition": "install-or-upgrade",
-      "name": "xserver-xorg-video-fbdev",
-      "purpose": "Support the Klipad framebuffer display path."
     }
   ],
   "schema_version": 1,
   "solver": {
     "install_recommends": false,
     "name": "APT",
-    "new_on_signed_base": 346,
-    "selected": 353,
-    "total_installed_size_kib": 1163566,
+    "new_on_signed_base": 225,
+    "selected": 232,
+    "total_installed_size_kib": 1012442,
     "upgrades_from_signed_base": 7,
     "version": "3.0.3"
   },

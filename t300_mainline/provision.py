@@ -49,7 +49,7 @@ SERVICE_USERS = (
     "klipper",
     "moonraker",
     "crowsnest",
-    "klipperscreen",
+    "t300-touchscreen",
     "mainsail",
     "t300-policy",
     "t300-deploy",
@@ -57,7 +57,6 @@ SERVICE_USERS = (
 )
 SERVICE_GROUPS = (
     "t300-comms",
-    "t300-display",
     "t300-gcode",
     *SERVICE_USERS,
 )
@@ -68,8 +67,8 @@ T300_UNITS = (
     "t300-admission.service",
     "crowsnest.service",
     "mainsail.service",
-    "t300-xorg.service",
-    "klipperscreen.service",
+    "t300-touchscreen-gateway.service",
+    "t300-touchscreen-bridge.service",
     "t300-host-mcu.service",
     r"mnt-t300\x2ddata.mount",
     r"var-lib-t300-moonraker\x2ddata-gcodes.mount",
@@ -666,7 +665,7 @@ def _create_accounts() -> None:
     for name in SERVICE_GROUPS:
         _run(["/usr/sbin/groupadd", "--system", name], timeout=30)
     for name in SERVICE_USERS:
-        home = "/var/lib/t300/klipperscreen" if name == "klipperscreen" else "/nonexistent"
+        home = "/nonexistent"
         command = [
             "/usr/sbin/useradd",
             "--system",
@@ -746,7 +745,6 @@ def _prepare_runtime_directories() -> None:
     _ensure_dir("/var/lib/t300/gcode-approvals", 0o2750, "t300-policy", "t300-gcode")
     _ensure_dir("/var/lib/t300/approved-gcodes", 0o2750, "t300-policy", "t300-gcode")
     _ensure_dir("/var/lib/t300/gcode-rejections", 0o750, "t300-policy", "t300-policy")
-    _ensure_dir("/var/lib/t300/klipperscreen", 0o750, "klipperscreen", "klipperscreen")
     _ensure_dir("/var/lib/t300/incoming", 0o730, "root", "t300-deploy")
     for name, owner in (
         ("klipper", "klipper"),
@@ -754,8 +752,7 @@ def _prepare_runtime_directories() -> None:
         ("moonraker", "moonraker"),
         ("crowsnest", "crowsnest"),
         ("mainsail", "mainsail"),
-        ("klipperscreen", "klipperscreen"),
-        ("xorg", "root"),
+        ("touchscreen", "t300-touchscreen"),
     ):
         _ensure_dir("/var/log/t300/%s" % name, 0o750, owner, owner if owner != "root" else "root")
 
@@ -763,7 +760,7 @@ def _prepare_runtime_directories() -> None:
 def _install_mainsail_defaults() -> None:
     source = Path("/etc/t300/mainsail/default.json")
     defaults = _read_json(source)
-    required = {"general", "navigation", "uiSettings", "macros", "dashboard"}
+    required = {"general", "navigation", "uiSettings", "view", "macros", "dashboard"}
     if set(defaults) != required:
         raise ProvisionError("Mainsail defaults do not contain the reviewed UI sections")
     theme_dir = _ensure_dir(
@@ -1159,6 +1156,30 @@ def _lock_configuration_permissions() -> None:
     os.chmod(root, 0o555)
 
 
+def _lock_private_runtime_permissions() -> None:
+    root = Path("/opt/t300/private/touchscreen")
+    if not root.exists():
+        return
+    if root.is_symlink() or not root.is_dir():
+        raise ProvisionError("private touchscreen runtime is not one real directory")
+    group = grp.getgrnam("t300-touchscreen").gr_gid
+    expected = {
+        root / "zhongchuang_klipper": 0o550,
+        root / "gene5.py": 0o440,
+        root / "lib/libboost_system.so.1.67.0": 0o440,
+        root / "lib/libwpa_client.so": 0o440,
+    }
+    actual = {path for path in root.rglob("*") if path.is_file()}
+    if actual != set(expected) or any(path.is_symlink() for path in root.rglob("*")):
+        raise ProvisionError("private touchscreen runtime shape changed after staging")
+    for directory in (root, root / "lib"):
+        os.chown(directory, 0, group)
+        os.chmod(directory, 0o550)
+    for path, mode in expected.items():
+        os.chown(path, 0, group)
+        os.chmod(path, mode)
+
+
 def _validate_services() -> None:
     # Klipper's own asynchronous logger catches EFBIG and continues, while
     # CPython must keep SIGXFSZ ignored for the systemd file-size ceiling to
@@ -1301,6 +1322,7 @@ def provision(
         journal["phase"] = "permissions-and-validation"
         _write_json_atomic(JOURNAL, journal)
         _lock_configuration_permissions()
+        _lock_private_runtime_permissions()
         _validate_services()
 
         candidate_manifest = {

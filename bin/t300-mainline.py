@@ -48,6 +48,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Ed25519 laptop key accepted only by the restricted bundle receiver",
     )
     stage.add_argument(
+        "--touchscreen-runtime",
+        type=Path,
+        help="owner-private hash-verified runtime extracted from official T300 1.5.2",
+    )
+    stage.add_argument(
         "--python-cache",
         type=Path,
         default=ROOT / ".cache/mainline/python-wheelhouse",
@@ -91,6 +96,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                 args.data_usb_uuid,
                 args.gergo_source,
                 args.deploy_public_key,
+                args.touchscreen_runtime,
             )
             print("Staged pinned root filesystem: %s" % (manifest,))
         elif args.command == "stage-recovery":

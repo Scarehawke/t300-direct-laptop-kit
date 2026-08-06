@@ -334,7 +334,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Production KlipperScreen exposes a short workflow instead of raw movement, heaters, extrusion, mesh, console, updater, pins, or limits. Mainsail hides raw panels by default but the command policy remains the real guard."
+                    "text": "Production preserves complete upstream Mainsail and the exact stock serial-touchscreen layout. The touchscreen's unprivileged bridge can reach only a constrained loopback gateway; the command policy, immutable limits, and native Klipper checks remain the real guards."
                   }
                 ]
               }
@@ -486,7 +486,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Operator trapdoors: homing while a print is loaded or paused, homing without a fresh clean-and-rearmed plate state, upload-and-print shortcuts, and treating ordinary queued Cancel as the emergency path."
+                    "text": "Operator trapdoors: Z or all-axis homing while a print is loaded or paused, Z or all-axis homing without a fresh clean-and-rearmed plate state, assuming a failed X/Y-only home is harmless, upload-and-print shortcuts, and treating ordinary queued Cancel as the emergency path."
                   }
                 ]
               }
@@ -670,7 +670,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Before a Z home or print, the operator confirms that the magnetic sheet is installed, flat, clipped, clean, and clear of loose filament. The confirmation survives harmless idle actions, but it is consumed or invalidated by printing, purging, hot extrusion, filament load or unload, M600, cancellation, Klipper restart, and loaded-print errors."
+            "text": "Before a Z home or print, the operator confirms in Mainsail that the magnetic sheet is installed, flat, clipped, clean, and clear of loose filament. The confirmation survives harmless idle actions and a successful X/Y-only home, but it is consumed or invalidated by printing, purging, hot extrusion, filament load or unload, M600, cancellation, any failed home, Klipper restart, and loaded-print errors."
           }
         ]
       },

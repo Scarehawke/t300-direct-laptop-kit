@@ -1,6 +1,6 @@
 [server]
 host: 127.0.0.1
-port: 7125
+port: 7126
 klippy_uds_address: /run/t300/klipper/klippy.sock
 max_upload_size: 512
 

@@ -207,6 +207,7 @@ class GCodePolicyTests(unittest.TestCase):
             "SET_PRESSURE_ADVANCE ADVANCE=0\n"
             "SET_PRESSURE_ADVANCE ADVANCE=0.02\n"
             "SET_PRESSURE_ADVANCE ADVANCE=0.2\n"
+            "SET_PRESSURE_ADVANCE EXTRUDER=extruder ADVANCE=0.02\n"
         )
         report = self.scan(valid_gcode(commands))
         self.assertTrue(report.accepted, report.to_json())
@@ -218,7 +219,7 @@ class GCodePolicyTests(unittest.TestCase):
             "SET_PRESSURE_ADVANCE ADVANCE=nan",
             "SET_PRESSURE_ADVANCE",
             "SET_PRESSURE_ADVANCE ADVANCE=0.02 SMOOTH_TIME=0.04",
-            "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder",
+            "SET_PRESSURE_ADVANCE ADVANCE=0.02 EXTRUDER=extruder1",
             "TUNING_TOWER COMMAND=SET_PRESSURE_ADVANCE PARAMETER=ADVANCE START=0",
         ):
             with self.subTest(command=command):

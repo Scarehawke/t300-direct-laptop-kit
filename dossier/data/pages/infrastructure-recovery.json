@@ -110,7 +110,7 @@
                 "content": [
                   {
                     "type": "text",
-                    "text": "Moonraker, Mainsail, KlipperScreen, Crowsnest, KAMP subset, and timelapse components are pinned by source, version, hash, and compatibility notes."
+                    "text": "Moonraker, Mainsail, Crowsnest, the KAMP subset, and timelapse components are pinned by source, version, hash, and compatibility notes. The exact official Comgrow 1.5.2 serial-touchscreen runtime is kept private and hash-verified as an owner-local staging input."
                   }
                 ]
               }
@@ -406,7 +406,7 @@
         "content": [
           {
             "type": "text",
-            "text": "Klipper, Moonraker, Mainsail, KlipperScreen, Crowsnest, admission scanning, host MCU, and display support are staged as separate services with narrow writable directories, resource limits, and explicit device access. Camera, network, and storage failures must degrade those features without blocking emergency shutdown or printer safety."
+            "text": "Klipper, Moonraker, Mainsail, Crowsnest, admission scanning, host MCU, and the stock touchscreen bridge/gateway are staged as separate services with narrow writable directories, resource limits, and explicit device access. The bridge is unprivileged and limited to the serial TFT plus its loopback gateway. Camera, display, network, and storage failures must degrade those features without blocking emergency shutdown or printer safety."
           }
         ]
       },

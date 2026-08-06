@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import configparser
 import datetime as dt
 import hashlib
 import ipaddress
@@ -41,19 +40,45 @@ EXPECTED_SERVICES = (
     "t300-admission.service",
     "crowsnest.service",
     "mainsail.service",
-    "t300-xorg.service",
-    "klipperscreen.service",
+    "t300-touchscreen-gateway.service",
+    "t300-touchscreen-bridge.service",
     "t300-host-mcu.service",
 )
 EXPECTED_MOUNTS = (
     r"mnt-t300\x2ddata.mount",
     r"var-lib-t300-moonraker\x2ddata-gcodes.mount",
 )
+EXPECTED_TOUCHSCREEN_CONTROL_IDS = {
+    "nav.home", "nav.control", "nav.print", "nav.settings",
+    "bottom.emergency_stop", "bottom.macros", "bottom.home", "bottom.back",
+    "top.wifi", "top.nozzle", "top.bed", "top.led",
+    "move.step.1", "move.step.5", "move.step.10", "move.step.50",
+    "move.x.minus", "move.x.plus", "move.y.minus", "move.y.plus",
+    "move.z.minus", "move.z.plus", "move.home.xy", "move.home.z",
+    "move.home.all", "move.unlock",
+    "temperature.nozzle", "temperature.bed", "temperature.pla",
+    "temperature.abs", "temperature.cooldown", "temperature.extrude",
+    "temperature.retract",
+    "control.led", "control.sound", "control.fan", "control.filament",
+    "files.local", "files.usb", "files.delete", "files.timelapse",
+    "files.timelapse_export", "files.timelapse_delete",
+    "level.z_tilt", "level.z_offset", "level.mesh",
+    "print.temperature", "print.led", "print.pause", "print.resume",
+    "print.stop", "print.tune", "print.details", "print.power_loss_resume",
+    "stop.confirm", "stop.back",
+    "tune.z.step.005", "tune.z.step.01", "tune.z.step.05",
+    "tune.z.plus", "tune.z.minus", "tune.flow", "tune.speed",
+    "tune.filament", "tune.fan",
+    "zcal.test.plus", "zcal.test.minus", "zcal.abort", "zcal.accept",
+    "system.brightness", "system.sleep", "system.language",
+    "system.factory_reset", "system.version", "system.vendor_update",
+    "error.restart", "error.firmware_restart",
+}
 HOST_GATE_SERVICES = {
     "crowsnest.service",
     "mainsail.service",
-    "t300-xorg.service",
-    "klipperscreen.service",
+    "t300-touchscreen-gateway.service",
+    "t300-touchscreen-bridge.service",
 }
 PRODUCTION_GATE_SERVICES = {
     "klipper.service",
@@ -63,7 +88,6 @@ PRODUCTION_GATE_SERVICES = {
 COMMON_HARDENING = (
     "NoNewPrivileges=yes",
     "ProtectSystem=strict",
-    "ProtectHome=yes",
     "ProtectKernelTunables=yes",
     "ProtectKernelModules=yes",
     "ProtectKernelLogs=yes",
@@ -112,15 +136,15 @@ SERVICE_RESOURCE_REQUIREMENTS = {
         "IOWeight=10",
         "OOMScoreAdjust=500",
     ),
-    "t300-xorg.service": (
-        "MemoryMax=256M",
+    "t300-touchscreen-gateway.service": (
+        "MemoryMax=128M",
         "CPUWeight=20",
         "IOWeight=20",
         "LimitFSIZE=16777216",
         "OOMScoreAdjust=400",
     ),
-    "klipperscreen.service": (
-        "MemoryMax=384M",
+    "t300-touchscreen-bridge.service": (
+        "MemoryMax=256M",
         "CPUWeight=50",
         "IOWeight=50",
         "LimitFSIZE=16777216",
@@ -218,6 +242,13 @@ def review_systemd_units(stage_root: Path) -> dict[str, Any]:
         for directive in COMMON_HARDENING:
             if directive not in text:
                 failures.append("%s lacks %s" % (name, directive))
+        protect_home = (
+            "ProtectHome=tmpfs"
+            if name == "t300-touchscreen-bridge.service"
+            else "ProtectHome=yes"
+        )
+        if protect_home not in text:
+            failures.append("%s lacks %s" % (name, protect_home))
         for directive in SERVICE_RESOURCE_REQUIREMENTS[name]:
             if directive not in text:
                 failures.append("%s lacks resource boundary %s" % (name, directive))
@@ -251,6 +282,10 @@ def review_systemd_units(stage_root: Path) -> dict[str, Any]:
             ):
                 if required not in text:
                     failures.append("admission service lacks %s" % required)
+        if name == "klipper.service" and "Restart=no" not in text:
+            failures.append(
+                "production Klipper must remain stopped after a host-process failure"
+            )
         if name == "klipper-maintenance.service":
             for required in (
                 "PrivateNetwork=yes",
@@ -280,17 +315,45 @@ def review_systemd_units(stage_root: Path) -> dict[str, Any]:
                     failures.append("host MCU unit lacks %s" % required)
             if re.search(r"(?m)^\[Install\]\s*$", text):
                 failures.append("host MCU unit must not be enableable")
-        if name == "t300-xorg.service":
+        if name == "t300-touchscreen-gateway.service":
             for required in (
-                "-nolisten tcp",
-                "RestrictAddressFamilies=AF_UNIX",
+                "-m t300_mainline.touchscreen_gateway",
+                "Environment=PYTHONPATH=/opt/t300/control",
+                "--listen-host 127.0.0.1 --listen-port 7125",
+                "--upstream-host 127.0.0.1 --upstream-port 7126",
+                "RestrictAddressFamilies=AF_UNIX AF_INET",
+                "IPAddressDeny=any",
+                "IPAddressAllow=localhost",
+                "CapabilityBoundingSet=",
+                "SystemCallFilter=~@mount @reboot",
             ):
                 if required not in text:
-                    failures.append("Xorg unit lacks local-only boundary %s" % required)
+                    failures.append("touchscreen gateway lacks boundary %s" % required)
             if "PrivateNetwork=yes" in text:
-                failures.append(
-                    "Xorg must share the host Unix-socket namespace with KlipperScreen"
-                )
+                failures.append("touchscreen gateway must share loopback with Moonraker")
+        if name == "t300-touchscreen-bridge.service":
+            for required in (
+                "ConditionFileIsExecutable=/opt/t300/private/touchscreen/zhongchuang_klipper",
+                "ExecStart=/opt/t300/private/touchscreen/zhongchuang_klipper localhost",
+                "Environment=LD_LIBRARY_PATH=/opt/t300/private/touchscreen/lib",
+                "SupplementaryGroups=dialout t300-gcode",
+                "WorkingDirectory=/run/t300/touchscreen-bridge",
+                "BindReadOnlyPaths=/var/lib/t300/moonraker-data/gcodes:/home/mks/gcode_files/sda1",
+                "BindReadOnlyPaths=-/mnt/t300-data/timelapse/videos:/home/mks/timelapse",
+                "BindReadOnlyPaths=/opt/t300/private/touchscreen/gene5.py:/home/mks/Desktop/myfile/zhongchuang/gene5.py",
+                "BindReadOnlyPaths=/etc/t300/touchscreen/data-usb-present:/dev/sda",
+                "DevicePolicy=closed",
+                "DeviceAllow=/dev/ttyS1 rw",
+                "RestrictAddressFamilies=AF_UNIX AF_INET",
+                "IPAddressDeny=any",
+                "IPAddressAllow=localhost",
+                "CapabilityBoundingSet=",
+                "SystemCallFilter=~@mount @reboot",
+            ):
+                if required not in text:
+                    failures.append("touchscreen bridge lacks boundary %s" % required)
+            if "PrivateNetwork=yes" in text:
+                failures.append("touchscreen bridge must share loopback with its gateway")
     for name in EXPECTED_MOUNTS:
         path = unit_root / name
         try:
@@ -384,7 +447,8 @@ def review_host_network_boundary(stage_root: Path) -> dict[str, Any]:
         "moonraker": stage_root / "etc/t300/moonraker/moonraker.conf",
         "nginx": stage_root / "etc/t300/nginx/nginx.conf",
         "crowsnest": stage_root / "etc/t300/crowsnest/crowsnest.conf",
-        "klipperscreen": stage_root / "etc/t300/klipperscreen/KlipperScreen.conf",
+        "touchscreen_gateway": stage_root / "etc/systemd/system/t300-touchscreen-gateway.service",
+        "touchscreen_bridge": stage_root / "etc/systemd/system/t300-touchscreen-bridge.service",
     }
     failures: list[str] = []
     content: dict[str, str] = {}
@@ -396,7 +460,10 @@ def review_host_network_boundary(stage_root: Path) -> dict[str, Any]:
     if failures:
         return {"passed": False, "reviewed_files": [], "failures": failures}
 
-    if any("@" in text for text in content.values()):
+    if any(
+        re.search(r"@[A-Z][A-Z0-9_]+@", value)
+        for value in content.values()
+    ):
         failures.append("host configuration retains an unresolved staging placeholder")
 
     moonraker = content["moonraker"]
@@ -404,8 +471,8 @@ def review_host_network_boundary(stage_root: Path) -> dict[str, Any]:
     authorization = _config_section(moonraker, "authorization")
     if server is None or re.search(r"(?m)^host:\s*127\.0\.0\.1\s*$", server) is None:
         failures.append("Moonraker is not bound exclusively to IPv4 loopback")
-    if server is None or re.search(r"(?m)^port:\s*7125\s*$", server) is None:
-        failures.append("Moonraker does not use the reviewed local proxy port")
+    if server is None or re.search(r"(?m)^port:\s*7126\s*$", server) is None:
+        failures.append("Moonraker does not use the reviewed direct-UI port")
     if authorization is None:
         failures.append("Moonraker authorization section is missing")
     else:
@@ -449,8 +516,8 @@ def review_host_network_boundary(stage_root: Path) -> dict[str, Any]:
     if "satisfy any" in nginx.lower():
         failures.append("nginx can bypass the source-network allow-list")
     for endpoint in (
-        "proxy_pass http://127.0.0.1:7125/websocket;",
-        "proxy_pass http://127.0.0.1:7125;",
+        "proxy_pass http://127.0.0.1:7126/websocket;",
+        "proxy_pass http://127.0.0.1:7126;",
         "proxy_pass http://127.0.0.1:8080/;",
     ):
         if endpoint not in nginx:
@@ -464,11 +531,19 @@ def review_host_network_boundary(stage_root: Path) -> dict[str, Any]:
     if re.search(r"(?mi)^custom_flags:.*--host\b", crowsnest):
         failures.append("Crowsnest custom flags override its loopback binding")
 
-    screen = content["klipperscreen"]
-    if re.search(r"(?mi)^moonraker_host:\s*127\.0\.0\.1\s*$", screen) is None:
-        failures.append("KlipperScreen does not use local-only Moonraker")
-    if re.search(r"(?mi)^moonraker_port:\s*7125\s*$", screen) is None:
-        failures.append("KlipperScreen does not use the reviewed Moonraker port")
+    gateway = content["touchscreen_gateway"]
+    if "--listen-host 127.0.0.1 --listen-port 7125" not in gateway:
+        failures.append("touchscreen gateway does not use its reviewed legacy loopback port")
+    if "--upstream-host 127.0.0.1 --upstream-port 7126" not in gateway:
+        failures.append("touchscreen gateway does not use the direct Moonraker loopback port")
+    if "RestrictAddressFamilies=AF_UNIX AF_INET" not in gateway:
+        failures.append("touchscreen gateway has a broader network family boundary")
+
+    bridge = content["touchscreen_bridge"]
+    if "zhongchuang_klipper localhost" not in bridge:
+        failures.append("official touchscreen bridge is not constrained to loopback")
+    if "127.0.0.1:7126" in bridge or "--upstream-port 7126" in bridge:
+        failures.append("official touchscreen bridge can bypass the compatibility gateway")
 
     return {
         "passed": not failures,
@@ -482,9 +557,11 @@ def _klipper_section(text: str, name: str) -> str | None:
 
 
 def review_operator_ui(stage_root: Path) -> dict[str, Any]:
-    """Review the small-screen and tablet defaults as one constrained workflow."""
+    """Review full Mainsail and the exact stock serial-touchscreen contract."""
     paths = {
-        "screen": stage_root / "etc/t300/klipperscreen/KlipperScreen.conf",
+        "contract": stage_root / "etc/t300/touchscreen/button-contract.json",
+        "gateway": stage_root / "etc/systemd/system/t300-touchscreen-gateway.service",
+        "bridge": stage_root / "etc/systemd/system/t300-touchscreen-bridge.service",
         "defaults": stage_root / "etc/t300/mainsail/default.json",
         "nginx": stage_root / "etc/t300/nginx/nginx.conf",
         "mainsail_unit": stage_root / "etc/systemd/system/mainsail.service",
@@ -503,81 +580,77 @@ def review_operator_ui(stage_root: Path) -> dict[str, Any]:
     if failures:
         return {"passed": False, "reviewed_files": [], "failures": failures}
 
-    parser = configparser.RawConfigParser(strict=True)
     try:
-        parser.read_string(text["screen"])
-    except configparser.Error as exc:
-        failures.append("KlipperScreen configuration is malformed: %s" % exc)
-    else:
-        if not parser.has_section("main"):
-            failures.append("KlipperScreen main section is missing")
-        else:
-            expected_main = {
-                "theme": "material-light",
-                "use_default_menu": "False",
-                "confirm_estop": "False",
-                "job_complete_timeout": "0",
-                "job_error_timeout": "0",
-            }
-            for option, expected in expected_main.items():
-                if parser.get("main", option, fallback=None) != expected:
-                    failures.append(
-                        "KlipperScreen %s must remain %s" % (option, expected)
-                    )
-        expected_menus = {
-            "menu __main",
-            "menu __main print_workflow",
-            "menu __main print_workflow plate_ready",
-            "menu __main print_workflow select_file",
-            "menu __main home_printer",
-            "menu __main printer_status",
-            "menu __main camera",
-            "menu __main notifications",
-            "menu __print",
-            "menu __print printer_status",
-            "menu __print camera",
-            "menu __print notifications",
+        contract = json.loads(text["contract"])
+    except json.JSONDecodeError as exc:
+        failures.append("stock touchscreen contract is malformed: %s" % exc)
+        contract = {}
+    controls = contract.get("controls") if isinstance(contract, dict) else None
+    if (
+        not isinstance(contract, dict)
+        or contract.get("schema_version") != 1
+        or not isinstance(controls, list)
+    ):
+        failures.append("stock touchscreen contract has an unsupported shape")
+        controls = []
+    ids = [item.get("id") for item in controls if isinstance(item, dict)]
+    if (
+        any(not isinstance(item, str) for item in ids)
+        or len(ids) != len(controls)
+        or len(ids) != len(set(ids))
+        or set(ids) != EXPECTED_TOUCHSCREEN_CONTROL_IDS
+    ):
+        failures.append("stock touchscreen control inventory is incomplete or duplicated")
+    dispositions = set(contract.get("dispositions", {})) if isinstance(contract, dict) else set()
+    required_controls = {
+        "bottom.emergency_stop": "preserved",
+        "bottom.macros": "constrained",
+        "top.led": "explicitly_refused",
+        "move.home.all": "constrained",
+        "control.led": "explicitly_refused",
+        "temperature.extrude": "translated",
+        "print.pause": "translated",
+        "print.resume": "translated",
+        "print.stop": "translated",
+        "print.led": "explicitly_refused",
+        "tune.z.plus": "constrained",
+        "tune.flow": "constrained",
+        "tune.speed": "constrained",
+        "files.usb": "constrained",
+        "files.delete": "explicitly_refused",
+        "files.timelapse_delete": "explicitly_refused",
+        "files.timelapse_export": "explicitly_refused",
+        "print.power_loss_resume": "explicitly_refused",
+        "error.restart": "preserved",
+        "error.firmware_restart": "preserved",
+        "system.factory_reset": "explicitly_refused",
+        "system.vendor_update": "explicitly_refused",
+    }
+    indexed = {
+        item.get("id"): item
+        for item in controls
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    for control_id, expected in required_controls.items():
+        item = indexed.get(control_id)
+        if item is None or item.get("disposition") != expected:
+            failures.append("stock touchscreen contract lacks reviewed behavior for %s" % control_id)
+    home_all = indexed.get("move.home.all", {})
+    if "Mainsail" not in home_all.get("candidate_action", "") or "checkbox" not in home_all.get("candidate_action", ""):
+        failures.append("stock touchscreen contract does not disclose where build-plate confirmation occurs")
+    if any(
+        not isinstance(item, dict)
+        or item.get("disposition") not in dispositions
+        or set(item) != {
+            "id", "page", "label", "stock_action", "candidate_action", "disposition"
         }
-        actual_menus = {name for name in parser.sections() if name.startswith("menu ")}
-        if actual_menus != expected_menus:
-            failures.append("KlipperScreen exposes an unreviewed or missing menu item")
-        required_scripts = {
-            "menu __main print_workflow plate_ready": "BUILD_PLATE_READY",
-            "menu __main home_printer": "HOME_PRINTER",
-            "menu __main printer_status": "T_STATUS",
-            "menu __print printer_status": "T_STATUS",
-        }
-        for section, script in required_scripts.items():
-            if script not in parser.get(section, "params", fallback=""):
-                failures.append("KlipperScreen lacks the reviewed %s action" % script)
-        if parser.get(
-            "menu __main print_workflow plate_ready", "name", fallback=""
-        ) != "Clean & Rearm Plate":
-            failures.append(
-                "KlipperScreen build-plate control is not phrased as an action"
-            )
-        forbidden_panels = {
-            "bed_level",
-            "bed_mesh",
-            "console",
-            "extrude",
-            "input_shaper",
-            "limits",
-            "move",
-            "network",
-            "pins",
-            "system",
-            "temperature",
-            "updater",
-            "zcalibrate",
-        }
-        exposed_panels = {
-            parser.get(section, "panel")
-            for section in actual_menus
-            if parser.has_option(section, "panel")
-        }
-        if exposed_panels & forbidden_panels:
-            failures.append("KlipperScreen exposes raw production controls")
+        for item in controls
+    ):
+        failures.append("stock touchscreen control records are malformed")
+    if "-m t300_mainline.touchscreen_gateway" not in text["gateway"]:
+        failures.append("physical touchscreen does not use the reviewed compatibility gateway")
+    if "zhongchuang_klipper localhost" not in text["bridge"]:
+        failures.append("physical touchscreen does not retain the exact official bridge path")
 
     try:
         defaults = json.loads(text["defaults"])
@@ -614,77 +687,97 @@ def review_operator_ui(stage_root: Path) -> dict[str, Any]:
         expected_visibility = {
             "Dashboard": True,
             "Webcam": True,
-            "Console": False,
-            "Heightmap": False,
+            "Console": True,
+            "Heightmap": True,
             "G-Code Files": True,
-            "G-Code Viewer": False,
+            "G-Code Viewer": True,
             "History": True,
             "Timelapse": True,
-            "Machine": False,
+            "Machine": True,
         }
         if visibility != expected_visibility:
-            failures.append("Mainsail navigation no longer matches the reviewed workflow")
+            failures.append("Mainsail must retain its standard navigation views")
 
     macros = defaults.get("macros", {})
-    groups = macros.get("macrogroups", {}) if isinstance(macros, dict) else {}
-    group = groups.get("t300-owner-actions", {}) if isinstance(groups, dict) else {}
-    macro_entries = group.get("macros", []) if isinstance(group, dict) else []
-    macro_names = {
-        item.get("name") for item in macro_entries if isinstance(item, dict)
-    }
     if (
-        macros.get("mode") != "expert"
-        or set(groups) != {"t300-owner-actions"}
-        or macro_names
-        != {
-            "T_STATUS",
-            "BUILD_PLATE_READY",
-            "HOME_PRINTER",
-            "LOAD_FILAMENT",
-            "UNLOAD_FILAMENT",
-        }
-        or group.get("showInPrinting") is not True
+        not isinstance(macros, dict)
+        or macros.get("mode") != "simple"
+        or macros.get("hiddenMacros") != []
+        or macros.get("macrogroups") != {}
     ):
-        failures.append("Mainsail Owner Actions group is missing or overbroad")
+        failures.append("Mainsail must retain the standard all-macros panel")
+
+    extruder_view = defaults.get("view", {}).get("extruder", {})
+    expected_extruder_view = {
+        "showTools": True,
+        "showExtrusionFactor": True,
+        "showPressureAdvance": False,
+        "showFirmwareRetraction": True,
+        "showExtruderControl": True,
+    }
+    if extruder_view != expected_extruder_view:
+        failures.append(
+            "Mainsail must retain extrusion controls and hide only the slicer-owned pressure-advance editor"
+        )
 
     dashboard = defaults.get("dashboard", {})
-    expected_panels = {
-        "afc",
-        "toolhead-control",
-        "extruder-control",
-        "macros",
-        "led-effects",
-        "machine-settings",
-        "miniconsole",
-        "miscellaneous",
-        "spoolman",
-        "mmu",
-        "temperature",
-        "webcam",
-        "macrogroup_t300-owner-actions",
+    expected_layouts = {
+        "mobileLayout": [
+            ("webcam", False),
+            ("toolhead-control", True),
+            ("extruder-control", True),
+            ("macros", True),
+            ("machine-settings", True),
+            ("miscellaneous", True),
+            ("temperature", True),
+            ("miniconsole", False),
+        ],
+        "tabletLayout1": [
+            ("webcam", True),
+            ("toolhead-control", True),
+            ("extruder-control", True),
+            ("macros", True),
+            ("machine-settings", True),
+            ("miscellaneous", True),
+        ],
+        "tabletLayout2": [("temperature", True), ("miniconsole", True)],
+        "desktopLayout1": [
+            ("webcam", True),
+            ("toolhead-control", True),
+            ("extruder-control", True),
+            ("macros", True),
+            ("machine-settings", True),
+            ("miscellaneous", True),
+        ],
+        "desktopLayout2": [("temperature", True), ("miniconsole", True)],
+        "widescreenLayout1": [
+            ("toolhead-control", True),
+            ("extruder-control", True),
+            ("macros", True),
+            ("miscellaneous", True),
+        ],
+        "widescreenLayout2": [
+            ("temperature", True),
+            ("machine-settings", True),
+        ],
+        "widescreenLayout3": [("webcam", True), ("miniconsole", True)],
     }
-    layouts = {
-        "mobile": ("mobileLayout",),
-        "tablet": ("tabletLayout1", "tabletLayout2"),
-        "desktop": ("desktopLayout1", "desktopLayout2"),
-        "widescreen": (
-            "widescreenLayout1",
-            "widescreenLayout2",
-            "widescreenLayout3",
-        ),
-    }
-    for viewport, names in layouts.items():
-        entries: list[dict[str, Any]] = []
-        for name in names:
-            value = dashboard.get(name, []) if isinstance(dashboard, dict) else []
-            if isinstance(value, list):
-                entries.extend(item for item in value if isinstance(item, dict))
-        panel_names = [item.get("name") for item in entries]
-        visible = {item.get("name") for item in entries if item.get("visible") is True}
-        if len(panel_names) != len(expected_panels) or set(panel_names) != expected_panels:
-            failures.append("Mainsail %s dashboard has missing or duplicate panels" % viewport)
-        if visible != {"webcam", "macrogroup_t300-owner-actions"}:
-            failures.append("Mainsail %s dashboard exposes raw controls" % viewport)
+    if not isinstance(dashboard, dict):
+        failures.append("Mainsail dashboard defaults are malformed")
+    else:
+        for layout, expected in expected_layouts.items():
+            value = dashboard.get(layout)
+            rendered = (
+                [(item.get("name"), item.get("visible")) for item in value]
+                if isinstance(value, list)
+                and all(isinstance(item, dict) for item in value)
+                else None
+            )
+            if rendered != expected:
+                failures.append(
+                    "Mainsail %s must retain the pinned upstream manual controls"
+                    % layout
+                )
 
     if text["version"].strip() != "v2.18.2":
         failures.append("compiled Mainsail version differs from the production pin")
@@ -777,11 +870,12 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
         (
             "_T_RETRACT_IF_HOT",
             "SET_PRESSURE_ADVANCE ADVANCE=0",
+            "SET_GCODE_OFFSET Z=0",
             "_T_SAFE_PARK",
         ),
     ):
         failures.append(
-            "T300 cancel hook does not retract, reset pressure advance, and park in order"
+            "T300 cancel hook does not retract, reset pressure advance/live Z, and park in order"
         )
 
     retract = _klipper_section(lifecycle, "gcode_macro _T_RETRACT_IF_HOT")
@@ -864,13 +958,49 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
     for name in ("LOAD_FILAMENT", "UNLOAD_FILAMENT"):
         filament = _klipper_section(lifecycle, "gcode_macro " + name)
         if filament is None:
-            failures.append("KlipperScreen-compatible %s macro is missing" % name)
+            failures.append("operator-compatible %s macro is missing" % name)
         elif (
             "printer.pause_resume.is_paused" not in filament
             or "can_extrude" not in filament
             or "T_MARK_BUILD_PLATE_DIRTY" not in filament
         ):
             failures.append("%s lacks paused, hot, or plate-dirty protection" % name)
+
+    screen_jog = _klipper_section(lifecycle, "gcode_macro T_SCREEN_JOG")
+    if screen_jog is None:
+        failures.append("bounded stock-touchscreen jog macro is missing")
+    else:
+        for required in (
+            "printer.t300_safety.commissioning_lock",
+            "printer.virtual_sdcard.file_path is not none",
+            'axis not in ["X", "Y", "Z"]',
+            "distance|abs not in [1.0, 5.0, 10.0, 50.0]",
+            "speed > 130",
+            "axis not in homed",
+            "SAVE_GCODE_STATE",
+            "RESTORE_GCODE_STATE",
+        ):
+            if required not in screen_jog:
+                failures.append("stock-touchscreen jog lacks %s" % required)
+
+    screen_filament = _klipper_section(
+        lifecycle, "gcode_macro T_SCREEN_FILAMENT"
+    )
+    if screen_filament is None:
+        failures.append("bounded stock-touchscreen filament macro is missing")
+    else:
+        for required in (
+            "printer.t300_safety.commissioning_lock",
+            "printer.virtual_sdcard.file_path is not none and not printer.pause_resume.is_paused",
+            "can_extrude",
+            "distance|abs not in [3.0, 5.0, 10.0]",
+            "speed > 5",
+            "T_MARK_BUILD_PLATE_DIRTY",
+            "SAVE_GCODE_STATE",
+            "RESTORE_GCODE_STATE",
+        ):
+            if required not in screen_filament:
+                failures.append("stock-touchscreen filament motion lacks %s" % required)
 
     purge_preflight = _klipper_section(
         lifecycle, "gcode_macro _T_VALIDATE_PURGE_LANE"
@@ -897,14 +1027,15 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
             "_T_RETRACT_IF_HOT",
             "TURN_OFF_HEATERS",
             "SET_PRESSURE_ADVANCE ADVANCE=0",
+            "SET_GCODE_OFFSET Z=0",
             "_T_SAFE_PARK",
         ),
     ):
         failures.append("END_PRINT no longer retracts, shuts down, and parks in order")
 
-    status = _klipper_section(lifecycle, "gcode_macro T_STATUS")
+    status = _klipper_section(lifecycle, "gcode_macro PRINTER_STATUS")
     if status is None:
-        failures.append("read-only T_STATUS macro is missing")
+        failures.append("read-only PRINTER_STATUS macro is missing")
     else:
         for required in (
             "printer.extruder.temperature",
@@ -916,12 +1047,12 @@ def review_klipper_lifecycle(stage_root: Path) -> dict[str, Any]:
             "action:prompt_begin T300 Status",
         ):
             if required not in status:
-                failures.append("T_STATUS lacks %s" % required)
+                failures.append("PRINTER_STATUS lacks %s" % required)
         if re.search(
             r"(?mi)^\s*(?:G[0-3]|M10[49]|M1[49]0|TURN_OFF_HEATERS|SET_)\b",
             status,
         ):
-            failures.append("T_STATUS can alter printer state")
+            failures.append("PRINTER_STATUS can alter printer state")
 
     idle = _klipper_section(machine, "idle_timeout")
     if idle is None or "TURN_OFF_HEATERS" not in idle or re.search(
